@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const translations = {
   en: {
     home: "Home",
+    shared_transport: "Shared Transport",
     weather: "Weather",
     community: "Community",
     market: "Market",
@@ -234,6 +235,7 @@ const translations = {
   },
   hi: {
     home: "होम",
+    shared_transport: "साझा परिवहन",
     weather: "मौसम",
     community: "समुदाय",
     market: "बाज़ार",
@@ -455,6 +457,7 @@ const translations = {
   },
   ta: {
     home: "முகப்பு",
+    shared_transport: "பகிர்வு போக்குவரத்து",
     weather: "வானிலை",
     community: "சமூகம்",
     market: "சந்தை",
@@ -733,6 +736,7 @@ const translations = {
   },
   te: {
     home: "హోమ్",
+    shared_transport: "షేర్డ్ రవాణా",
     weather: "వాతావరణం",
     community: "కమ్యూనిటీ",
     market: "మార్కెట్",
@@ -954,6 +958,7 @@ const translations = {
   },
   kn: {
     home: "ಮುಖಪುಟ",
+    shared_transport: "ಹಂಚಿಕೆಯ ಸಾರಿಗೆ",
     weather: "ಹವಾಮಾನ",
     community: "ಸಮುದಾಯ",
     market: "ಮಾರುಕಟ್ಟೆ",
@@ -1175,6 +1180,7 @@ const translations = {
   },
   ml: {
     home: "ഹോം",
+    shared_transport: "ഷെയർഡ് ട്രാൻസ്പോർട്ട്",
     weather: "കാലാവസ്ഥ",
     community: "കമ്മ്യൂണിറ്റി",
     market: "മാർക്കറ്റ്",

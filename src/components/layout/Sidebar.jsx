@@ -30,7 +30,7 @@ export const Sidebar = () => {
 
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
-    { id: 'transport', label: 'Shared Transport', icon: Truck },
+    { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },
     { id: 'weather', label: t('weather'), icon: CloudSun },
     { id: 'disease', label: t('disease_detection'), icon: Bug },
     { id: 'irrigation', label: t('irrigation'), icon: Droplet },
@@ -125,11 +125,29 @@ export const Sidebar = () => {
             toggleDrawer();
           }}
         >
-          <img 
-            src={user.avatar} 
-            alt={user.name} 
-            className="user-avatar"
-          />
+          {user?.avatar ? (
+            <img 
+              src={user.avatar} 
+              alt={user.name} 
+              className="user-avatar"
+            />
+          ) : (
+            <div 
+              className="user-avatar"
+              style={{
+                background: 'linear-gradient(135deg, #16a34a, #15803d)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                border: '2px solid #22c55e'
+              }}
+            >
+              {user?.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'F'}
+            </div>
+          )}
           <div className="user-details">
             <div className="user-name">{user.name}</div>
             <div className="user-loc">{user.village}, {user.district}</div>

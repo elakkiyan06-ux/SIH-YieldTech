@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   User, 
   MapPin, 
@@ -12,7 +12,10 @@ import {
   Bookmark, 
   FileText, 
   HelpCircle,
-  Sprout
+  Sprout,
+  Camera,
+  Upload,
+  Trash2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
@@ -26,6 +29,7 @@ export const FarmerProfile = () => {
 
   const [activeTab, setActiveTab] = useState('farm-info');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Edit form state
   const [editName, setEditName] = useState(user.name);
@@ -35,6 +39,59 @@ export const FarmerProfile = () => {
   const [editSoilType, setEditSoilType] = useState(user.soilType);
   const [editWaterSource, setEditWaterSource] = useState(user.waterSource);
   const [editLanguage, setEditLanguage] = useState(user.language);
+
+  const getInitials = (name) => {
+    if (!name) return 'F';
+    const parts = name.trim().split(' ').filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0].slice(0, 2).toUpperCase();
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (PNG, JPG, JPEG, WEBP).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 360;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        updateProfile({ avatar: dataUrl });
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleRemovePhoto = () => {
+    updateProfile({ avatar: null });
+  };
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
@@ -60,11 +117,76 @@ export const FarmerProfile = () => {
       <div className="farm-card profile-hero-card" style={{ padding: '28px 32px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <img 
-              src={user.avatar} 
-              alt={user.name} 
-              style={{ width: '84px', height: '84px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #22c55e', boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)' }} 
-            />
+            {/* Avatar with Camera Button Overlay */}
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              {user.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt={user.name} 
+                  style={{ 
+                    width: '88px', 
+                    height: '88px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover', 
+                    border: '3px solid #22c55e', 
+                    boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)' 
+                  }} 
+                />
+              ) : (
+                <div 
+                  style={{ 
+                    width: '88px', 
+                    height: '88px', 
+                    borderRadius: '50%', 
+                    background: 'linear-gradient(135deg, #16a34a, #15803d)', 
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2rem',
+                    fontWeight: 800,
+                    border: '3px solid #22c55e', 
+                    boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)'
+                  }} 
+                >
+                  {getInitials(user.name)}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Upload or change profile picture"
+                style={{
+                  position: 'absolute',
+                  bottom: '-2px',
+                  right: '-2px',
+                  background: '#16a34a',
+                  color: '#ffffff',
+                  border: '2px solid #ffffff',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                  transition: 'transform 0.2s, background-color 0.2s'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                <Camera size={16} />
+              </button>
+              <input 
+                ref={fileInputRef}
+                type="file" 
+                accept="image/*" 
+                style={{ display: 'none' }} 
+                onChange={handleImageUpload} 
+              />
+            </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>{user.name}</h1>
@@ -268,6 +390,43 @@ export const FarmerProfile = () => {
         title="✏️ Edit Farmer Information"
       >
         <form onSubmit={handleSaveProfile}>
+          {/* Profile Picture Management in Modal */}
+          <div className="form-group" style={{ textAlign: 'center', marginBottom: '20px', padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <label className="form-label" style={{ marginBottom: '10px', display: 'block', fontWeight: 700 }}>Profile Photo</label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+              {user.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt={user.name} 
+                  style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #22c55e' }} 
+                />
+              ) : (
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'linear-gradient(135deg, #16a34a, #15803d)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1.3rem' }}>
+                  {getInitials(user.name)}
+                </div>
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload size={14} /> {user.avatar ? 'Change Photo' : 'Upload Photo'}
+                </button>
+                {user.avatar && (
+                  <button
+                    type="button"
+                    style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', padding: 0 }}
+                    onClick={handleRemovePhoto}
+                  >
+                    <Trash2 size={12} /> Remove Photo
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="form-group">
             <label className="form-label">Full Name</label>
             <input 

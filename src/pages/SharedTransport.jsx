@@ -204,8 +204,8 @@ export const SharedTransport = () => {
       {/* 1. HERO BANNER */}
       <div className="transport-hero-card">
         <div>
-          <h1 className="transport-hero-title">
-            <Truck size={30} /> Real-Time Shared Transport Hub
+          <h1 className="transport-hero-title" style={{ color: '#ffffff' }}>
+            <Truck size={30} style={{ color: '#ffffff' }} /> Real-Time Shared Transport Hub
           </h1>
           <p className="transport-hero-subtitle">
             Share vehicle space with nearby farmers heading to the same mandi. 

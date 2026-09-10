@@ -136,7 +136,7 @@ export const Register = ({ onSwitchToLogin }) => {
       soilType,
       waterSource: 'Borewell with Drip',
       language: currentLang,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&auto=format&fit=crop&q=80',
+      avatar: null,
       bio: 'Cultivating crops with smart water practices.',
       verified: false,
       role: 'farmer'

@@ -6,7 +6,18 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('farmogram_user');
-    return saved ? JSON.parse(saved) : currentUser;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.avatar && typeof parsed.avatar === 'string' && parsed.avatar.includes('images.unsplash.com')) {
+          parsed.avatar = null;
+        }
+        return parsed;
+      } catch (e) {
+        return currentUser;
+      }
+    }
+    return currentUser;
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {

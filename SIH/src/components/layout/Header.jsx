@@ -110,17 +110,38 @@ export const Header = () => {
           }}
           title="Farmer Profile"
         >
-          <img 
-            src={user.avatar} 
-            alt={user.name} 
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '9999px',
-              objectFit: 'cover',
-              border: '2px solid #22c55e'
-            }}
-          />
+          {user?.avatar ? (
+             <img 
+              src={user.avatar} 
+              alt={user.name} 
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '9999px',
+                objectFit: 'cover',
+                border: '2px solid #22c55e'
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '9999px',
+                background: 'linear-gradient(135deg, #16a34a, #15803d)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                border: '2px solid #22c55e',
+                boxShadow: '0 2px 6px rgba(22, 163, 74, 0.2)'
+              }}
+            >
+              {user?.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'F'}
+            </div>
+          )}
         </button>
       </div>
     </header>

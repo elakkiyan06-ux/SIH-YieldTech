@@ -13,7 +13,7 @@ export const currentUser = {
   soilType: "Red Loam",
   waterSource: "Drip Irrigation + Borewell",
   language: "English (Tamil native)",
-  avatar: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=240&auto=format&fit=crop&q=80",
+  avatar: null,
   bio: "Progressive farmer adopting precision drip irrigation and natural pest management practices. Cultivating since 2011.",
   verified: false,
   role: "farmer" // 'farmer' | 'admin'
