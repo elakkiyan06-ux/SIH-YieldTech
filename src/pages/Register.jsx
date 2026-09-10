@@ -1,19 +1,115 @@
 import React, { useState } from 'react';
-import { Wheat, MapPin, Layers, Droplet, User, Phone, Sparkles } from 'lucide-react';
+import { Wheat, MapPin, Layers, Droplet, User, Phone, Sparkles, CheckCircle, ArrowRight, Lock, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { locations, soilTypes, cropsList } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
+import { soilTypes, cropsList } from '../data/mockData';
+import indianStatesData from '../data/indianStates.json';
+
+const languages = [
+  { id: 'hi', name: 'हिंदी', icon: 'अ' },
+  { id: 'en', name: 'English', icon: 'A' },
+  { id: 'ta', name: 'தமிழ்', icon: 'அ' },
+  { id: 'te', name: 'తెలుగు', icon: 'అ' },
+  { id: 'kn', name: 'ಕನ್ನಡ', icon: 'ಅ' },
+  { id: 'ml', name: 'മലയാളം', icon: 'അ' }
+];
+
+const cropEmojis = {
+  Paddy: '🌾',
+  Tomato: '🍅',
+  Groundnut: '🥜',
+  Sugarcane: '🎋',
+  Cotton: '☁️',
+  Banana: '🍌',
+  Maize: '🌽',
+  Turmeric: '🫚'
+};
+
+const stateGeneratedImages = {
+  'Andhra Pradesh': '/states/state_ap_1788599649263.jpg',
+  'Arunachal Pradesh': '/states/state_ar_1788599844323.jpg',
+  'Assam': '/states/state_as_1788599868722.jpg',
+  'Bihar': '/states/state_br_1788599882525.jpg',
+  'Chandigarh (UT)': '/states/state_chandigarh_1788702974709.jpg',
+  'Chhattisgarh': '/states/state_chhattisgarh_1788702893093.jpg',
+  'Dadra and Nagar Haveli (UT)': '/states/state_dadra_1788703000000.jpg',
+  'Daman and Diu (UT)': '/states/state_daman_1788703000000.jpg',
+  'Delhi (NCT)': '/states/state_delhi_1788702703801.jpg',
+  'Goa': '/states/state_goa_1788702716890.jpg',
+  'Gujarat': '/states/state_gj_1788599741869.jpg',
+  'Haryana': '/states/state_haryana_1788702862769.jpg',
+  'Himachal Pradesh': '/states/state_hp_1788702834479.jpg',
+  'Jammu and Kashmir': '/states/state_jk_1788702850343.jpg',
+  'Jharkhand': '/states/state_jharkhand_1788702879013.jpg',
+  'Karnataka': '/states/state_ka_1788599769045.jpg',
+  'Kerala': '/states/state_kl_1788599690136.jpg',
+  'Lakshadweep (UT)': '/states/state_lakshadweep_1788703000000.jpg',
+  'Madhya Pradesh': '/states/state_mp_1788702731526.jpg',
+  'Maharashtra': '/states/state_mh_1788599662605.jpg',
+  'Manipur': '/states/state_manipur_1788703000000.jpg',
+  'Meghalaya': '/states/state_meghalaya_1788703000000.jpg',
+  'Mizoram': '/states/state_mizoram_1788703000000.jpg',
+  'Nagaland': '/states/state_nagaland_1788703000000.jpg',
+  'Odisha': '/states/state_odisha_1788702742505.jpg',
+  'Puducherry (UT)': '/states/state_puducherry_1788703000000.jpg',
+  'Punjab': '/states/state_pb_1788599677100.jpg',
+  'Rajasthan': '/states/state_rj_1788599754895.jpg',
+  'Sikkim': '/states/state_sikkim_1788702906662.jpg',
+  'Tamil Nadu': '/states/state_tn_1788599703795.jpg',
+  'Telangana': '/states/state_telangana_1788702754652.jpg',
+  'Tripura': '/states/state_tripura_1788703000000.jpg',
+  'Uttar Pradesh': '/states/state_up_1788599728249.jpg',
+  'Uttarakhand': '/states/state_uttarakhand_1788702767903.jpg',
+  'West Bengal': '/states/state_wb_1788599782080.jpg'
+};
+
+const stateIcons = {
+  'Andhra Pradesh': '🛕',
+  'Karnataka': '🕌',
+  'Kerala': '🌴',
+  'Maharashtra': '🏙️',
+  'Punjab': '🌾',
+  'Tamil Nadu': '🛕',
+  'Uttar Pradesh': '🕌',
+  'Gujarat': '🦁',
+  'Rajasthan': '🐪',
+  'West Bengal': '🐅',
+  'Assam': '🫖',
+  'Himachal Pradesh': '🍎',
+  'Goa': '🏖️'
+};
+
+const defaultStateIcon = '🗺️';
+
+const soilImages = {
+  'Red Loam': `${import.meta.env.BASE_URL}images/soils/red_loam.jpg`,
+  'Clayey Alluvial': `${import.meta.env.BASE_URL}images/soils/clayey_alluvial.jpg`,
+  'Black Cotton Soil (Regur)': `${import.meta.env.BASE_URL}images/soils/black_cotton.jpg`,
+  'Sandy Loam': `${import.meta.env.BASE_URL}images/soils/sandy_loam.jpg`,
+  'Laterite Soil': `${import.meta.env.BASE_URL}images/soils/laterite_soil.jpg`
+};
 
 export const Register = ({ onSwitchToLogin }) => {
   const { login } = useAuth();
+  const { currentLang, setCurrentLang, t } = useLanguage();
 
+  const [step, setStep] = useState(1);
+
+  // Form State
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [district, setDistrict] = useState('Coimbatore');
-  const [village, setVillage] = useState('');
-  const [landArea, setLandArea] = useState('3.0');
-  const [soilType, setSoilType] = useState('Red Loam');
-  const [selectedCrops, setSelectedCrops] = useState(['Tomato', 'Paddy']);
-  const [waterSource, setWaterSource] = useState('Borewell with Drip');
+  const [password, setPassword] = useState('');
+  
+  const [state, setState] = useState('');
+  const [district, setDistrict] = useState('');
+  const [landArea, setLandArea] = useState('');
+  const [soilType, setSoilType] = useState('');
+  
+  const [selectedCrops, setSelectedCrops] = useState([]);
+
+  const availableDistricts = state 
+    ? indianStatesData.states.find(s => s.state === state)?.districts || []
+    : [];
 
   const toggleCrop = (crop) => {
     setSelectedCrops(prev => 
@@ -21,20 +117,25 @@ export const Register = ({ onSwitchToLogin }) => {
     );
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
+  const handleNext = (e) => {
+    e?.preventDefault();
+    if (step < 7) setStep(step + 1);
+    else handleRegister();
+  };
+
+  const handleRegister = () => {
     const newFarmer = {
       id: 'usr_' + Date.now(),
-      name: name.trim() || 'Farmer Ramasamy',
-      phone: phone.trim() || '+91 94432 10987',
-      village: village.trim() || 'Sulur',
+      name: name.trim(),
+      phone: phone.trim(),
+      village: '',
       district,
-      state: 'Tamil Nadu',
+      state: state,
       landArea,
-      primaryCrops: selectedCrops.length > 0 ? selectedCrops : ['Tomato'],
+      primaryCrops: selectedCrops,
       soilType,
-      waterSource,
-      language: 'English (Tamil native)',
+      waterSource: 'Borewell with Drip',
+      language: currentLang,
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&auto=format&fit=crop&q=80',
       bio: 'Cultivating crops with smart water practices.',
       verified: false,
@@ -45,132 +146,398 @@ export const Register = ({ onSwitchToLogin }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="farm-card auth-card" style={{ maxWidth: '540px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <div className="brand-logo-icon" style={{ margin: '0 auto 10px auto', width: '48px', height: '48px' }}>
-            <Wheat size={26} />
+    <div className="auth-container auth-3d-bg">
+      <div className="auth-card-3d" style={{ maxWidth: '600px', width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div className="brand-logo-3d">
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Farmogram Logo" />
           </div>
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a' }}>
-            Farmer Onboarding
+          <h1 className="brand-title-3d">
+            {t('farmer_onboarding')}
           </h1>
-          <p style={{ fontSize: '0.82rem', color: '#64748b' }}>
-            Register your landholding to unlock hyperlocal microclimate and agronomic decision tools.
-          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
+            {[1, 2, 3, 4, 5, 6, 7].map(i => (
+              <div 
+                key={i} 
+                style={{
+                  height: '6px',
+                  width: '32px',
+                  borderRadius: '4px',
+                  backgroundColor: i <= step ? '#16a34a' : '#e2e8f0',
+                  transition: 'background-color 0.3s'
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        <form onSubmit={handleRegister}>
-          <div className="grid-2">
-            <div className="form-group">
-              <label className="form-label">Farmer Full Name *</label>
-              <input 
-                type="text" 
-                className="form-input" 
-                placeholder="e.g., Ramasamy K." 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Mobile Number *</label>
-              <input 
-                type="tel" 
-                className="form-input" 
-                placeholder="+91 94432 10987" 
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="form-group">
-              <label className="form-label">District</label>
-              <select className="form-select" value={district} onChange={(e) => setDistrict(e.target.value)}>
-                {locations.map(loc => (
-                  <option key={loc} value={loc}>{loc}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Village / Town</label>
-              <input 
-                type="text" 
-                className="form-input" 
-                placeholder="e.g., Sulur" 
-                value={village}
-                onChange={(e) => setVillage(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="form-group">
-              <label className="form-label">Cultivable Land (Acres)</label>
-              <input 
-                type="number" 
-                step="0.5" 
-                className="form-input" 
-                value={landArea} 
-                onChange={(e) => setLandArea(e.target.value)} 
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Dominant Soil Type</label>
-              <select className="form-select" value={soilType} onChange={(e) => setSoilType(e.target.value)}>
-                {soilTypes.map(st => (
-                  <option key={st.id} value={st.name}>{st.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Primary Crops Selection */}
-          <div className="form-group">
-            <label className="form-label">Primary Crops Cultivated (Select 1 or more)</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px' }}>
-              {cropsList.map(crop => {
-                const isSelected = selectedCrops.includes(crop);
-                return (
-                  <button
-                    key={crop}
-                    type="button"
-                    onClick={() => toggleCrop(crop)}
-                    className={`btn btn-sm ${isSelected ? 'btn-primary' : 'btn-secondary'}`}
+        <form onSubmit={handleNext} className="auth-form-3d">
+          
+          {/* STEP 1: Language */}
+          {step === 1 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>1. {t('step_language')}</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                {languages.map(lang => (
+                  <div 
+                    key={lang.id}
+                    onClick={() => setCurrentLang(lang.id)}
+                    style={{
+                      border: currentLang === lang.id ? '2px solid #16a34a' : '1px solid #e2e8f0',
+                      backgroundColor: currentLang === lang.id ? '#f0fdf4' : '#ffffff',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s',
+                      boxShadow: currentLang === lang.id ? '0 4px 6px -1px rgba(22, 163, 74, 0.2)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                    }}
                   >
-                    {crop} {isSelected && '✓'}
-                  </button>
-                );
-              })}
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: currentLang === lang.id ? '#15803d' : '#64748b' }}>
+                      {lang.icon}
+                    </div>
+                    <span style={{ fontWeight: 600, color: '#1e293b' }}>{lang.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            style={{ width: '100%', padding: '12px', marginTop: '16px' }}
-          >
-            Create Farmer Profile & Enter
-          </button>
+          {/* STEP 2: Basic Info */}
+          {step === 2 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>2. {t('step_basic_info')}</h2>
+              <div className="form-group-3d">
+                <label className="form-label">{t('full_name')} *</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#64748b' }} />
+                  <input 
+                    type="text" 
+                    className="form-input-3d" 
+                    placeholder={t('placeholder_name')} 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    style={{ paddingLeft: '40px' }}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-3d">
+                <label className="form-label">{t('mobile_number')} *</label>
+                <div style={{ position: 'relative' }}>
+                  <Phone size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#64748b' }} />
+                  <input 
+                    type="tel" 
+                    className="form-input-3d" 
+                    placeholder={t('placeholder_phone')} 
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    style={{ paddingLeft: '40px' }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: Password / Security */}
+          {step === 3 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>3. {t('step_security')}</h2>
+              <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '16px' }}>{t('mobile_verified')}</p>
+              
+              <div className="form-group-3d">
+                <label className="form-label">{t('create_password')} *</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#64748b' }} />
+                  <input 
+                    type="password" 
+                    className="form-input-3d" 
+                    placeholder="••••••••" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    style={{ paddingLeft: '40px' }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: Farm Location (State) */}
+          {step === 4 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>4. {t('step_state')}</h2>
+              
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', 
+                gap: '16px',
+                maxHeight: '350px',
+                overflowY: 'auto',
+                padding: '4px'
+              }}>
+                {indianStatesData.states.map(s => {
+                  const isSelected = state === s.state;
+                  const generatedImg = stateGeneratedImages[s.state];
+                  const fallbackIcon = stateIcons[s.state] || defaultStateIcon;
+
+                  return (
+                    <div 
+                      key={s.state}
+                      onClick={() => { setState(s.state); setDistrict(''); }}
+                      style={{
+                        border: isSelected ? '2px solid #16a34a' : '1px solid #e2e8f0',
+                        backgroundColor: isSelected ? '#f0fdf4' : '#ffffff',
+                        borderRadius: '12px',
+                        padding: '16px 8px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        transition: 'all 0.2s',
+                        boxShadow: isSelected ? '0 4px 6px -1px rgba(22, 163, 74, 0.2)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        position: 'relative'
+                      }}
+                    >
+                      {generatedImg ? (
+                        <div style={{ 
+                          width: '100px', 
+                          height: '80px', 
+                          backgroundImage: `url(${generatedImg})`,
+                          backgroundSize: 'contain',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat'
+                        }} />
+                      ) : (
+                        <div style={{ fontSize: '2.5rem', lineHeight: 1, height: '80px', display: 'flex', alignItems: 'center' }}>
+                          {fallbackIcon}
+                        </div>
+                      )}
+                      
+                      <span style={{ fontWeight: 600, color: '#1e293b', textAlign: 'center', fontSize: '0.85rem' }}>{t(s.state) || s.state}</span>
+                      
+                      {isSelected && (
+                        <div style={{ position: 'absolute', top: '6px', right: '6px', backgroundColor: '#16a34a', borderRadius: '50%', padding: '2px', display: 'flex' }}>
+                          <CheckCircle size={12} color="white" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: District & Land */}
+          {step === 5 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>5. {t('step_district')}</h2>
+              <div className="grid-2">
+                <div className="form-group-3d">
+                  <label className="form-label">{t('district')} *</label>
+                  <select 
+                    className="form-input-3d select-3d" 
+                    value={district} 
+                    onChange={(e) => setDistrict(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>{t('select_district')}</option>
+                    {availableDistricts.map(dist => (
+                      <option key={dist} value={dist}>{t(dist) || dist}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group-3d">
+                  <label className="form-label">{t('land_acres')}</label>
+                  <input 
+                    type="number" 
+                    step="0.5" 
+                    className="form-input-3d" 
+                    value={landArea} 
+                    onChange={(e) => setLandArea(e.target.value)} 
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 6: Soil Type */}
+          {step === 6 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>6. {t('soil_type')}</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '16px' }}>
+                {soilTypes.map(st => {
+                  const isSelected = soilType === st.name;
+                  const imgUrl = soilImages[st.name];
+                  return (
+                    <div
+                      key={st.id}
+                      onClick={() => setSoilType(st.name)}
+                      style={{
+                        position: 'relative',
+                        height: '120px',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        border: isSelected ? '2px solid #16a34a' : '1px solid #e2e8f0',
+                        boxShadow: isSelected ? '0 4px 6px -1px rgba(22, 163, 74, 0.3)' : 'none',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <img 
+                        src={imgUrl} 
+                        alt={t(st.name) || st.name} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = `${import.meta.env.BASE_URL}images/soils/red_loam.jpg`;
+                        }}
+                      />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }} />
+                      <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '0.9rem' }}>
+                        {t(st.name) || st.name}
+                      </div>
+                      {isSelected && (
+                        <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#16a34a', borderRadius: '50%', padding: '4px', display: 'flex' }}>
+                          <CheckCircle size={14} color="white" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 7: Crops */}
+          {step === 7 && (
+            <div className="animate-fade-in">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>7. {t('primary_crops')}</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '12px' }}>
+                {cropsList.map(crop => {
+                  const isSelected = selectedCrops.includes(crop);
+                  return (
+                    <div
+                      key={crop}
+                      onClick={() => toggleCrop(crop)}
+                      style={{
+                        position: 'relative',
+                        borderRadius: '14px',
+                        cursor: 'pointer',
+                        border: isSelected ? '2.5px solid #16a34a' : '1.5px solid #e2e8f0',
+                        backgroundColor: isSelected ? '#f0fdf4' : '#ffffff',
+                        boxShadow: isSelected ? '0 6px 16px -2px rgba(22, 163, 74, 0.28)' : '0 2px 6px rgba(0,0,0,0.04)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        height: '115px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '12px 8px',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.borderColor = '#86efac';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.borderColor = '#e2e8f0';
+                          e.currentTarget.style.transform = 'none';
+                        }
+                      }}
+                    >
+                      <div style={{
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '50%',
+                        backgroundColor: isSelected ? '#dcfce7' : '#f8fafc',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.2rem',
+                        transition: 'all 0.2s ease',
+                        boxShadow: isSelected ? '0 2px 8px rgba(22, 163, 74, 0.25)' : 'inset 0 1px 2px rgba(0,0,0,0.03)'
+                      }}>
+                        <span style={{ filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.08))' }}>
+                          {cropEmojis[crop] || '🌱'}
+                        </span>
+                      </div>
+                      
+                      <span style={{
+                        color: isSelected ? '#15803d' : '#0f172a',
+                        fontWeight: 700,
+                        fontSize: '0.92rem',
+                        textAlign: 'center',
+                        lineHeight: 1.2
+                      }}>
+                        {t(crop) || crop}
+                      </span>
+
+                      {isSelected && (
+                        <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#16a34a', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.15)' }}>
+                          <CheckCircle size={14} color="white" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+            {step > 1 && (
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                style={{ flex: 1, padding: '12px' }}
+                onClick={() => setStep(step - 1)}
+              >
+                {t('back')}
+              </button>
+            )}
+            <button 
+              type="submit" 
+              className="btn-3d-submit" 
+              style={{ flex: 2 }}
+            >
+              {step < 7 ? (
+                <>
+                  {t('next')} <ArrowRight size={18} style={{ marginLeft: '8px' }} />
+                </>
+              ) : (
+                t('create_profile')
+              )}
+            </button>
+          </div>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '0.85rem', color: '#64748b' }}>
-          Already registered?{' '}
-          <button 
-            type="button"
-            onClick={onSwitchToLogin}
-            style={{ background: 'none', border: 'none', color: '#16a34a', fontWeight: 700, cursor: 'pointer' }}
-          >
-            Login Here
-          </button>
-        </div>
+        {step === 1 && (
+          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.85rem', color: '#64748b' }}>
+            {t('already_registered')}{' '}
+            <button 
+              type="button"
+              onClick={onSwitchToLogin}
+              style={{ background: 'none', border: 'none', color: '#16a34a', fontWeight: 700, cursor: 'pointer' }}
+            >
+              {t('login_here')}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

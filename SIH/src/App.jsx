@@ -23,6 +23,8 @@ import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Reels } from './pages/Reels';
+import { SharedTransport } from './pages/SharedTransport';
+import { OfficerDashboard } from './pages/OfficerDashboard';
 
 
 // Styles
@@ -55,6 +57,8 @@ const MainAppContent = () => {
     switch (activePage) {
       case 'home':
         return <Home />;
+      case 'transport':
+        return <SharedTransport />;
       case 'crop-advisor':
         return <CropAdvisor />;
       case 'weather':
@@ -79,6 +83,8 @@ const MainAppContent = () => {
         return <FarmerProfile />;
       case 'settings':
         return <Settings />;
+      case 'officer-dashboard':
+        return <OfficerDashboard />;
       default:
         return <Home />;
     }

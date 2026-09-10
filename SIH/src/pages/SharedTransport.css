@@ -1,0 +1,332 @@
+/* Shared Transport & Vehicle Pooling Styles */
+
+.transport-container {
+  padding: 24px 0 60px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.transport-hero-card {
+  background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+  color: #ffffff;
+  padding: 28px 32px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px -5px rgba(21, 128, 61, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.transport-hero-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transport-hero-subtitle {
+  font-size: 0.95rem;
+  color: #bbf7d0;
+  max-width: 680px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Metrics Row */
+.transport-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.transport-metric-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.metric-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-number {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Navigation Tabs */
+.transport-tabs-bar {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.transport-tab-btn {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.transport-tab-btn:hover {
+  color: #16a34a;
+}
+
+.transport-tab-btn.active {
+  color: #16a34a;
+  border-bottom-color: #16a34a;
+  font-weight: 700;
+}
+
+/* Real-Time Radar / Pulse Searching View */
+.radar-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.radar-circle-outer {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #f0fdf4;
+  border: 2px dashed #86efac;
+  margin: 0 auto 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: radarRotate 6s linear infinite;
+}
+
+@keyframes radarRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.radar-pulse-center {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+  animation: pulseGlow 1.8s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6); }
+  70% { box-shadow: 0 0 0 24px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* Match Proposal Card */
+.match-proposal-card {
+  background: #ffffff;
+  border: 2px solid #22c55e;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 25px -3px rgba(34, 197, 94, 0.15);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.match-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.match-score-pill {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cost-split-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92rem;
+}
+
+.cost-split-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.cost-split-table td {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.saving-badge-highlight {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Visual Route Timeline */
+.route-timeline-container {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.route-step-row {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.route-step-row:last-child {
+  padding-bottom: 0;
+}
+
+.route-step-line {
+  position: absolute;
+  top: 32px;
+  left: 15px;
+  bottom: -4px;
+  width: 2px;
+  background: #cbd5e1;
+}
+
+.route-step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #16a34a;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.route-step-icon.active {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.route-step-content h5 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.route-step-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Vehicle Capacity Gauge */
+.capacity-gauge-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.gauge-track {
+  height: 12px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  overflow: hidden;
+  margin: 10px 0 6px 0;
+}
+
+.gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+/* Action Controls & Simulation Buttons */
+.simulation-bar {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}

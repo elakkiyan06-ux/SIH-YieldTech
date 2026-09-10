@@ -12,64 +12,53 @@ import {
 import { cropsList } from '../data/mockData';
 
 export const ProfitCalculator = () => {
-  const [crop, setCrop] = useState('Tomato');
-  const [landArea, setLandArea] = useState('2.0'); // Acres
+  const [crop, setCrop] = useState('');
+  const [landArea, setLandArea] = useState(''); 
   
   // Cost parameters (Per Acre base or total)
-  const [seedCost, setSeedCost] = useState(4500);
-  const [fertilizerCost, setFertilizerCost] = useState(9000);
-  const [labourCost, setLabourCost] = useState(14000);
-  const [irrigationCost, setIrrigationCost] = useState(3500);
-  const [otherExpenses, setOtherExpenses] = useState(3000);
+  const [seedCost, setSeedCost] = useState('');
+  const [fertilizerCost, setFertilizerCost] = useState('');
+  const [labourCost, setLabourCost] = useState('');
+  const [irrigationCost, setIrrigationCost] = useState('');
+  const [otherExpenses, setOtherExpenses] = useState('');
 
   // Output parameters
-  const [expectedYield, setExpectedYield] = useState(30); // Quintals or Tonnes per acre
-  const [sellingPrice, setSellingPrice] = useState(2800); // ₹ per unit
+  const [expectedYield, setExpectedYield] = useState(''); 
+  const [sellingPrice, setSellingPrice] = useState(''); 
 
-  // Preset loading for different crops
+  const [isCalculated, setIsCalculated] = useState(false);
+
   const handleCropChange = (selected) => {
     setCrop(selected);
-    if (selected === 'Groundnut') {
-      setSeedCost(5500);
-      setFertilizerCost(6000);
-      setLabourCost(10000);
-      setIrrigationCost(2500);
-      setOtherExpenses(2000);
-      setExpectedYield(22);
-      setSellingPrice(6500);
-    } else if (selected === 'Paddy') {
-      setSeedCost(2500);
-      setFertilizerCost(7000);
-      setLabourCost(11000);
-      setIrrigationCost(2000);
-      setOtherExpenses(1500);
-      setExpectedYield(26);
-      setSellingPrice(2300);
-    } else if (selected === 'Turmeric') {
-      setSeedCost(12000);
-      setFertilizerCost(14000);
-      setLabourCost(22000);
-      setIrrigationCost(4000);
-      setOtherExpenses(5000);
-      setExpectedYield(25);
-      setSellingPrice(14800);
-    } else {
-      // Tomato
-      setSeedCost(4500);
-      setFertilizerCost(9000);
-      setLabourCost(14000);
-      setIrrigationCost(3500);
-      setOtherExpenses(3000);
-      setExpectedYield(30);
-      setSellingPrice(2800);
-    }
+    setIsCalculated(false);
   };
 
-  const area = parseFloat(landArea) || 1;
-  const costPerAcre = seedCost + fertilizerCost + labourCost + irrigationCost + otherExpenses;
+  const handleReset = () => {
+    setCrop('');
+    setLandArea('');
+    setSeedCost('');
+    setFertilizerCost('');
+    setLabourCost('');
+    setIrrigationCost('');
+    setOtherExpenses('');
+    setExpectedYield('');
+    setSellingPrice('');
+    setIsCalculated(false);
+  };
+
+  const handleCalculate = (e) => {
+    e.preventDefault();
+    if (!crop || !landArea || seedCost === '' || fertilizerCost === '' || labourCost === '' || irrigationCost === '' || otherExpenses === '' || expectedYield === '' || sellingPrice === '') {
+      return;
+    }
+    setIsCalculated(true);
+  };
+
+  const area = parseFloat(landArea) || 0;
+  const costPerAcre = Number(seedCost) + Number(fertilizerCost) + Number(labourCost) + Number(irrigationCost) + Number(otherExpenses);
   const totalCost = costPerAcre * area;
-  const totalYield = expectedYield * area;
-  const expectedRevenue = totalYield * sellingPrice;
+  const totalYield = Number(expectedYield) * area;
+  const expectedRevenue = totalYield * Number(sellingPrice);
   const netProfit = expectedRevenue - totalCost;
   const roi = totalCost > 0 ? Math.round((netProfit / totalCost) * 100) : 0;
   const breakEvenPrice = totalYield > 0 ? Math.round(totalCost / totalYield) : 0;
@@ -93,20 +82,21 @@ export const ProfitCalculator = () => {
             <h2 className="card-section-title">Cost & Yield Variables</h2>
             <button 
               type="button" 
-              onClick={() => handleCropChange('Tomato')} 
+              onClick={handleReset} 
               className="btn btn-secondary btn-sm"
-              title="Reset to defaults"
+              title="Clear all fields"
             >
               <RotateCcw size={14} /> Reset
             </button>
           </div>
           <p className="card-section-subtitle">Values are automatically scaled by land area.</p>
 
-          <div style={{ marginTop: '16px' }}>
+          <form onSubmit={handleCalculate} style={{ marginTop: '16px' }}>
             <div className="grid-2">
               <div className="form-group">
                 <label className="form-label">Crop</label>
-                <select className="form-select" value={crop} onChange={(e) => handleCropChange(e.target.value)}>
+                <select className="form-select" value={crop} onChange={(e) => handleCropChange(e.target.value)} required>
+                  <option value="" disabled>Select Crop</option>
                   {cropsList.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -117,10 +107,12 @@ export const ProfitCalculator = () => {
                 <label className="form-label">Cultivated Area (Acres)</label>
                 <input 
                   type="number" 
-                  step="0.5" 
+                  step="0.1" 
+                  min="0"
                   className="form-input" 
                   value={landArea} 
                   onChange={(e) => setLandArea(e.target.value)} 
+                  required
                 />
               </div>
             </div>
@@ -133,40 +125,44 @@ export const ProfitCalculator = () => {
               <div className="form-group">
                 <label className="form-label">Seed / Seedling Cost (₹)</label>
                 <input 
-                  type="number" 
+                  type="number" min="0"
                   className="form-input" 
                   value={seedCost} 
-                  onChange={(e) => setSeedCost(Number(e.target.value))} 
+                  onChange={(e) => setSeedCost(e.target.value)} 
+                  required
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Fertilizer & Nutrition (₹)</label>
                 <input 
-                  type="number" 
+                  type="number" min="0"
                   className="form-input" 
                   value={fertilizerCost} 
-                  onChange={(e) => setFertilizerCost(Number(e.target.value))} 
+                  onChange={(e) => setFertilizerCost(e.target.value)} 
+                  required
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Labour & Spraying (₹)</label>
                 <input 
-                  type="number" 
+                  type="number" min="0"
                   className="form-input" 
                   value={labourCost} 
-                  onChange={(e) => setLabourCost(Number(e.target.value))} 
+                  onChange={(e) => setLabourCost(e.target.value)} 
+                  required
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Irrigation & Power (₹)</label>
                 <input 
-                  type="number" 
+                  type="number" min="0"
                   className="form-input" 
                   value={irrigationCost} 
-                  onChange={(e) => setIrrigationCost(Number(e.target.value))} 
+                  onChange={(e) => setIrrigationCost(e.target.value)} 
+                  required
                 />
               </div>
             </div>
@@ -174,10 +170,11 @@ export const ProfitCalculator = () => {
             <div className="form-group">
               <label className="form-label">Other Machinery & Transport Expenses (₹)</label>
               <input 
-                type="number" 
+                type="number" min="0"
                 className="form-input" 
                 value={otherExpenses} 
-                onChange={(e) => setOtherExpenses(Number(e.target.value))} 
+                onChange={(e) => setOtherExpenses(e.target.value)} 
+                required
               />
             </div>
 
@@ -189,29 +186,46 @@ export const ProfitCalculator = () => {
               <div className="form-group">
                 <label className="form-label">Expected Yield (Q/Acre)</label>
                 <input 
-                  type="number" 
+                  type="number" step="0.1" min="0"
                   className="form-input" 
                   value={expectedYield} 
-                  onChange={(e) => setExpectedYield(Number(e.target.value))} 
+                  onChange={(e) => setExpectedYield(e.target.value)} 
+                  required
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Expected Selling Price (₹/Q)</label>
                 <input 
-                  type="number" 
+                  type="number" min="0"
                   className="form-input" 
                   value={sellingPrice} 
-                  onChange={(e) => setSellingPrice(Number(e.target.value))} 
+                  onChange={(e) => setSellingPrice(e.target.value)} 
+                  required
                 />
               </div>
             </div>
-          </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '16px', padding: '12px' }}>
+              <TrendingUp size={18} /> Calculate Profit Margin
+            </button>
+          </form>
         </div>
 
         {/* Right Financial Results Card */}
         <div className="calc-results-column">
-          <div className="farm-card recommendation-card" style={{ borderTopColor: '#7c3aed' }}>
+          {!isCalculated ? (
+            <div className="farm-card" style={{ height: '100%', minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px', border: '2px dashed #cbd5e1', background: '#f8fafc' }}>
+              <div style={{ backgroundColor: '#e2e8f0', borderRadius: '50%', padding: '20px', marginBottom: '20px' }}>
+                <Calculator size={40} color="#64748b" />
+              </div>
+              <h3 style={{ fontSize: '1.2rem', color: '#475569', marginBottom: '10px' }}>Ready to Calculate</h3>
+              <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '320px', lineHeight: 1.5 }}>
+                Enter your own expected costs and yield parameters to generate a personalized financial feasibility report.
+              </p>
+            </div>
+          ) : (
+            <div className="farm-card recommendation-card" style={{ borderTopColor: '#7c3aed' }}>
             <span className="badge badge-green" style={{ fontSize: '0.8rem' }}>
               Financial Feasibility for {area} Acres of {crop}
             </span>
@@ -291,6 +305,7 @@ export const ProfitCalculator = () => {
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>

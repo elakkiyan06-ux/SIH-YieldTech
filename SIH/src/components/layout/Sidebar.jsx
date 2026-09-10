@@ -16,7 +16,8 @@ import {
   LogOut,
   ChevronRight,
   X,
-  Settings
+  Settings,
+  Truck
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { useAuth } from '../../context/AuthContext';
@@ -29,6 +30,7 @@ export const Sidebar = () => {
 
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
+    { id: 'transport', label: 'Shared Transport', icon: Truck },
     { id: 'weather', label: t('weather'), icon: CloudSun },
     { id: 'disease', label: t('disease_detection'), icon: Bug },
     { id: 'irrigation', label: t('irrigation'), icon: Droplet },

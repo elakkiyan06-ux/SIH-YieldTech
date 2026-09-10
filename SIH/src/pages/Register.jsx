@@ -14,15 +14,15 @@ const languages = [
   { id: 'ml', name: 'മലയാളം', icon: 'അ' }
 ];
 
-const cropImages = {
-  Paddy: 'https://images.unsplash.com/photo-1595861783060-f46399c23315?w=200&h=200&fit=crop&q=80',
-  Tomato: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=200&h=200&fit=crop&q=80',
-  Groundnut: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=200&h=200&fit=crop&q=80',
-  Sugarcane: 'https://images.unsplash.com/photo-1527842891421-42eec6e703ea?w=200&h=200&fit=crop&q=80',
-  Cotton: 'https://images.unsplash.com/photo-1600863920958-e4215444b0f9?w=200&h=200&fit=crop&q=80',
-  Banana: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=200&h=200&fit=crop&q=80',
-  Maize: 'https://images.unsplash.com/photo-1555562093-f4c0ce3b7a54?w=200&h=200&fit=crop&q=80',
-  Turmeric: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200&h=200&fit=crop&q=80'
+const cropEmojis = {
+  Paddy: '🌾',
+  Tomato: '🍅',
+  Groundnut: '🥜',
+  Sugarcane: '🎋',
+  Cotton: '☁️',
+  Banana: '🍌',
+  Maize: '🌽',
+  Turmeric: '🫚'
 };
 
 const stateGeneratedImages = {
@@ -82,11 +82,11 @@ const stateIcons = {
 const defaultStateIcon = '🗺️';
 
 const soilImages = {
-  'Red Loam': 'https://images.unsplash.com/photo-1518534063533-317112025350?w=200&h=200&fit=crop',
-  'Clayey Alluvial': 'https://images.unsplash.com/photo-1574895085449-74e5088c2271?w=200&h=200&fit=crop',
-  'Black Cotton Soil (Regur)': 'https://images.unsplash.com/photo-1580211155981-d249f3984d7f?w=200&h=200&fit=crop',
-  'Sandy Loam': 'https://images.unsplash.com/photo-1511690078903-71dc5a49f5e3?w=200&h=200&fit=crop',
-  'Laterite Soil': 'https://images.unsplash.com/photo-1463130456064-9273c660f7e4?w=200&h=200&fit=crop'
+  'Red Loam': `${import.meta.env.BASE_URL}images/soils/red_loam.jpg`,
+  'Clayey Alluvial': `${import.meta.env.BASE_URL}images/soils/clayey_alluvial.jpg`,
+  'Black Cotton Soil (Regur)': `${import.meta.env.BASE_URL}images/soils/black_cotton.jpg`,
+  'Sandy Loam': `${import.meta.env.BASE_URL}images/soils/sandy_loam.jpg`,
+  'Laterite Soil': `${import.meta.env.BASE_URL}images/soils/laterite_soil.jpg`
 };
 
 export const Register = ({ onSwitchToLogin }) => {
@@ -394,7 +394,15 @@ export const Register = ({ onSwitchToLogin }) => {
                         transition: 'all 0.2s'
                       }}
                     >
-                      <img src={imgUrl} alt={t(st.name) || st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img 
+                        src={imgUrl} 
+                        alt={t(st.name) || st.name} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = `${import.meta.env.BASE_URL}images/soils/red_loam.jpg`;
+                        }}
+                      />
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }} />
                       <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '0.9rem' }}>
                         {t(st.name) || st.name}
@@ -425,44 +433,62 @@ export const Register = ({ onSwitchToLogin }) => {
                       onClick={() => toggleCrop(crop)}
                       style={{
                         position: 'relative',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
+                        borderRadius: '14px',
                         cursor: 'pointer',
-                        border: isSelected ? '2px solid #16a34a' : '1px solid #e2e8f0',
-                        boxShadow: isSelected ? '0 4px 6px -1px rgba(22, 163, 74, 0.3)' : 'none',
-                        transition: 'all 0.2s',
-                        height: '110px'
+                        border: isSelected ? '2.5px solid #16a34a' : '1.5px solid #e2e8f0',
+                        backgroundColor: isSelected ? '#f0fdf4' : '#ffffff',
+                        boxShadow: isSelected ? '0 6px 16px -2px rgba(22, 163, 74, 0.28)' : '0 2px 6px rgba(0,0,0,0.04)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        height: '115px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '12px 8px',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.borderColor = '#86efac';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.borderColor = '#e2e8f0';
+                          e.currentTarget.style.transform = 'none';
+                        }
                       }}
                     >
-                      {cropImages[crop] ? (
-                        <img 
-                          src={cropImages[crop]} 
-                          alt={crop} 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                        />
-                      ) : (
-                        <div style={{ width: '100%', height: '100%', backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Wheat size={32} color="#94a3b8" />
-                        </div>
-                      )}
-                      
                       <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-                        padding: '16px 8px 8px 8px',
-                        color: 'white',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        textAlign: 'center'
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '50%',
+                        backgroundColor: isSelected ? '#dcfce7' : '#f8fafc',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.2rem',
+                        transition: 'all 0.2s ease',
+                        boxShadow: isSelected ? '0 2px 8px rgba(22, 163, 74, 0.25)' : 'inset 0 1px 2px rgba(0,0,0,0.03)'
+                      }}>
+                        <span style={{ filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.08))' }}>
+                          {cropEmojis[crop] || '🌱'}
+                        </span>
+                      </div>
+                      
+                      <span style={{
+                        color: isSelected ? '#15803d' : '#0f172a',
+                        fontWeight: 700,
+                        fontSize: '0.92rem',
+                        textAlign: 'center',
+                        lineHeight: 1.2
                       }}>
                         {t(crop) || crop}
-                      </div>
+                      </span>
 
                       {isSelected && (
-                        <div style={{ position: 'absolute', top: '6px', right: '6px', backgroundColor: '#16a34a', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#16a34a', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.15)' }}>
                           <CheckCircle size={14} color="white" />
                         </div>
                       )}

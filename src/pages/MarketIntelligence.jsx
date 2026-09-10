@@ -137,8 +137,17 @@ export const MarketIntelligence = () => {
       </div>
 
       {/* Mandi Commodities Grid */}
-      <div className="grid-3" style={{ gap: '20px' }}>
-        {filteredCommodities.map(item => {
+      {filteredCommodities.length === 0 ? (
+        <div className="farm-card" style={{ gridColumn: '1 / -1', padding: '60px 20px', textAlign: 'center', background: '#f8fafc', border: '2px dashed #cbd5e1' }}>
+          <h3 style={{ color: '#475569', fontSize: '1.25rem', marginBottom: '8px', fontWeight: '700' }}>No Mandi Price Details Available</h3>
+          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>We couldn't find any active APMC mandi price details for the selected crop and district combination.</p>
+          <button onClick={() => { setSearchTerm(''); setSelectedCrop('All'); setSelectedMandi('All'); }} className="btn btn-primary" style={{ marginTop: '16px' }}>
+            Clear Filters
+          </button>
+        </div>
+      ) : (
+        <div className="grid-3" style={{ gap: '20px' }}>
+          {filteredCommodities.map(item => {
           const isUp = item.trend === 'up';
           return (
             <div 
@@ -218,7 +227,8 @@ export const MarketIntelligence = () => {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Mandi Commodity Detailed Modal */}
       {activeTrendModal && (

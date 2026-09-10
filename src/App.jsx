@@ -19,11 +19,13 @@ import { GovernmentSchemes } from './pages/GovernmentSchemes';
 import { ExpertQA } from './pages/ExpertQA';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { FarmerProfile } from './pages/FarmerProfile';
-import { AdminDashboard } from './pages/AdminDashboard';
+import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Reels } from './pages/Reels';
+import { SharedTransport } from './pages/SharedTransport';
+import { OfficerDashboard } from './pages/OfficerDashboard';
 
-import { FarmingChatbot } from './components/chatbot/FarmingChatbot';
 
 // Styles
 import './index.css';
@@ -37,7 +39,7 @@ import './pages/auth.css';
 
 const MainAppContent = () => {
   const { isAuthenticated, isAdmin } = useAuth();
-  const { activePage } = useAppState();
+  const { activePage, isDrawerOpen, toggleDrawer } = useAppState();
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
 
   // If farmer is not logged in, display authentication view
@@ -51,13 +53,12 @@ const MainAppContent = () => {
 
   // Active page renderer
   const renderActivePage = () => {
-    if (isAdmin) {
-      return <AdminDashboard />;
-    }
 
     switch (activePage) {
       case 'home':
         return <Home />;
+      case 'transport':
+        return <SharedTransport />;
       case 'crop-advisor':
         return <CropAdvisor />;
       case 'weather':
@@ -70,6 +71,8 @@ const MainAppContent = () => {
         return <MarketIntelligence />;
       case 'profit':
         return <ProfitCalculator />;
+      case 'reels':
+        return <Reels />;
       case 'schemes':
         return <GovernmentSchemes />;
       case 'expert-qa':
@@ -78,8 +81,10 @@ const MainAppContent = () => {
         return <NotificationsPage />;
       case 'profile':
         return <FarmerProfile />;
-      case 'admin':
-        return <AdminDashboard />;
+      case 'settings':
+        return <Settings />;
+      case 'officer-dashboard':
+        return <OfficerDashboard />;
       default:
         return <Home />;
     }
@@ -87,13 +92,31 @@ const MainAppContent = () => {
 
   return (
     <div className="app-container">
-      {/* Left Navigation Sidebar */}
+      {/* Drawer Overlay */}
+      {isDrawerOpen && (
+        <div 
+          className="drawer-overlay"
+          onClick={toggleDrawer}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 900,
+            backdropFilter: 'blur(2px)'
+          }}
+        />
+      )}
+
+      {/* Left Navigation Sidebar (now acting as mobile drawer) */}
       <Sidebar />
 
       {/* Main Content Area */}
       <div className="main-wrapper">
         <Header />
-        <main className="page-content">
+        <main className={`page-content ${activePage === 'reels' ? 'reels-page-content' : ''}`}>
           {renderActivePage()}
         </main>
       </div>
@@ -101,18 +124,20 @@ const MainAppContent = () => {
       {/* Mobile Navigation Bottom Bar */}
       <MobileNav />
 
-      {/* AI Farming Chatbot Floating Widget */}
-      <FarmingChatbot />
     </div>
   );
 };
 
+import { LanguageProvider } from './context/LanguageContext';
+
 export default function App() {
   return (
-    <AuthProvider>
-      <AppStateProvider>
-        <MainAppContent />
-      </AppStateProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <AppStateProvider>
+          <MainAppContent />
+        </AppStateProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

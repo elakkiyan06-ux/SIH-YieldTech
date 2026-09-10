@@ -1,12 +1,13 @@
 import React from 'react';
-import { CloudSun, Bell, MapPin, Search } from 'lucide-react';
+import { CloudSun, Bell, MapPin, Search, Menu, Globe } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppStateContext';
-import { weatherData } from '../../data/mockData';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const Header = () => {
   const { user, isAdmin } = useAuth();
-  const { setActivePage, unreadNotificationsCount } = useAppState();
+  const { setActivePage, unreadNotificationsCount, toggleDrawer, weather } = useAppState();
+  const { currentLang, setCurrentLang } = useLanguage();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -17,24 +18,64 @@ export const Header = () => {
 
   return (
     <header className="top-header">
-      {/* Greeting & Location */}
-      <div className="header-greeting-block">
-        <div className="greeting-text">
-          {isAdmin ? (
-            <span>🛡️ Farmogram Admin Portal</span>
-          ) : (
-            <span>{getGreeting()}, Farmer {user.name.split(' ')[0]} 🌾</span>
-          )}
-        </div>
-        <div className="greeting-subtext">
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            <MapPin size={12} /> {user.village}, {user.district} District • Season: Kharif / Samba
-          </span>
+      {/* Hamburger Menu & Location */}
+      <div className="header-greeting-block" style={{ flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+        <button 
+          onClick={toggleDrawer}
+          className="hamburger-menu-btn"
+          title="Open Menu"
+          style={{ background: 'none', border: 'none', padding: '4px', cursor: 'pointer', color: 'var(--slate-700)' }}
+        >
+          <Menu size={24} />
+        </button>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="greeting-text" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Farmogram Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>Farmogram</span>
+          </div>
         </div>
       </div>
 
-      {/* Weather Chip & Notifications */}
+      {/* Weather Chip, Language Selector & Notifications */}
       <div className="header-actions">
+        {/* Global Language Selector */}
+        <div 
+          className="header-lang-picker"
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            background: '#ffffff', 
+            borderRadius: '9999px', 
+            padding: '5px 12px', 
+            border: '1.5px solid #86efac', 
+            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.12)' 
+          }}
+        >
+          <Globe size={16} color="#16a34a" />
+          <select 
+            value={currentLang} 
+            onChange={(e) => setCurrentLang(e.target.value)}
+            style={{ 
+              background: 'transparent', 
+              border: 'none', 
+              fontSize: '0.85rem', 
+              fontWeight: 700, 
+              color: '#0f172a', 
+              cursor: 'pointer', 
+              outline: 'none' 
+            }}
+            title="Switch Language / மொழி மாற்றுக"
+          >
+            <option value="en">English (EN)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="ml">മലയാളം (Malayalam)</option>
+          </select>
+        </div>
+
         {/* Quick Weather Snapshot */}
         <button 
           onClick={() => setActivePage('weather')} 
@@ -42,8 +83,8 @@ export const Header = () => {
           title="Click to view complete 7-day weather forecast"
         >
           <CloudSun size={18} color="#16a34a" />
-          <span>Coimbatore <strong>{weatherData.currentTemp}°C</strong></span>
-          <span style={{ opacity: 0.75 }}>• {weatherData.condition}</span>
+          <span>{weather.location.split(',')[0]} <strong>{weather.currentTemp}°C</strong></span>
+          <span style={{ opacity: 0.75 }}>• {weather.condition}</span>
         </button>
 
         {/* Notification Bell */}

@@ -5,7 +5,6 @@ import {
   Bug, 
   Droplet, 
   TrendingUp, 
-  Calculator, 
   AlertCircle, 
   PlusCircle, 
   Sparkles,
@@ -14,19 +13,39 @@ import {
   Play,
   CheckCircle2,
   Calendar,
-  Layers
+  Layers,
+  Phone,
+  Mail,
+  MapPin,
+  Award,
+  BadgeCheck,
+  Truck,
+  ShieldAlert
 } from 'lucide-react';
+import { SOSModal } from '../components/sos/SOSModal';
+
+const expertProfiles = [
+  { id: 1, name: 'Dr. S. Ramasamy', role: 'Agronomist, TNAU', expertise: 'Crop Management, Pest Control', phone: '+91 98765 43210', email: 'ramasamy.s@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
+  { id: 2, name: 'Dr. K. Meenakshi', role: 'Soil Scientist, TNAU', expertise: 'Soil Health, Fertilizers', phone: '+91 98765 43211', email: 'meenakshi.k@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop' },
+  { id: 3, name: 'Dr. P. Velmurugan', role: 'Plant Pathologist', expertise: 'Disease Diagnostics', phone: '+91 98765 43212', email: 'velmurugan.p@tnau.ac.in', location: 'Madurai, TN', avatar: 'https://images.unsplash.com/photo-1537368910025-702800faa86b?w=150&h=150&fit=crop' },
+  { id: 4, name: 'Dr. A. Anand', role: 'Entomologist', expertise: 'Pest Management', phone: '+91 98765 43213', email: 'anand.a@tnau.ac.in', location: 'Trichy, TN', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop' },
+  { id: 5, name: 'Dr. N. Karthikeyan', role: 'Horticulture Specialist', expertise: 'Fruits & Vegetables', phone: '+91 98765 43214', email: 'karthikeyan.n@tnau.ac.in', location: 'Ooty, TN', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop' },
+  { id: 6, name: 'Dr. R. Shalini', role: 'Irrigation Expert', expertise: 'Water Management', phone: '+91 98765 43215', email: 'shalini.r@tnau.ac.in', location: 'Thanjavur, TN', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop' },
+  { id: 7, name: 'Dr. V. Prakash', role: 'Agri-Economist', expertise: 'Market Trends, Pricing', phone: '+91 98765 43216', email: 'prakash.v@tnau.ac.in', location: 'Chennai, TN', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop' }
+];
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
-import { weatherData } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 import { PostCard } from '../components/feed/PostCard';
 import { ReelCard } from '../components/feed/ReelCard';
 import { CreatePostModal } from '../components/feed/CreatePostModal';
 import { CommentModal } from '../components/feed/CommentModal';
 import { Modal } from '../components/common/Modal';
+import { SoilTestCenters } from '../components/feed/SoilTestCenters';
 
 export const Home = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { 
     posts, 
     reels, 
@@ -34,85 +53,86 @@ export const Home = () => {
     addComment, 
     setActivePage,
     feedFilter,
-    setFeedFilter
+    setFeedFilter,
+    weather
   } = useAppState();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [activeCommentPost, setActiveCommentPost] = useState(null);
   const [activeReelModal, setActiveReelModal] = useState(null);
   const [reelCategoryFilter, setReelCategoryFilter] = useState('All');
+  const [isSOSOpen, setIsSOSOpen] = useState(false);
 
   // Quick Action Tiles Definition
   const quickActions = [
     { 
       id: 'crop-advisor', 
-      title: 'Crop Advisor', 
-      desc: 'AI Multi-factor agronomic advice', 
+      title: t('crop_advisor'), 
+      desc: t('crop_advisor_desc'), 
       icon: Sprout, 
       color: '#15803d', 
       bg: '#f0fdf4',
-      badge: 'High Precision'
+      badge: t('high_precision')
     },
     { 
       id: 'weather', 
-      title: 'Weather Advisory', 
-      desc: '7-day microclimate forecast', 
+      title: t('weather_advisory'), 
+      desc: t('weather_advisory_desc'), 
       icon: CloudSun, 
       color: '#0284c7', 
       bg: '#f0f9ff',
-      badge: 'Rain Alert'
+      badge: t('rain_alert')
     },
     { 
       id: 'disease', 
-      title: 'Disease Detection', 
-      desc: 'Scan leaf lesions for remedies', 
+      title: t('disease_detection'), 
+      desc: t('disease_desc'), 
       icon: Bug, 
       color: '#b45309', 
       bg: '#fffbeb',
-      badge: 'Instant AI'
+      badge: t('instant_ai')
     },
     { 
       id: 'irrigation', 
-      title: 'Irrigation', 
-      desc: 'Weather & stage-based schedule', 
+      title: t('irrigation'), 
+      desc: t('irrigation_desc'), 
       icon: Droplet, 
       color: '#0369a1', 
       bg: '#e0f2fe',
-      badge: 'Water Saving'
+      badge: t('water_saving')
     },
     { 
       id: 'market', 
-      title: 'Market Prices', 
-      desc: 'Live Mandi rates & trends', 
+      title: t('market_prices'), 
+      desc: t('market_prices_desc'), 
       icon: TrendingUp, 
       color: '#059669', 
       bg: '#ecfdf5',
-      badge: 'Tomato ↑ 8%'
+      badge: t('tomato_up')
     },
     { 
-      id: 'profit', 
-      title: 'Profit Calculator', 
-      desc: 'Calculate costs, yield & ROI', 
-      icon: Calculator, 
-      color: '#7c3aed', 
-      bg: '#f5f3ff',
-      badge: 'Financials'
+      id: 'transport', 
+      title: t('transport_pooling'), 
+      desc: t('transport_pooling_desc'), 
+      icon: Truck, 
+      color: '#16a34a', 
+      bg: '#dcfce7', 
+      badge: t('save_money')
     }
   ];
 
   // Feed filtering logic
   const filteredPosts = posts.filter(post => {
-    if (feedFilter === 'for-you') return true;
-    if (feedFilter === 'my-crops') {
-      return user.primaryCrops.some(c => 
-        post.crop.toLowerCase().includes(c.toLowerCase()) || 
-        (post.tags && post.tags.some(t => t.toLowerCase().includes(c.toLowerCase())))
-      );
+    const isNearby = post.author.location.toLowerCase().includes(user.district.toLowerCase()) ||
+                     post.author.location.toLowerCase().includes('coimbatore') ||
+                     post.author.location.toLowerCase().includes('erode');
+                     
+    if (feedFilter === 'for-you') {
+      // Exclude nearby posts so For You has completely different content
+      return !isNearby; 
     }
     if (feedFilter === 'nearby') {
-      return post.author.location.toLowerCase().includes(user.district.toLowerCase()) ||
-             post.author.location.toLowerCase().includes('coimbatore') ||
-             post.author.location.toLowerCase().includes('erode');
+      return isNearby;
     }
     if (feedFilter === 'experts') {
       return post.author.verified === true;
@@ -131,28 +151,25 @@ export const Home = () => {
       {/* 1. DASHBOARD HEADER & GREETING */}
       <section className="dashboard-hero-card">
         <div className="hero-content">
-          <div className="hero-badge-pill">
-            <Sparkles size={14} /> Smart India Hackathon 2026 Prototype
-          </div>
           <h1 className="hero-greeting">
-            Good Morning, Farmer {user.name.split(' ')[0]} 🌾
+            {t('good_morning')}, {user.name.split(' ')[0]} 🌾
           </h1>
           <p className="hero-summary">
-            Welcome to your unified agriculture community and decision-support hub. 
-            All insights are personalized for your <strong>{user.landArea} Acre</strong> farm in <strong>{user.village}, {user.district}</strong>.
+            {t('your_farm_dashboard')}. 
+            All insights are personalized for your <strong>{user.landArea} Acre</strong> farm in <strong>{user.district}</strong>.
           </p>
 
           <div className="hero-meta-chips">
             <div className="hero-chip">
-              <span className="chip-label">Location:</span>
-              <strong className="chip-value">{weatherData.location.split(',')[0]}</strong>
+              <span className="chip-label">{t('location')}</span>
+              <strong className="chip-value">{weather.location.split(',')[0]}</strong>
             </div>
             <div className="hero-chip">
-              <span className="chip-label">Temperature:</span>
-              <strong className="chip-value">{weatherData.currentTemp}°C ({weatherData.condition})</strong>
+              <span className="chip-label">{t('temperature')}</span>
+              <strong className="chip-value">{weather.currentTemp}°C ({weather.condition})</strong>
             </div>
             <div className="hero-chip">
-              <span className="chip-label">Primary Soil:</span>
+              <span className="chip-label">{t('primary_soil')}</span>
               <strong className="chip-value">{user.soilType}</strong>
             </div>
           </div>
@@ -162,7 +179,7 @@ export const Home = () => {
         <div className="hero-side-status">
           <div className="status-box">
             <div className="status-num">3</div>
-            <div className="status-txt">Active Crops in Season</div>
+            <div className="status-txt">{t('active_crops_in_season')}</div>
             <div className="status-tags">
               {user.primaryCrops.map(c => (
                 <span key={c} className="mini-crop-pill">{c}</span>
@@ -179,11 +196,11 @@ export const Home = () => {
         </div>
         <div className="alert-banner-text">
           <div className="alert-banner-title">
-            <span>Agricultural Advisory: {weatherData.advisoryAlert.title}</span>
-            <span className="alert-urgency-tag">High Priority</span>
+            <span>{t('agricultural_advisory')} {weather.advisoryAlert.title}</span>
+            <span className="alert-urgency-tag">{t('high_priority')}</span>
           </div>
           <p className="alert-banner-desc">
-            “{weatherData.advisoryAlert.message}”
+            “{weather.advisoryAlert.message}”
           </p>
         </div>
         <button 
@@ -191,15 +208,15 @@ export const Home = () => {
           className="btn btn-secondary btn-sm"
           style={{ alignSelf: 'center', borderColor: '#fed7aa', color: '#c2410c' }}
         >
-          View Weather Advisory <ArrowRight size={14} />
+          {t('view_weather_advisory')} <ArrowRight size={14} />
         </button>
       </section>
 
       {/* 3. QUICK ACTION CARDS */}
       <section className="quick-actions-section">
         <div className="section-title-row">
-          <h2 className="section-title">Decision Support Tools</h2>
-          <span className="section-subtitle">Pre-sowing to post-harvest intelligence</span>
+          <h2 className="section-title">{t('decision_support_tools')}</h2>
+          <span className="section-subtitle">{t('pre_sowing_intelligence')}</span>
         </div>
 
         <div className="grid-3 quick-actions-grid">
@@ -227,7 +244,7 @@ export const Home = () => {
                   <p className="action-card-desc">{action.desc}</p>
                 </div>
                 <div className="action-card-footer">
-                  <span className="action-link-text">Open Tool</span>
+                  <span className="action-link-text">{t('open_tool')}</span>
                   <ArrowRight size={16} />
                 </div>
               </div>
@@ -240,14 +257,14 @@ export const Home = () => {
       <section className="community-feed-section" style={{ marginTop: '36px' }}>
         <div className="section-title-row" style={{ marginBottom: '16px' }}>
           <div>
-            <h2 className="section-title">🌾 Farmogram Community & Knowledge Hub</h2>
-            <span className="section-subtitle">Real experiences, verified advice & agronomic practices from Indian farmers</span>
+            <h2 className="section-title">{t('community_hub_title')}</h2>
+            <span className="section-subtitle">{t('community_hub_subtitle')}</span>
           </div>
           <button 
             onClick={() => setIsCreateOpen(true)}
             className="btn btn-primary"
           >
-            <PlusCircle size={18} /> Share Your Experience
+            <PlusCircle size={18} /> {t('share_experience')}
           </button>
         </div>
 
@@ -261,28 +278,16 @@ export const Home = () => {
               🌟 For You
             </button>
             <button 
-              onClick={() => setFeedFilter('my-crops')}
-              className={`feed-tab-btn ${feedFilter === 'my-crops' ? 'active' : ''}`}
-            >
-              🌱 My Crops ({user.primaryCrops.join(', ')})
-            </button>
-            <button 
-              onClick={() => setFeedFilter('nearby')}
-              className={`feed-tab-btn ${feedFilter === 'nearby' ? 'active' : ''}`}
-            >
-              📍 Nearby ({user.district})
-            </button>
-            <button 
               onClick={() => setFeedFilter('experts')}
               className={`feed-tab-btn ${feedFilter === 'experts' ? 'active' : ''}`}
             >
               🎓 TNAU & Verified Experts
             </button>
             <button 
-              onClick={() => setFeedFilter('reels')}
-              className={`feed-tab-btn ${feedFilter === 'reels' ? 'active' : ''}`}
+              onClick={() => setFeedFilter('soil-tests')}
+              className={`feed-tab-btn ${feedFilter === 'soil-tests' ? 'active' : ''}`}
             >
-              🎬 Agri-Reels ({reels.length})
+              🧪 Soil Test Centers
             </button>
           </div>
         </div>
@@ -315,54 +320,42 @@ export const Home = () => {
                 ))}
               </div>
             </div>
+          ) : feedFilter === 'experts' ? (
+            /* Experts Profiles View */
+            <div className="experts-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+              {expertProfiles.map(expert => (
+                <div key={expert.id} className="farm-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                    <img src={expert.avatar} alt={expert.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #f0fdf4' }} />
+                    <div>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {expert.name} <BadgeCheck size={18} color="#16a34a" />
+                      </h3>
+                      <p style={{ fontSize: '0.9rem', color: '#16a34a', fontWeight: 600 }}>{expert.role}</p>
+                      <p style={{ fontSize: '0.85rem', color: '#64748b' }}>{expert.location}</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#475569', fontSize: '0.9rem' }}>
+                      <Award size={16} /> <strong>Expertise:</strong> {expert.expertise}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#475569', fontSize: '0.9rem' }}>
+                      <Phone size={16} /> {expert.phone}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', fontSize: '0.9rem' }}>
+                      <Mail size={16} /> {expert.email}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : feedFilter === 'soil-tests' ? (
+            /* Soil Test Centers View */
+            <SoilTestCenters userDistrict={user.district} userState={user.state} />
           ) : (
             /* Regular Feed Posts */
             <div className="feed-posts-column">
-              {/* Horizontal Short Reels Carousel Preview */}
-              <div className="feed-reels-strip-card farm-card" style={{ marginBottom: '20px', padding: '16px 20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b' }}>
-                    🎬 Short Video Agri-Tips & Guides
-                  </span>
-                  <button 
-                    onClick={() => setFeedFilter('reels')}
-                    className="btn btn-sm btn-outline"
-                  >
-                    View All Reels
-                  </button>
-                </div>
-                <div className="horizontal-reels-scroll" style={{ display: 'flex', gap: '14px', overflowX: 'auto', paddingBottom: '6px' }}>
-                  {reels.slice(0, 4).map(reel => (
-                    <div 
-                      key={reel.id}
-                      onClick={() => setActiveReelModal(reel)}
-                      style={{
-                        minWidth: '160px',
-                        maxWidth: '160px',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        aspectRatio: '9/14',
-                        cursor: 'pointer',
-                        boxShadow: 'var(--shadow-sm)'
-                      }}
-                    >
-                      <img src={reel.thumbnail} alt={reel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)' }} />
-                      <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: '0.65rem', padding: '2px 6px', borderRadius: '9999px' }}>
-                        {reel.duration}
-                      </div>
-                      <div style={{ position: 'absolute', bottom: '8px', left: '8px', right: '8px', color: '#fff' }}>
-                        <div style={{ fontSize: '0.68rem', color: '#86efac', fontWeight: 600 }}>{reel.crop}</div>
-                        <div style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.2, marginTop: '2px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                          {reel.title}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Feed Post List */}
               <div className="feed-posts-list" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {filteredPosts.length > 0 ? (
@@ -386,7 +379,91 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* 🚨 SOS / Wildlife Conflict & Farm Emergency Section */}
+      <section className="home-sos-section" style={{
+        marginTop: '36px',
+        marginBottom: '28px',
+        background: 'linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%)',
+        borderRadius: '18px',
+        padding: '28px 24px',
+        color: '#ffffff',
+        boxShadow: '0 12px 30px -8px rgba(185, 28, 28, 0.45)',
+        border: '1px solid rgba(248, 113, 113, 0.35)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '-40px',
+          right: '-40px',
+          width: '180px',
+          height: '180px',
+          background: 'rgba(239, 68, 68, 0.25)',
+          borderRadius: '50%',
+          filter: 'blur(40px)',
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '22px', position: 'relative', zIndex: 1 }}>
+          <div style={{ flex: '1 1 360px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 12px', background: 'rgba(255, 255, 255, 0.16)', backdropFilter: 'blur(4px)', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+              <span style={{ display: 'inline-block', width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #f87171' }} />
+              {t('sos_banner_badge')}
+            </div>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '0 0 8px 0', color: '#ffffff', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>🆘</span> {t('sos_banner_title')}
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.94rem', color: '#fecaca', lineHeight: 1.5, maxWidth: '640px' }}>
+              {t('sos_banner_desc')}
+            </p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐘 {t('sos_elephant_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐗 {t('sos_wild_boar_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐆 {t('sos_leopard_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐍 {t('sos_snake_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🔥 {t('sos_other_fire')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.22)', padding: '4px 10px', borderRadius: '6px', fontWeight: 600 }}>⚡ Sathyamangalam / Erode Forest RRT Connected</span>
+            </div>
+          </div>
+
+          <div style={{ flex: '0 0 auto' }}>
+            <button 
+              id="home-sos-launch-button"
+              onClick={() => setIsSOSOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                padding: '16px 32px',
+                background: '#ffffff',
+                color: '#b91c1c',
+                border: 'none',
+                borderRadius: '14px',
+                fontSize: '1.1rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 8px 26px rgba(0,0,0,0.32)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                letterSpacing: '-0.01em'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.42)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 26px rgba(0,0,0,0.32)'; }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>🚨</span>
+              <span>{t('sos_launch_report')}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Modals */}
+      <SOSModal 
+        isOpen={isSOSOpen} 
+        onClose={() => setIsSOSOpen(false)} 
+      />
+
       <CreatePostModal 
         isOpen={isCreateOpen} 
         onClose={() => setIsCreateOpen(false)} 

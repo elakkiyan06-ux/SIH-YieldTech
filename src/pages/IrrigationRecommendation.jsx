@@ -13,18 +13,17 @@ import {
 import { cropsList, soilTypes, irrigationScheduleMock } from '../data/mockData';
 
 export const IrrigationRecommendation = () => {
-  const [crop, setCrop] = useState('Tomato');
-  const [soilType, setSoilType] = useState('Red Loam');
-  const [growthStage, setGrowthStage] = useState('Flowering / Pegging');
-  const [weatherCondition, setWeatherCondition] = useState('Partly Cloudy (Rain expected tomorrow)');
-  const [waterSource, setWaterSource] = useState('Borewell with Inline Drip');
+  const [crop, setCrop] = useState('');
+  const [soilType, setSoilType] = useState('');
+  const [growthStage, setGrowthStage] = useState('');
+  const [weatherCondition, setWeatherCondition] = useState('');
+  const [waterSource, setWaterSource] = useState('');
 
-  const [schedule, setSchedule] = useState(
-    irrigationScheduleMock.getRecommendation('Tomato', 'Red Loam', 'Flowering / Pegging', 'Rain expected')
-  );
+  const [schedule, setSchedule] = useState(null);
 
   const handleCalculate = (e) => {
     e.preventDefault();
+    if (!crop || !soilType || !growthStage || !weatherCondition) return;
     const result = irrigationScheduleMock.getRecommendation(crop, soilType, growthStage, weatherCondition);
     setSchedule(result);
   };
@@ -51,7 +50,8 @@ export const IrrigationRecommendation = () => {
             {/* 1. Crop Selection */}
             <div className="form-group">
               <label className="form-label">Crop Cultivated</label>
-              <select className="form-select" value={crop} onChange={(e) => setCrop(e.target.value)}>
+              <select className="form-select" value={crop} onChange={(e) => setCrop(e.target.value)} required>
+                <option value="" disabled>Select Crop</option>
                 {cropsList.map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -61,7 +61,8 @@ export const IrrigationRecommendation = () => {
             {/* 2. Soil Type */}
             <div className="form-group">
               <label className="form-label">Soil Type</label>
-              <select className="form-select" value={soilType} onChange={(e) => setSoilType(e.target.value)}>
+              <select className="form-select" value={soilType} onChange={(e) => setSoilType(e.target.value)} required>
+                <option value="" disabled>Select Soil Type</option>
                 {soilTypes.map(st => (
                   <option key={st.id} value={st.name}>{st.name}</option>
                 ))}
@@ -71,19 +72,21 @@ export const IrrigationRecommendation = () => {
             {/* 3. Crop Growth Stage */}
             <div className="form-group">
               <label className="form-label">Crop Phenological Stage</label>
-              <select className="form-select" value={growthStage} onChange={(e) => setGrowthStage(e.target.value)}>
-                <option value="Germination / Nursery (0-15 DAS)">Germination / Nursery (0-15 DAS)</option>
-                <option value="Early Vegetative (16-35 DAS)">Early Vegetative (16-35 DAS)</option>
-                <option value="Flowering / Pegging (36-60 DAS)">Flowering / Pegging (36-60 DAS)</option>
-                <option value="Pod Development / Fruit Bulking (61-90 DAS)">Pod Development / Fruit Bulking (61-90 DAS)</option>
-                <option value="Maturity & Pre-Harvest (90+ DAS)">Maturity & Pre-Harvest (90+ DAS)</option>
+              <select className="form-select" value={growthStage} onChange={(e) => setGrowthStage(e.target.value)} required>
+                <option value="" disabled>Select Growth Stage</option>
+                <option value="Germination / Nursery (0-15 Days)">Germination / Nursery (0-15 Days)</option>
+                <option value="Early Vegetative (16-35 Days)">Early Vegetative (16-35 Days)</option>
+                <option value="Flowering / Pegging (36-60 Days)">Flowering / Pegging (36-60 Days)</option>
+                <option value="Pod Development / Fruit Bulking (61-90 Days)">Pod Development / Fruit Bulking (61-90 Days)</option>
+                <option value="Maturity & Pre-Harvest (90+ Days)">Maturity & Pre-Harvest (90+ Days)</option>
               </select>
             </div>
 
             {/* 4. Weather Context */}
             <div className="form-group">
               <label className="form-label">Short-Term Weather Outlook</label>
-              <select className="form-select" value={weatherCondition} onChange={(e) => setWeatherCondition(e.target.value)}>
+              <select className="form-select" value={weatherCondition} onChange={(e) => setWeatherCondition(e.target.value)} required>
+                <option value="" disabled>Select Weather Outlook</option>
                 <option value="Rain expected tomorrow (35mm)">Rain expected tomorrow (35-45mm)</option>
                 <option value="Dry & Sunny (No rain)">Dry & Sunny (No rain for 5 days)</option>
                 <option value="High Humidity & Mild Clouds">High Humidity & Mild Clouds</option>
@@ -93,7 +96,8 @@ export const IrrigationRecommendation = () => {
             {/* 5. Irrigation System */}
             <div className="form-group">
               <label className="form-label">Irrigation System</label>
-              <select className="form-select" value={waterSource} onChange={(e) => setWaterSource(e.target.value)}>
+              <select className="form-select" value={waterSource} onChange={(e) => setWaterSource(e.target.value)} required>
+                <option value="" disabled>Select Irrigation System</option>
                 <option value="Borewell with Inline Drip">Inline Drip Irrigation (2.4 LPH emitters)</option>
                 <option value="Micro-Sprinkler System">Micro-Sprinkler System</option>
                 <option value="Ridge & Furrow Surface Method">Ridge & Furrow Surface Method</option>
@@ -109,7 +113,18 @@ export const IrrigationRecommendation = () => {
 
         {/* Right Output Dashboard */}
         <div className="irrigation-result-column">
-          <div className="farm-card recommendation-card" style={{ borderTopColor: '#0284c7' }}>
+          {!schedule ? (
+            <div className="farm-card" style={{ height: '100%', minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px', border: '2px dashed #cbd5e1', background: '#f8fafc' }}>
+              <div style={{ backgroundColor: '#e2e8f0', borderRadius: '50%', padding: '20px', marginBottom: '20px' }}>
+                <Waves size={40} color="#64748b" />
+              </div>
+              <h3 style={{ fontSize: '1.2rem', color: '#475569', marginBottom: '10px' }}>Ready to Calculate</h3>
+              <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '320px', lineHeight: 1.5 }}>
+                Fill in your field parameters and click "Calculate" to generate a personalized 7-day irrigation schedule.
+              </p>
+            </div>
+          ) : (
+            <div className="farm-card recommendation-card" style={{ borderTopColor: '#0284c7' }}>
             {/* Top Stat Ribbon */}
             <div className="rec-header-row">
               <div>
@@ -173,8 +188,9 @@ export const IrrigationRecommendation = () => {
                   </div>
                 ))}
               </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

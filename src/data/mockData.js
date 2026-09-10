@@ -117,6 +117,11 @@ export const initialFeedPosts = [
     title: "Successful tomato cultivation using drip irrigation & plastic mulching",
     content: "Sharing our 4th harvest cycle of Shivam F1 tomato in Erode. By adopting 25-micron silver-black mulching film and inline drip fertigation (NPK 19:19:19), we reduced irrigation water use by 42% and weed growth was practically zero! Yield reached 28 tonnes per acre with excellent firmness for export.",
     image: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=800&auto=format&fit=crop&q=80",
+    images: [
+      { url: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=800&auto=format&fit=crop&q=80", caption: "Drip Vine Growth" },
+      { url: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=800&auto=format&fit=crop&q=80", caption: "Mulched Raised Bed" },
+      { url: "https://images.unsplash.com/photo-1546470427-227c7369a47d?w=800&auto=format&fit=crop&q=80", caption: "Firm Grade-A Harvest" }
+    ],
     likes: 142,
     isLiked: false,
     saves: 38,
@@ -143,6 +148,11 @@ export const initialFeedPosts = [
     title: "Groundnut Alert: Early Season Tikka Leaf Spot & Leaf Miner identification",
     content: "Field surveys across Coimbatore and Tirupur reveal initial circular necrotic spots surrounded by yellow chlorotic halos on lower foliage of 35-day groundnut crops. Do not delay action. Recommended control: Spray Mancozeb 75% WP @ 2g/liter or Neem Seed Kernel Extract (NSKE 5%) during morning hours before afternoon showers.",
     image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800&auto=format&fit=crop&q=80",
+    images: [
+      { url: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800&auto=format&fit=crop&q=80", caption: "Field Foliage Survey" },
+      { url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&auto=format&fit=crop&q=80", caption: "Lower Foliage Check" },
+      { url: "https://images.unsplash.com/photo-1567375698348-5d9d5ae99de0?w=800&auto=format&fit=crop&q=80", caption: "Healthy Groundnut Pods" }
+    ],
     likes: 289,
     isLiked: false,
     saves: 94,
@@ -168,7 +178,12 @@ export const initialFeedPosts = [
     timestamp: "Yesterday",
     title: "Samba Paddy SRI Technique: Achieving 40+ productive tillers per hill",
     content: "Transitioned 3 acres to Modified System of Rice Intensification (SRI) using CR 1009 Sub 1 variety. Transplanting 14-day single seedlings at 25x25 cm with cono-weeder passes at day 10, 20, and 30 aerated the soil tremendously. Panicle initiation is uniform and root mass is double compared to flood method.",
-    image: "https://images.unsplash.com/photo-1536657464919-892534f60d6e?w=800&auto=format&fit=crop&q=80",
+    image: `${import.meta.env.BASE_URL}images/posts/tn_paddy_field.jpg`,
+    images: [
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_paddy_field.jpg`, caption: "Thanjavur Delta Field" },
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_paddy_seedlings.jpg`, caption: "SRI Green Seedlings" },
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_paddy_panicles.jpg`, caption: "Golden Panicles" }
+    ],
     likes: 312,
     isLiked: false,
     saves: 110,
@@ -191,7 +206,12 @@ export const initialFeedPosts = [
     timestamp: "2 days ago",
     title: "Natural farming experience: Jeevamrutham application in Erode Local Turmeric",
     content: "Applied fermented Jeevamrutham through venturi injector every 15 days along with border crops of marigold and maize. Not a single chemical pesticide used this season. Rhizome development is thick with vibrant orange core. Zero chemical residue test report received!",
-    image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&auto=format&fit=crop&q=80",
+    image: `${import.meta.env.BASE_URL}images/posts/tn_turmeric_farm.jpg`,
+    images: [
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_turmeric_farm.jpg`, caption: "Erode Turmeric Farm" },
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_turmeric_rhizome.jpg`, caption: "Fresh Orange Rhizome" },
+      { url: `${import.meta.env.BASE_URL}images/posts/tn_turmeric_harvest.jpg`, caption: "Farmer Harvest Cluster" }
+    ],
     likes: 198,
     isLiked: false,
     saves: 65,

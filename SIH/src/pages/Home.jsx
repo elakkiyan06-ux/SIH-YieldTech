@@ -5,7 +5,6 @@ import {
   Bug, 
   Droplet, 
   TrendingUp, 
-  Calculator, 
   AlertCircle, 
   PlusCircle, 
   Sparkles,
@@ -19,8 +18,11 @@ import {
   Mail,
   MapPin,
   Award,
-  BadgeCheck
+  BadgeCheck,
+  Truck,
+  ShieldAlert
 } from 'lucide-react';
+import { SOSModal } from '../components/sos/SOSModal';
 
 const expertProfiles = [
   { id: 1, name: 'Dr. S. Ramasamy', role: 'Agronomist, TNAU', expertise: 'Crop Management, Pest Control', phone: '+91 98765 43210', email: 'ramasamy.s@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
@@ -59,12 +61,13 @@ export const Home = () => {
   const [activeCommentPost, setActiveCommentPost] = useState(null);
   const [activeReelModal, setActiveReelModal] = useState(null);
   const [reelCategoryFilter, setReelCategoryFilter] = useState('All');
+  const [isSOSOpen, setIsSOSOpen] = useState(false);
 
   // Quick Action Tiles Definition
   const quickActions = [
     { 
       id: 'crop-advisor', 
-      title: 'Crop Advisor', 
+      title: t('crop_advisor'), 
       desc: t('crop_advisor_desc'), 
       icon: Sprout, 
       color: '#15803d', 
@@ -108,13 +111,13 @@ export const Home = () => {
       badge: t('tomato_up')
     },
     { 
-      id: 'profit', 
-      title: t('profit_calculator'), 
-      desc: t('profit_desc'), 
-      icon: Calculator, 
-      color: '#7c3aed', 
-      bg: '#f5f3ff',
-      badge: t('financials')
+      id: 'transport', 
+      title: t('transport_pooling'), 
+      desc: t('transport_pooling_desc'), 
+      icon: Truck, 
+      color: '#16a34a', 
+      bg: '#dcfce7', 
+      badge: t('save_money')
     }
   ];
 
@@ -275,22 +278,10 @@ export const Home = () => {
               🌟 For You
             </button>
             <button 
-              onClick={() => setFeedFilter('nearby')}
-              className={`feed-tab-btn ${feedFilter === 'nearby' ? 'active' : ''}`}
-            >
-              📍 Nearby ({user.district})
-            </button>
-            <button 
               onClick={() => setFeedFilter('experts')}
               className={`feed-tab-btn ${feedFilter === 'experts' ? 'active' : ''}`}
             >
               🎓 TNAU & Verified Experts
-            </button>
-            <button 
-              onClick={() => setFeedFilter('reels')}
-              className={`feed-tab-btn ${feedFilter === 'reels' ? 'active' : ''}`}
-            >
-              🎬 Reels ({reels.length})
             </button>
             <button 
               onClick={() => setFeedFilter('soil-tests')}
@@ -365,51 +356,6 @@ export const Home = () => {
           ) : (
             /* Regular Feed Posts */
             <div className="feed-posts-column">
-              {/* Horizontal Short Reels Carousel Preview */}
-              <div className="feed-reels-strip-card farm-card" style={{ marginBottom: '20px', padding: '16px 20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b' }}>
-                    🎬 Short Video Agri-Tips & Guides
-                  </span>
-                  <button 
-                    onClick={() => setFeedFilter('reels')}
-                    className="btn btn-sm btn-outline"
-                  >
-                    View All Reels
-                  </button>
-                </div>
-                <div className="horizontal-reels-scroll" style={{ display: 'flex', gap: '14px', overflowX: 'auto', paddingBottom: '6px' }}>
-                  {reels.slice(0, 4).map(reel => (
-                    <div 
-                      key={reel.id}
-                      onClick={() => setActiveReelModal(reel)}
-                      style={{
-                        minWidth: '160px',
-                        maxWidth: '160px',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        aspectRatio: '9/14',
-                        cursor: 'pointer',
-                        boxShadow: 'var(--shadow-sm)'
-                      }}
-                    >
-                      <img src={reel.thumbnail} alt={reel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)' }} />
-                      <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: '0.65rem', padding: '2px 6px', borderRadius: '9999px' }}>
-                        {reel.duration}
-                      </div>
-                      <div style={{ position: 'absolute', bottom: '8px', left: '8px', right: '8px', color: '#fff' }}>
-                        <div style={{ fontSize: '0.68rem', color: '#86efac', fontWeight: 600 }}>{reel.crop}</div>
-                        <div style={{ fontSize: '0.74rem', fontWeight: 700, lineHeight: 1.2, marginTop: '2px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                          {reel.title}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Feed Post List */}
               <div className="feed-posts-list" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {filteredPosts.length > 0 ? (
@@ -433,7 +379,91 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* 🚨 SOS / Wildlife Conflict & Farm Emergency Section */}
+      <section className="home-sos-section" style={{
+        marginTop: '36px',
+        marginBottom: '28px',
+        background: 'linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%)',
+        borderRadius: '18px',
+        padding: '28px 24px',
+        color: '#ffffff',
+        boxShadow: '0 12px 30px -8px rgba(185, 28, 28, 0.45)',
+        border: '1px solid rgba(248, 113, 113, 0.35)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '-40px',
+          right: '-40px',
+          width: '180px',
+          height: '180px',
+          background: 'rgba(239, 68, 68, 0.25)',
+          borderRadius: '50%',
+          filter: 'blur(40px)',
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '22px', position: 'relative', zIndex: 1 }}>
+          <div style={{ flex: '1 1 360px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 12px', background: 'rgba(255, 255, 255, 0.16)', backdropFilter: 'blur(4px)', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+              <span style={{ display: 'inline-block', width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #f87171' }} />
+              {t('sos_banner_badge')}
+            </div>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '0 0 8px 0', color: '#ffffff', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>🆘</span> {t('sos_banner_title')}
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.94rem', color: '#fecaca', lineHeight: 1.5, maxWidth: '640px' }}>
+              {t('sos_banner_desc')}
+            </p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐘 {t('sos_elephant_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐗 {t('sos_wild_boar_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐆 {t('sos_leopard_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🐍 {t('sos_snake_name')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>🔥 {t('sos_other_fire')}</span>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.22)', padding: '4px 10px', borderRadius: '6px', fontWeight: 600 }}>⚡ Sathyamangalam / Erode Forest RRT Connected</span>
+            </div>
+          </div>
+
+          <div style={{ flex: '0 0 auto' }}>
+            <button 
+              id="home-sos-launch-button"
+              onClick={() => setIsSOSOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                padding: '16px 32px',
+                background: '#ffffff',
+                color: '#b91c1c',
+                border: 'none',
+                borderRadius: '14px',
+                fontSize: '1.1rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 8px 26px rgba(0,0,0,0.32)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                letterSpacing: '-0.01em'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.42)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 26px rgba(0,0,0,0.32)'; }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>🚨</span>
+              <span>{t('sos_launch_report')}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Modals */}
+      <SOSModal 
+        isOpen={isSOSOpen} 
+        onClose={() => setIsSOSOpen(false)} 
+      />
+
       <CreatePostModal 
         isOpen={isCreateOpen} 
         onClose={() => setIsCreateOpen(false)} 

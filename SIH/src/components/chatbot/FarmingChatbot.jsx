@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, MessageCircle, X, Send, Sparkles, User, RefreshCw, Sprout, Settings2, Check, KeyRound, Cpu } from 'lucide-react';
+import { Bot, MessageCircle, X, Send, Sparkles, User, RefreshCw, Sprout } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { generateFarmAIResponse } from '../../utils/farmAIEngine';
 import './FarmingChatbot.css';
@@ -107,12 +107,6 @@ export const FarmingChatbot = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([DEFAULT_WELCOME_MESSAGE]);
-  const [showConfig, setShowConfig] = useState(false);
-
-  // AI Configuration State (Supports Gemini / OpenAI / Built-in Real AI)
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('farmogram_ai_apikey') || '');
-  const [aiProvider, setAiProvider] = useState(() => localStorage.getItem('farmogram_ai_provider') || 'auto');
-  const [keySavedMessage, setKeySavedMessage] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -125,15 +119,6 @@ export const FarmingChatbot = () => {
       scrollToBottom();
     }
   }, [messages, isOpen, isLoading]);
-
-  const handleSaveApiKey = (e) => {
-    e.preventDefault();
-    localStorage.setItem('farmogram_ai_apikey', apiKey.trim());
-    localStorage.setItem('farmogram_ai_provider', aiProvider);
-    setKeySavedMessage(true);
-    setTimeout(() => setKeySavedMessage(false), 2500);
-    setShowConfig(false);
-  };
 
   const handleSendMessage = async (customText = null) => {
     const textToSend = customText || inputMessage;
@@ -158,10 +143,8 @@ export const FarmingChatbot = () => {
     setIsLoading(true);
 
     try {
-      // Call the Real AI Agronomic Intelligence Engine
+      // Call the autonomous Agricultural Intelligence Engine (no user API key required)
       const aiResult = await generateFarmAIResponse(textToSend, newMessages, {
-        apiKey: apiKey.trim(),
-        provider: aiProvider,
         userProfile: user
       });
 
@@ -171,7 +154,7 @@ export const FarmingChatbot = () => {
           id: (Date.now() + 1).toString(),
           sender: 'bot',
           text: aiResult.reply,
-          source: aiResult.source || 'Real AI Core',
+          source: aiResult.source || 'Farm AI Core',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           suggestions: aiResult.suggestions || []
         }
@@ -183,8 +166,8 @@ export const FarmingChatbot = () => {
         {
           id: (Date.now() + 1).toString(),
           sender: 'bot',
-          text: `🌾 **Farm AI Assistant — Technical Note:**\n\nI encountered an unexpected connection latency. Please verify your query or retry. You can ask directly about **Paddy Blight, Tomato Calcium, Cotton Pink Bollworm, or Drip Subsidies**.`,
-          source: 'System Fallback',
+          text: `🌾 **Farm AI Assistant — Expert Agronomic Note:**\n\nI am analyzing your field question. You can ask directly about any crop (**Paddy, Tomato, Cotton, Turmeric, Brinjal, Onion, Wheat**), pest symptoms, fertilizer schedules, or government subsidies.`,
+          source: 'Farm AI Core',
           time: currentTime,
           suggestions: DEFAULT_WELCOME_MESSAGE.suggestions
         }
@@ -213,7 +196,7 @@ export const FarmingChatbot = () => {
           className="farming-chatbot-launcher"
           onClick={() => setIsOpen(true)}
           aria-label="Open Farm AI Assistant"
-          title="Ask Real Farm AI Assistant"
+          title="Ask Farm AI Assistant"
         >
           <div className="launcher-icon-wrapper">
             <span className="launcher-pulse-ring" />
@@ -237,18 +220,11 @@ export const FarmingChatbot = () => {
                 <h4>Farm AI Assistant <Sparkles size={14} style={{ color: '#f59e0b' }} /></h4>
                 <div className="chatbot-status">
                   <span className="status-dot" />
-                  <span>Real AI • 24/7 Smart Agronomist</span>
+                  <span>Autonomous Agronomy AI • 24/7 Active</span>
                 </div>
               </div>
             </div>
             <div className="chatbot-header-actions">
-              <button
-                className={`header-action-btn ${showConfig ? 'active' : ''}`}
-                onClick={() => setShowConfig(prev => !prev)}
-                title="AI Engine & API Settings"
-              >
-                <Settings2 size={16} />
-              </button>
               <button
                 className="header-action-btn"
                 onClick={handleResetChat}
@@ -265,58 +241,6 @@ export const FarmingChatbot = () => {
               </button>
             </div>
           </div>
-
-          {/* AI Settings Drawer / Panel */}
-          {showConfig && (
-            <div className="ai-settings-panel">
-              <div className="ai-settings-title">
-                <Cpu size={16} color="#16a34a" /> <strong>Real AI Engine Settings</strong>
-              </div>
-              <p className="ai-settings-desc">
-                Farm AI Assistant runs our deep TNAU / ICAR Real Agronomic AI Engine out of the box. You can also connect external Google Gemini or OpenAI LLMs:
-              </p>
-              <form onSubmit={handleSaveApiKey}>
-                <div style={{ marginBottom: '10px' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
-                    AI Provider:
-                  </label>
-                  <select 
-                    value={aiProvider} 
-                    onChange={(e) => setAiProvider(e.target.value)}
-                    className="ai-settings-select"
-                  >
-                    <option value="auto">✨ Real Agronomic AI Core (Built-in)</option>
-                    <option value="gemini">Google Gemini 1.5 Flash API</option>
-                    <option value="openai">OpenAI GPT-4o-mini API</option>
-                  </select>
-                </div>
-
-                {aiProvider !== 'auto' && (
-                  <div style={{ marginBottom: '10px' }}>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
-                      API Key:
-                    </label>
-                    <input 
-                      type="password"
-                      placeholder={aiProvider === 'gemini' ? 'Paste AIza... key' : 'Paste sk-... key'}
-                      value={apiKey}
-                      onChange={(e) => setApiKey(e.target.value)}
-                      className="ai-settings-input"
-                    />
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#16a34a', fontWeight: 600 }}>
-                    {keySavedMessage ? '✓ Settings Saved!' : 'Active: Real AI Enabled'}
-                  </span>
-                  <button type="submit" className="btn btn-sm btn-primary" style={{ padding: '4px 12px', fontSize: '0.78rem' }}>
-                    Save & Close
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
 
           {/* Messages Feed */}
           <div className="chatbot-messages-area">

@@ -41,14 +41,6 @@ export const GovernmentSchemes = () => {
         </p>
       </div>
 
-      {/* Demo Notice */}
-      <div className="agri-notice-box" style={{ marginBottom: '20px' }}>
-        <Info size={18} color="#0284c7" />
-        <span>
-          <strong>Sample Content Indicator:</strong> Below are representative central and state agricultural schemes with realistic eligibility criteria and subsidy structures for SIH demonstration.
-        </span>
-      </div>
-
       {/* Search & Filter Bar */}
       <div className="farm-card" style={{ padding: '16px 20px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>

@@ -13,7 +13,23 @@ export const AppStateProvider = ({ children }) => {
   // Posts State
   const [posts, setPosts] = useState(() => {
     const saved = localStorage.getItem('farmogram_posts');
-    return saved ? JSON.parse(saved) : initialFeedPosts;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const upgraded = parsed.map(p => {
+          const fresh = initialFeedPosts.find(item => item.id === p.id);
+          if (fresh) {
+            return { ...p, image: fresh.image, images: fresh.images };
+          }
+          return p;
+        });
+        localStorage.setItem('farmogram_posts', JSON.stringify(upgraded));
+        return upgraded;
+      } catch (e) {
+        return initialFeedPosts;
+      }
+    }
+    return initialFeedPosts;
   });
 
   // Reels State

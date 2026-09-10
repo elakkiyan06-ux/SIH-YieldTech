@@ -15,7 +15,7 @@ export const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
 
   const sampleImages = [
     { label: 'Tomato Drip', url: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=800&auto=format&fit=crop&q=80' },
-    { label: 'Paddy SRI Field', url: 'https://images.unsplash.com/photo-1536657464919-892534f60d6e?w=800&auto=format&fit=crop&q=80' },
+    { label: 'Paddy SRI Field', url: 'https://images.unsplash.com/photo-1595861783060-f46399c23315?w=800&auto=format&fit=crop&q=80' },
     { label: 'Groundnut Crop', url: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800&auto=format&fit=crop&q=80' },
     { label: 'Organic Turmeric', url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&auto=format&fit=crop&q=80' },
     { label: 'Healthy Banana Plot', url: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=800&auto=format&fit=crop&q=80' }

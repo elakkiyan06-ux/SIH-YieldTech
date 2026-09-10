@@ -1,11 +1,13 @@
 import React from 'react';
-import { CloudSun, Bell, MapPin, Search, Menu } from 'lucide-react';
+import { CloudSun, Bell, MapPin, Search, Menu, Globe } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppStateContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const Header = () => {
   const { user, isAdmin } = useAuth();
   const { setActivePage, unreadNotificationsCount, toggleDrawer, weather } = useAppState();
+  const { currentLang, setCurrentLang } = useLanguage();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -34,8 +36,46 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Weather Chip & Notifications */}
+      {/* Weather Chip, Language Selector & Notifications */}
       <div className="header-actions">
+        {/* Global Language Selector */}
+        <div 
+          className="header-lang-picker"
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            background: '#ffffff', 
+            borderRadius: '9999px', 
+            padding: '5px 12px', 
+            border: '1.5px solid #86efac', 
+            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.12)' 
+          }}
+        >
+          <Globe size={16} color="#16a34a" />
+          <select 
+            value={currentLang} 
+            onChange={(e) => setCurrentLang(e.target.value)}
+            style={{ 
+              background: 'transparent', 
+              border: 'none', 
+              fontSize: '0.85rem', 
+              fontWeight: 700, 
+              color: '#0f172a', 
+              cursor: 'pointer', 
+              outline: 'none' 
+            }}
+            title="Switch Language / மொழி மாற்றுக"
+          >
+            <option value="en">English (EN)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="ml">മലയാളം (Malayalam)</option>
+          </select>
+        </div>
+
         {/* Quick Weather Snapshot */}
         <button 
           onClick={() => setActivePage('weather')} 
