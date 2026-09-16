@@ -273,6 +273,30 @@ class StorageFacilityService {
     return listings;
   }
 
+  getFacilities(params) {
+    return this.getListings(params);
+  }
+
+  getFacilityById(id) {
+    return this.getListingById(id);
+  }
+
+  createFacility(facilityData) {
+    return this.createListing(facilityData);
+  }
+
+  updateFacility(id, updatedData) {
+    return this.updateListing(id, updatedData);
+  }
+
+  deleteFacility(id) {
+    return this.deleteListing(id);
+  }
+
+  reportFacility(reportData) {
+    return this.reportListing(reportData);
+  }
+
   getListingById(id) {
     const list = this.getRawListings();
     return list.find(item => item.id === id) || null;
