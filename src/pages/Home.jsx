@@ -142,6 +142,24 @@ export const Home = () => {
       color: '#16a34a', 
       bg: '#dcfce7', 
       badge: t('save_money')
+    },
+    {
+      id: 'el-nino-advisor',
+      title: t('el_nino_advisor') || 'El Niño & Climate Advisor',
+      desc: 'Understand ocean-atmosphere climate patterns & farm preparedness',
+      icon: CloudSun,
+      color: '#0284c7',
+      bg: '#f0f9ff',
+      badge: 'Climate Intelligence'
+    },
+    {
+      id: 'crop-insurance-claim',
+      title: t('crop_claim_assistant') || 'Crop Claim Assistant',
+      desc: 'Prepare PMFBY claim evidence dossiers & 72-hr loss intimation',
+      icon: ShieldAlert,
+      color: '#c2410c',
+      bg: '#fff7ed',
+      badge: '72h Notice'
     }
   ];
 

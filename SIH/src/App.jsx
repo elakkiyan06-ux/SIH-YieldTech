@@ -32,6 +32,8 @@ import { ListEquipment } from './pages/ListEquipment';
 import { NearbyStorage } from './pages/NearbyStorage';
 import { ListStorage } from './pages/ListStorage';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { CropInsuranceClaim } from './pages/CropInsuranceClaim';
+import { ElNinoAdvisor } from './pages/ElNinoAdvisor';
 
 
 // Styles
@@ -42,6 +44,8 @@ import './pages/Home.css';
 import './pages/CropAdvisor.css';
 import './pages/WeatherPage.css';
 import './pages/DiseaseDetection.css';
+import './pages/CropInsuranceClaim.css';
+import './pages/ElNinoAdvisor.css';
 import './pages/auth.css';
 
 const MainAppContent = () => {
@@ -93,6 +97,10 @@ const MainAppContent = () => {
         return <Reels />;
       case 'schemes':
         return <GovernmentSchemes />;
+      case 'crop-insurance-claim':
+        return <CropInsuranceClaim />;
+      case 'el-nino-advisor':
+        return <ElNinoAdvisor />;
       case 'expert-qa':
         return <ExpertQA />;
       case 'notifications':

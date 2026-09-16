@@ -15,19 +15,22 @@ import {
   Sprout,
   Camera,
   Upload,
-  Trash2
+  Trash2,
+  ShieldAlert
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
 import { soilTypes, locations, cropsList } from '../data/mockData';
 import { PostCard } from '../components/feed/PostCard';
 import { Modal } from '../components/common/Modal';
+import { cropClaimService } from '../services/cropClaimService';
 
 export const FarmerProfile = () => {
   const { user, updateProfile } = useAuth();
-  const { posts, questions } = useAppState();
+  const { posts, questions, setActivePage } = useAppState();
 
   const [activeTab, setActiveTab] = useState('farm-info');
+  const myDossiers = cropClaimService.getDossiers();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -251,6 +254,12 @@ export const FarmerProfile = () => {
           >
             🌱 Sowing History
           </button>
+          <button 
+            onClick={() => setActiveTab('claim-dossiers')} 
+            className={`feed-tab-btn ${activeTab === 'claim-dossiers' ? 'active' : ''}`}
+          >
+            🛡️ Claim Dossiers ({myDossiers.length})
+          </button>
         </div>
       </div>
 
@@ -379,6 +388,56 @@ export const FarmerProfile = () => {
                 <span className="badge badge-green">Harvested (28 Tonnes)</span>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Tab 6: Claim Dossiers */}
+        {activeTab === 'claim-dossiers' && (
+          <div className="farm-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                  Recorded Crop Loss Incident Dossiers
+                </h3>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '2px' }}>
+                  Pre-survey evidence packets generated for PMFBY 72-hour reporting
+                </div>
+              </div>
+              <button 
+                onClick={() => setActivePage('crop-insurance-claim')} 
+                className="btn btn-primary btn-sm"
+              >
+                + Record New Incident
+              </button>
+            </div>
+
+            {myDossiers.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                No crop loss dossiers recorded yet.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {myDossiers.map(dossier => (
+                  <div key={dossier.id} style={{ background: '#f8fafc', padding: '16px 20px', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="badge badge-amber" style={{ fontSize: '0.68rem' }}>{dossier.referenceNumber}</span>
+                        <strong style={{ color: '#0f172a' }}>{dossier.cropName}</strong>
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>
+                        Cause: {dossier.damageCause} • Affected: {dossier.affectedArea} ({dossier.affectedPercentage}%) • {dossier.photos?.length || 0} Photos
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setActivePage('crop-insurance-claim')} 
+                      className="btn btn-outline btn-sm"
+                    >
+                      View & Print Dossier
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

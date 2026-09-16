@@ -37,6 +37,8 @@ export const Sidebar = () => {
     { id: 'nearby-storage', label: t('nearby_storage') || 'Nearby Storage & Cold Store', icon: Warehouse },
     { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },
     { id: 'weather', label: t('weather'), icon: CloudSun },
+    { id: 'el-nino-advisor', label: t('el_nino_advisor') || 'El Niño Preparedness', icon: CloudSun },
+    { id: 'crop-insurance-claim', label: t('crop_claim_assistant') || 'Crop Claim Assistant', icon: ShieldAlert },
     { id: 'disease', label: t('disease_detection'), icon: Bug },
     { id: 'irrigation', label: t('irrigation'), icon: Droplet },
     { id: 'expert-qa', label: t('expert_qa') || 'Expert Q&A', icon: HelpCircle },

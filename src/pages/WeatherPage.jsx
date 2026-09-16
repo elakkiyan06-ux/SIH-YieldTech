@@ -12,13 +12,14 @@ import {
   Calendar,
   CheckCircle2,
   Info,
-  MapPin
+  MapPin,
+  ArrowRight
 } from 'lucide-react';
 import { locations } from '../data/mockData';
 import { useAppState } from '../context/AppStateContext';
 
 export const WeatherPage = () => {
-  const { weather } = useAppState();
+  const { weather, setActivePage } = useAppState();
 
   // Dynamic advisories are now fetched from the global weather state
   const agroAdvisories = weather.agroAdvisories || [];
@@ -35,6 +36,43 @@ export const WeatherPage = () => {
             Hyperlocal microclimate forecasts and agrometeorological advisories tailored for field operations.
           </p>
         </div>
+      </div>
+
+      {/* El Niño & Climate Risk Banner */}
+      <div 
+        className="farm-card" 
+        style={{ 
+          padding: '16px 20px', 
+          marginBottom: '24px', 
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+          border: '1px solid #bae6fd',
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          flexWrap: 'wrap', 
+          gap: '14px' 
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#0284c7', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <CloudSun size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#0369a1' }}>
+              El Niño & Long-Range Climate Preparedness Advisor
+            </div>
+            <div style={{ fontSize: '0.82rem', color: '#0284c7', marginTop: '2px' }}>
+              Understand Pacific sea surface anomalies, monsoon facts vs myths, and drought-proofing mitigation steps.
+            </div>
+          </div>
+        </div>
+        <button 
+          onClick={() => setActivePage('el-nino-advisor')} 
+          className="btn btn-primary btn-sm"
+          style={{ background: '#0284c7', borderColor: '#0284c7', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+        >
+          Explore El Niño Advisor <ArrowRight size={14} />
+        </button>
       </div>
 
       {/* Hero Weather Card */}

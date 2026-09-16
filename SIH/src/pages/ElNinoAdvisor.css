@@ -1,0 +1,258 @@
+/* El Niño Impact & Farm Preparedness Advisor Styling */
+
+.elnino-page {
+  padding-bottom: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Bilingual Toggle Switch */
+.lang-toggle-bar {
+  display: inline-flex;
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.lang-toggle-btn {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lang-toggle-btn.active {
+  background: #ffffff;
+  color: #15803d;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Scientific Nuance Spotlight Banner */
+.nuance-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1px solid #bbf7d0;
+  border-left: 5px solid #16a34a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
+}
+
+.nuance-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.nuance-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #166534;
+  line-height: 1.3;
+}
+
+.nuance-body {
+  font-size: 0.9rem;
+  color: #14532d;
+  line-height: 1.6;
+}
+
+.nuance-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #86efac;
+}
+
+.nuance-stat-card {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.nuance-stat-num {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #15803d;
+}
+
+.nuance-stat-desc {
+  font-size: 0.78rem;
+  color: #166534;
+  margin-top: 2px;
+}
+
+/* 5 Pillars Grid */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.pillar-card {
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pillar-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.pillar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pillar-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pillar-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 6px;
+}
+
+.pillar-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.pillar-advice-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.pillar-advice-list li {
+  margin-bottom: 6px;
+}
+
+/* Dynamic Preparedness Tool */
+.advisor-tool-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.advisor-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Risk Meter */
+.risk-meter-container {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.risk-meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.risk-track {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.risk-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+/* Recommendations Box */
+.recommendations-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 18px 22px;
+}
+
+.recommendations-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  color: #14532d;
+  line-height: 1.6;
+}
+
+.recommendations-list li {
+  margin-bottom: 8px;
+}
+
+/* Forecast Status & Data Verification Hub */
+.forecast-hub-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.forecast-badges-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.source-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

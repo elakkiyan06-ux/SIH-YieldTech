@@ -13,8 +13,10 @@ import {
 } from 'lucide-react';
 import { governmentSchemes } from '../data/mockData';
 import { Modal } from '../components/common/Modal';
+import { useAppState } from '../context/AppStateContext';
 
 export const GovernmentSchemes = () => {
+  const { setActivePage } = useAppState();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalScheme, setActiveModalScheme] = useState(null);
@@ -118,23 +120,34 @@ export const GovernmentSchemes = () => {
             </div>
 
             {/* Card Footer Actions */}
-            <div style={{ display: 'flex', gap: '10px', marginTop: '18px', borderTop: '1px solid #f1f5f9', paddingTop: '14px' }}>
-              <button 
-                onClick={() => setActiveModalScheme(scheme)}
-                className="btn btn-outline btn-sm"
-                style={{ flex: 1 }}
-              >
-                <FileText size={14} /> View Details & Documents
-              </button>
-              <a 
-                href={scheme.officialLink} 
-                target="_blank" 
-                rel="noreferrer"
-                className="btn btn-primary btn-sm"
-                style={{ flex: 1 }}
-              >
-                Apply Online <ExternalLink size={14} />
-              </a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '18px', borderTop: '1px solid #f1f5f9', paddingTop: '14px' }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  onClick={() => setActiveModalScheme(scheme)}
+                  className="btn btn-outline btn-sm"
+                  style={{ flex: 1 }}
+                >
+                  <FileText size={14} /> View Details
+                </button>
+                <a 
+                  href={scheme.officialLink} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="btn btn-primary btn-sm"
+                  style={{ flex: 1 }}
+                >
+                  Apply Online <ExternalLink size={14} />
+                </a>
+              </div>
+              {(scheme.category === 'Insurance' || scheme.name.toLowerCase().includes('insurance')) && (
+                <button 
+                  onClick={() => setActivePage('crop-insurance-claim')}
+                  className="btn btn-sm"
+                  style={{ background: '#fff7ed', color: '#c2410c', borderColor: '#fed7aa', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontWeight: 700, width: '100%' }}
+                >
+                  <ShieldCheck size={15} /> Prepare Crop Damage Claim Dossier
+                </button>
+              )}
             </div>
           </div>
         ))}
