@@ -37,10 +37,10 @@ const LOCALIZED_QUESTIONS = {
     land_area: "What is the cultivable land area (in acres)?",
     has_soil_test: "Do you have a recent soil test report for this field?",
     soil_ph: "What is the exact soil pH from your report?",
-    welcome_title: "{qLang.welcome_title}",
-    welcome_desc: "{qLang.welcome_desc}",
-    start_btn: "{qLang.start_btn}",
-    select_option: "{qLang.select_option}",
+    welcome_title: "Welcome to Smart Crop Advisor",
+    welcome_desc: "We will ask a few targeted questions about your field and provide highly accurate crop recommendations based on real-time weather and soil data.",
+    start_btn: "Start Questionnaire",
+    select_option: "Select an option...",
     yes: "Yes",
     no: "No",
     processing: "Processing...",
@@ -471,6 +471,8 @@ const ScoreBar = ({ label, score, color, icon: Icon }) => (
 );
 
 export const CropAdvisor = () => {
+  const { currentLang, t } = useLanguage();
+  const qLang = LOCALIZED_QUESTIONS[currentLang] || LOCALIZED_QUESTIONS.en;
   const [collectedData, setCollectedData] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionHistory, setQuestionHistory] = useState([]);
@@ -579,7 +581,7 @@ export const CropAdvisor = () => {
                 <select className="form-select" value={answer} onChange={(e) => setAnswer(e.target.value)}>
                   <option value="">{qLang.select_option}</option>
                   {(currentQuestion.id === 'city' && collectedData.state 
-                    ? CITIES_BY_STATE[collectedData.state].map(c => ({label: c, value: c})) 
+                    ? (CITIES_BY_STATE[collectedData.state] || []).map(c => ({label: c, value: c})) 
                     : currentQuestion.options).map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
                   ))}

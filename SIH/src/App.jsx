@@ -7,6 +7,7 @@ import { AppStateProvider, useAppState } from './context/AppStateContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { MobileNav } from './components/layout/MobileNav';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 // Page Components
 import { Home } from './pages/Home';
@@ -43,7 +44,7 @@ import './pages/auth.css';
 
 const MainAppContent = () => {
   const { isAuthenticated, isAdmin } = useAuth();
-  const { activePage, isDrawerOpen, toggleDrawer } = useAppState();
+  const { activePage, setActivePage, isDrawerOpen, toggleDrawer } = useAppState();
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
 
   // If farmer is not logged in, display authentication view
@@ -130,7 +131,9 @@ const MainAppContent = () => {
       <div className="main-wrapper">
         <Header />
         <main className={`page-content ${activePage === 'reels' ? 'reels-page-content' : ''}`}>
-          {renderActivePage()}
+          <ErrorBoundary key={activePage} onGoHome={() => setActivePage('home')}>
+            {renderActivePage()}
+          </ErrorBoundary>
         </main>
       </div>
 

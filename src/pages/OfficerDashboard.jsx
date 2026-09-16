@@ -18,7 +18,8 @@ import {
   Radio, 
   ExternalLink,
   ChevronRight,
-  RefreshCw
+  RefreshCw,
+  Volume2
 } from 'lucide-react';
 import { sosEmergencyService, sosEvents, VERIFIED_AUTHORITIES } from '../services/sosEmergencyService';
 import './OfficerDashboard.css';
