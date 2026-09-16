@@ -33,7 +33,8 @@ import {
 import { 
   EQUIPMENT_CATEGORIES, 
   EQUIPMENT_PHOTO_PRESETS,
-  TN_LOCATION_COORDINATES 
+  TN_LOCATION_COORDINATES,
+  getEquipmentImageUrl 
 } from '../data/equipmentSeedData';
 import './ListEquipment.css';
 
@@ -573,7 +574,13 @@ export const ListEquipment = () => {
                     <div className="active-images-gallery">
                       {formData.images.map((imgUrl, idx) => (
                         <div key={idx} className="uploaded-image-preview-card">
-                          <img src={imgUrl} alt={`Selected ${idx + 1}`} />
+                          <img 
+                            src={getEquipmentImageUrl(imgUrl)} 
+                            alt={`Selected ${idx + 1}`} 
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800';
+                            }}
+                          />
                           {idx === 0 ? (
                             <span className="primary-photo-badge">Cover Photo</span>
                           ) : (
@@ -618,7 +625,13 @@ export const ListEquipment = () => {
                           className={`preset-thumb-card ${isSelected ? 'selected' : ''}`}
                           title={`Click to ${isSelected ? 'remove' : 'add'} ${preset.title}`}
                         >
-                          <img src={preset.url} alt={preset.title} />
+                          <img 
+                            src={getEquipmentImageUrl(preset.url)} 
+                            alt={preset.title} 
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800';
+                            }}
+                          />
                           <span>{preset.title}</span>
                           {isSelected && (
                             <span className="preset-check-badge">✓ Selected</span>
@@ -932,8 +945,11 @@ export const ListEquipment = () => {
                   <div key={item.id} className="my-listing-card farm-card">
                     <div className="my-listing-media">
                       <img 
-                        src={item.images && item.images[0] ? item.images[0] : 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800'} 
+                        src={getEquipmentImageUrl(item.images && item.images[0]) || 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800'} 
                         alt={item.title} 
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800';
+                        }}
                       />
                       <span className={`my-status-badge ${isAvail ? 'available' : 'busy'}`}>
                         {isAvail ? 'Available' : 'Busy'}

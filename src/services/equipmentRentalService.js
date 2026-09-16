@@ -12,7 +12,8 @@
 import { 
   INITIAL_EQUIPMENT_LISTINGS, 
   EQUIPMENT_CATEGORIES, 
-  TN_LOCATION_COORDINATES 
+  TN_LOCATION_COORDINATES,
+  getEquipmentImageUrl
 } from '../data/equipmentSeedData';
 
 class EquipmentEventBus {
@@ -110,6 +111,12 @@ class EquipmentRentalService {
                 category: seed.category, 
                 categoryLabel: seed.categoryLabel 
               };
+            }
+          } else if (Array.isArray(item.images)) {
+            const normalizedImages = item.images.map(img => (typeof img === 'string' && img.startsWith('/') ? getEquipmentImageUrl(img) : img));
+            if (JSON.stringify(normalizedImages) !== JSON.stringify(item.images)) {
+              modified = true;
+              return { ...item, images: normalizedImages };
             }
           }
           return item;

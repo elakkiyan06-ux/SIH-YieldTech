@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
-import { CATEGORY_DEFAULT_IMAGES } from '../../data/equipmentSeedData';
+import { CATEGORY_DEFAULT_IMAGES, getEquipmentImageUrl } from '../../data/equipmentSeedData';
 
 export const EquipmentCard = ({ 
   equipment, 
@@ -32,11 +32,21 @@ export const EquipmentCard = ({
 
   const categoryFallback = (CATEGORY_DEFAULT_IMAGES && CATEGORY_DEFAULT_IMAGES[equipment.category]) 
     ? CATEGORY_DEFAULT_IMAGES[equipment.category] 
-    : '/images/equipment/tractor_mahindra_rotavator.jpg';
+    : getEquipmentImageUrl('images/equipment/tractor_mahindra_rotavator.jpg');
 
-  const displayImage = !imgError && equipment.images && equipment.images.length > 0 && equipment.images[0]
+  const rawImage = !imgError && equipment.images && equipment.images.length > 0 && equipment.images[0]
     ? equipment.images[0] 
     : categoryFallback;
+
+  const displayImage = getEquipmentImageUrl(rawImage) || categoryFallback;
+
+  const handleImageError = (e) => {
+    if (!imgError) {
+      setImgError(true);
+    } else {
+      e.currentTarget.src = 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800';
+    }
+  };
 
   const isAvailable = equipment.status === 'AVAILABLE';
 
@@ -52,7 +62,7 @@ export const EquipmentCard = ({
         <img 
           src={displayImage} 
           alt={equipment.title} 
-          onError={() => setImgError(true)}
+          onError={handleImageError}
           className="equipment-img"
           loading="lazy"
         />

@@ -1,6 +1,29 @@
 // Agricultural Equipment Seed Data for Farmogram AI
 // Realistic machinery listings across Tamil Nadu agro-corridors
 
+export const getEquipmentImageUrl = (url) => {
+  if (!url || typeof url !== 'string') return '';
+  if (
+    url.startsWith('data:') || 
+    url.startsWith('blob:') || 
+    url.startsWith('http://') || 
+    url.startsWith('https://')
+  ) {
+    return url;
+  }
+  let clean = url.trim();
+  while (clean.startsWith('/') || clean.startsWith('./')) {
+    if (clean.startsWith('./')) {
+      clean = clean.slice(2);
+    } else if (clean.startsWith('/')) {
+      clean = clean.slice(1);
+    }
+  }
+  const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || './';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  return `${cleanBase}${clean}`;
+};
+
 export const EQUIPMENT_CATEGORIES = [
   { id: 'all', name: 'All Equipment', icon: 'Sparkles', count: 12 },
   { id: 'tractor', name: 'Tractors (35-65 HP)', icon: 'Tractor', count: 3 },
@@ -32,7 +55,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 45,
     year: 2022,
     images: [
-      '/images/equipment/tractor_mahindra_rotavator.jpg'
+      getEquipmentImageUrl('images/equipment/tractor_mahindra_rotavator.jpg')
     ],
     price: 850,
     priceUnit: 'hour', // 'hour' | 'acre' | 'day'
@@ -83,7 +106,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 55,
     year: 2023,
     images: [
-      '/images/equipment/johndeere_cultivator.jpg'
+      getEquipmentImageUrl('images/equipment/johndeere_cultivator.jpg')
     ],
     price: 1100,
     priceUnit: 'hour',
@@ -134,7 +157,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 76,
     year: 2024,
     images: [
-      '/images/equipment/jcb_3dx_backhoe.jpg'
+      getEquipmentImageUrl('images/equipment/jcb_3dx_backhoe.jpg')
     ],
     price: 1350,
     priceUnit: 'hour',
@@ -184,7 +207,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 68,
     year: 2023,
     images: [
-      '/images/equipment/combine_paddy_harvester.jpg'
+      getEquipmentImageUrl('images/equipment/combine_paddy_harvester.jpg')
     ],
     price: 2400,
     priceUnit: 'acre',
@@ -234,7 +257,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 52,
     year: 2023,
     images: [
-      '/images/equipment/rotavator_swaraj.jpg'
+      getEquipmentImageUrl('images/equipment/rotavator_swaraj.jpg')
     ],
     price: 950,
     priceUnit: 'hour',
@@ -284,7 +307,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 42,
     year: 2022,
     images: [
-      '/images/equipment/heavy_spring_cultivator.jpg'
+      getEquipmentImageUrl('images/equipment/heavy_spring_cultivator.jpg')
     ],
     price: 700,
     priceUnit: 'hour',
@@ -334,7 +357,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 45,
     year: 2024,
     images: [
-      '/images/equipment/seed_fertilizer_drill.jpg'
+      getEquipmentImageUrl('images/equipment/seed_fertilizer_drill.jpg')
     ],
     price: 1100,
     priceUnit: 'acre',
@@ -384,7 +407,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 50,
     year: 2023,
     images: [
-      '/images/equipment/water_tanker_agri.jpg'
+      getEquipmentImageUrl('images/equipment/water_tanker_agri.jpg')
     ],
     price: 1200,
     priceUnit: 'day',
@@ -434,7 +457,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 13,
     year: 2023,
     images: [
-      '/images/equipment/power_tiller_farm.jpg'
+      getEquipmentImageUrl('images/equipment/power_tiller_farm.jpg')
     ],
     price: 450,
     priceUnit: 'hour',
@@ -484,7 +507,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 0,
     year: 2024,
     images: [
-      '/images/equipment/agri_drone_sprayer.jpg'
+      getEquipmentImageUrl('images/equipment/agri_drone_sprayer.jpg')
     ],
     price: 450,
     priceUnit: 'acre',
@@ -534,7 +557,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 50,
     year: 2023,
     images: [
-      '/images/equipment/mouldboard_plough.jpg'
+      getEquipmentImageUrl('images/equipment/mouldboard_plough.jpg')
     ],
     price: 1050,
     priceUnit: 'hour',
@@ -584,7 +607,7 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
     horsepower: 49,
     year: 2024,
     images: [
-      '/images/equipment/mahindra_front_loader.jpg'
+      getEquipmentImageUrl('images/equipment/mahindra_front_loader.jpg')
     ],
     price: 1150,
     priceUnit: 'hour',
@@ -621,78 +644,78 @@ export const INITIAL_EQUIPMENT_LISTINGS = [
 ];
 
 export const CATEGORY_DEFAULT_IMAGES = {
-  tractor: '/images/equipment/tractor_mahindra_rotavator.jpg',
-  jcb: '/images/equipment/jcb_3dx_backhoe.jpg',
-  harvester: '/images/equipment/combine_paddy_harvester.jpg',
-  rotavator: '/images/equipment/rotavator_swaraj.jpg',
-  cultivator: '/images/equipment/heavy_spring_cultivator.jpg',
-  seed_drill: '/images/equipment/seed_fertilizer_drill.jpg',
-  water_tanker: '/images/equipment/water_tanker_agri.jpg',
-  power_tiller: '/images/equipment/power_tiller_farm.jpg',
-  drone: '/images/equipment/agri_drone_sprayer.jpg',
-  plough: '/images/equipment/mouldboard_plough.jpg'
+  tractor: getEquipmentImageUrl('images/equipment/tractor_mahindra_rotavator.jpg'),
+  jcb: getEquipmentImageUrl('images/equipment/jcb_3dx_backhoe.jpg'),
+  harvester: getEquipmentImageUrl('images/equipment/combine_paddy_harvester.jpg'),
+  rotavator: getEquipmentImageUrl('images/equipment/rotavator_swaraj.jpg'),
+  cultivator: getEquipmentImageUrl('images/equipment/heavy_spring_cultivator.jpg'),
+  seed_drill: getEquipmentImageUrl('images/equipment/seed_fertilizer_drill.jpg'),
+  water_tanker: getEquipmentImageUrl('images/equipment/water_tanker_agri.jpg'),
+  power_tiller: getEquipmentImageUrl('images/equipment/power_tiller_farm.jpg'),
+  drone: getEquipmentImageUrl('images/equipment/agri_drone_sprayer.jpg'),
+  plough: getEquipmentImageUrl('images/equipment/mouldboard_plough.jpg')
 };
 
 export const EQUIPMENT_PHOTO_PRESETS = [
   {
     category: 'tractor',
     title: 'Mahindra 575 DI with Rotavator',
-    url: '/images/equipment/tractor_mahindra_rotavator.jpg'
+    url: getEquipmentImageUrl('images/equipment/tractor_mahindra_rotavator.jpg')
   },
   {
     category: 'tractor',
     title: 'John Deere 5310 4WD Heavy Tractor',
-    url: '/images/equipment/johndeere_cultivator.jpg'
+    url: getEquipmentImageUrl('images/equipment/johndeere_cultivator.jpg')
   },
   {
     category: 'tractor',
     title: 'Mahindra 4WD with Front Loader Bucket',
-    url: '/images/equipment/mahindra_front_loader.jpg'
+    url: getEquipmentImageUrl('images/equipment/mahindra_front_loader.jpg')
   },
   {
     category: 'jcb',
     title: 'JCB 3DX Super Backhoe Loader',
-    url: '/images/equipment/jcb_3dx_backhoe.jpg'
+    url: getEquipmentImageUrl('images/equipment/jcb_3dx_backhoe.jpg')
   },
   {
     category: 'harvester',
     title: 'Combine Paddy Harvester in Field',
-    url: '/images/equipment/combine_paddy_harvester.jpg'
+    url: getEquipmentImageUrl('images/equipment/combine_paddy_harvester.jpg')
   },
   {
     category: 'rotavator',
     title: 'Swaraj Tractor + Shaktiman Rotavator',
-    url: '/images/equipment/rotavator_swaraj.jpg'
+    url: getEquipmentImageUrl('images/equipment/rotavator_swaraj.jpg')
   },
   {
     category: 'cultivator',
     title: 'National 9-Tyne Spring Cultivator',
-    url: '/images/equipment/heavy_spring_cultivator.jpg'
+    url: getEquipmentImageUrl('images/equipment/heavy_spring_cultivator.jpg')
   },
   {
     category: 'seed_drill',
     title: 'Precision Seed & Fertilizer Planter Drill',
-    url: '/images/equipment/seed_fertilizer_drill.jpg'
+    url: getEquipmentImageUrl('images/equipment/seed_fertilizer_drill.jpg')
   },
   {
     category: 'water_tanker',
     title: '10,000L Agri Water Tanker with Spray Pump',
-    url: '/images/equipment/water_tanker_agri.jpg'
+    url: getEquipmentImageUrl('images/equipment/water_tanker_agri.jpg')
   },
   {
     category: 'power_tiller',
     title: 'VST Shakti 130 DI Walk-Behind Power Tiller',
-    url: '/images/equipment/power_tiller_farm.jpg'
+    url: getEquipmentImageUrl('images/equipment/power_tiller_farm.jpg')
   },
   {
     category: 'drone',
     title: 'IoTechWorld Precision Agri Drone Sprayer',
-    url: '/images/equipment/agri_drone_sprayer.jpg'
+    url: getEquipmentImageUrl('images/equipment/agri_drone_sprayer.jpg')
   },
   {
     category: 'plough',
     title: 'Hydraulic Reversible Mouldboard Plough',
-    url: '/images/equipment/mouldboard_plough.jpg'
+    url: getEquipmentImageUrl('images/equipment/mouldboard_plough.jpg')
   }
 ];
 

@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { SOSModal } from '../components/sos/SOSModal';
 import { equipmentRentalService } from '../services/equipmentRentalService';
-import { CATEGORY_DEFAULT_IMAGES } from '../data/equipmentSeedData';
+import { CATEGORY_DEFAULT_IMAGES, getEquipmentImageUrl } from '../data/equipmentSeedData';
 
 const expertProfiles = [
   { id: 1, name: 'Dr. S. Ramasamy', role: 'Agronomist, TNAU', expertise: 'Crop Management, Pest Control', phone: '+91 98765 43210', email: 'ramasamy.s@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
@@ -312,8 +312,11 @@ export const Home = () => {
             >
               <div style={{ position: 'relative', height: '140px', borderRadius: '10px', overflow: 'hidden', background: '#f1f5f9' }}>
                 <img 
-                  src={(item.images && item.images[0]) || CATEGORY_DEFAULT_IMAGES[item.category] || 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800'} 
+                  src={getEquipmentImageUrl((item.images && item.images[0]) || CATEGORY_DEFAULT_IMAGES[item.category]) || 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800'} 
                   alt={item.title} 
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800';
+                  }}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
                 <span style={{ 
