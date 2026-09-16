@@ -22,11 +22,14 @@ import {
   Truck,
   ShieldAlert,
   Tractor,
-  Wrench
+  Wrench,
+  Warehouse
 } from 'lucide-react';
 import { SOSModal } from '../components/sos/SOSModal';
 import { equipmentRentalService } from '../services/equipmentRentalService';
 import { CATEGORY_DEFAULT_IMAGES, getEquipmentImageUrl } from '../data/equipmentSeedData';
+import { storageService } from '../services/storageService';
+import { getStorageImageUrl } from '../data/storageSeedData';
 
 const expertProfiles = [
   { id: 1, name: 'Dr. S. Ramasamy', role: 'Agronomist, TNAU', expertise: 'Crop Management, Pest Control', phone: '+91 98765 43210', email: 'ramasamy.s@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
@@ -123,6 +126,15 @@ export const Home = () => {
       bg: '#f0fdf4'
     },
     { 
+      id: 'nearby-storage', 
+      title: t('nearby_storage') || 'Storage & Cold Storage', 
+      desc: 'Find godowns, cold storage & packhouses near your farm', 
+      icon: Warehouse, 
+      color: '#0f766e', 
+      bg: '#f0fdfa',
+      badge: 'Zero Spoilage'
+    },
+    { 
       id: 'transport', 
       title: t('transport_pooling'), 
       desc: t('transport_pooling_desc'), 
@@ -136,6 +148,11 @@ export const Home = () => {
   // Top nearby agricultural equipment preview for dashboard widget
   const [nearbyMachines] = useState(() => {
     return equipmentRentalService.getListings({ radiusKm: 40 }).slice(0, 3);
+  });
+
+  // Top nearby storage facilities preview for dashboard widget
+  const [nearbyStoragePreview] = useState(() => {
+    return storageService.getFacilities({ radiusKm: 50 }).slice(0, 3);
   });
 
   // Feed filtering logic
@@ -371,6 +388,111 @@ export const Home = () => {
                 </span>
                 <span style={{ fontSize: '0.82rem', color: '#2563eb', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                   View & Rent <ArrowRight size={14} />
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3B. NEARBY AGRICULTURAL STORAGE & COLD STORAGE SECTION */}
+      <section className="marketplace-section" style={{ marginTop: '28px' }}>
+        <div className="section-title-row" style={{ marginBottom: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="badge badge-emerald">Post-Harvest Storage</span>
+              <h2 className="section-title" style={{ margin: 0 }}>
+                {t('nearby_storage') || 'Nearby Cold Storage, Godowns & Warehouses'}
+              </h2>
+            </div>
+            <span className="section-subtitle">
+              Verified cold storage and warehouse space with transparent tariffs near {user?.village || 'Perundurai'}, {user?.district || 'Erode'}
+            </span>
+          </div>
+          <button 
+            onClick={() => setActivePage('nearby-storage')}
+            className="btn btn-outline"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 700 }}
+          >
+            <span>Explore All Storage</span>
+            <ArrowRight size={15} />
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+          {nearbyStoragePreview.map(fac => (
+            <div 
+              key={fac.id} 
+              className="farm-card" 
+              style={{ 
+                padding: '16px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '12px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                position: 'relative'
+              }}
+              onClick={() => setActivePage('nearby-storage')}
+            >
+              <div style={{ position: 'relative', height: '140px', borderRadius: '10px', overflow: 'hidden', background: '#f1f5f9' }}>
+                <img 
+                  src={getStorageImageUrl(fac.images?.[0] || 'images/storage/cold_storage_facility.jpg')} 
+                  alt={fac.facilityName} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <span style={{ 
+                  position: 'absolute', 
+                  bottom: '8px', 
+                  right: '8px', 
+                  background: 'rgba(255,255,255,0.95)', 
+                  color: '#0d9488', 
+                  fontSize: '0.75rem', 
+                  fontWeight: 800, 
+                  padding: '2px 8px', 
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+                }}>
+                  📍 {fac.distanceKm} km away
+                </span>
+                <span style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '8px',
+                  background: fac.storageType === 'cold_storage' ? 'rgba(2, 132, 199, 0.92)' : 'rgba(21, 128, 61, 0.92)',
+                  color: '#ffffff',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  {fac.storageTypeLabel}
+                </span>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <strong style={{ color: '#0f766e', fontSize: '1.2rem' }}>
+                    ₹{fac.price} <span style={{ fontSize: '0.78rem', color: '#64748b' }}>/ MT / day</span>
+                  </strong>
+                  <span style={{ fontSize: '0.75rem', color: '#15803d', fontWeight: 700 }}>
+                    {fac.availableCapacity} MT Available
+                  </span>
+                </div>
+                <h4 style={{ margin: '4px 0 2px 0', fontSize: '0.98rem', color: '#0f172a', lineHeight: 1.3 }}>
+                  {fac.facilityName}
+                </h4>
+                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                  Location: <strong>{fac.location?.village}, {fac.location?.district}</strong>
+                </span>
+              </div>
+
+              <div style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.75rem', color: '#0f766e', fontWeight: 600 }}>
+                  🌾 {fac.supportedCrops?.slice(0, 2).join(', ')}
+                </span>
+                <span style={{ fontSize: '0.82rem', color: '#0d9488', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  View & Calculate <ArrowRight size={14} />
                 </span>
               </div>
             </div>

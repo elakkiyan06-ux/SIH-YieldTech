@@ -19,7 +19,8 @@ import {
   Settings,
   Truck,
   Tractor,
-  Wrench
+  Wrench,
+  Warehouse
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { useAuth } from '../../context/AuthContext';
@@ -33,6 +34,7 @@ export const Sidebar = () => {
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
     { id: 'equipment', label: t('nearby_equipment') || 'Nearby Equipment', icon: Tractor },
+    { id: 'nearby-storage', label: t('nearby_storage') || 'Nearby Storage & Cold Store', icon: Warehouse },
     { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },
     { id: 'weather', label: t('weather'), icon: CloudSun },
     { id: 'disease', label: t('disease_detection'), icon: Bug },
@@ -116,6 +118,19 @@ export const Sidebar = () => {
             <Wrench size={20} />
           </span>
           <span className="nav-item-label">{t('list_equipment') || 'List Your Equipment'}</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActivePage('list-storage');
+            toggleDrawer();
+          }}
+          className={`sidebar-nav-item ${activePage === 'list-storage' ? 'active' : ''}`}
+        >
+          <span className="nav-item-icon-wrapper">
+            <Warehouse size={20} />
+          </span>
+          <span className="nav-item-label">{t('list_storage') || 'List Storage Facility'}</span>
         </button>
 
         <button

@@ -29,6 +29,8 @@ import { SharedTransport } from './pages/SharedTransport';
 import { OfficerDashboard } from './pages/OfficerDashboard';
 import { NearbyEquipment } from './pages/NearbyEquipment';
 import { ListEquipment } from './pages/ListEquipment';
+import { NearbyStorage } from './pages/NearbyStorage';
+import { ListStorage } from './pages/ListStorage';
 import { AdminDashboard } from './pages/AdminDashboard';
 
 
@@ -69,6 +71,10 @@ const MainAppContent = () => {
         return <NearbyEquipment />;
       case 'list-equipment':
         return <ListEquipment />;
+      case 'nearby-storage':
+        return <NearbyStorage />;
+      case 'list-storage':
+        return <ListStorage />;
       case 'transport':
         return <SharedTransport />;
       case 'crop-advisor':

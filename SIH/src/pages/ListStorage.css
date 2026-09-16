@@ -1,0 +1,339 @@
+/* List Storage Facility Page Styles */
+
+.list-storage-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.list-storage-hero-banner {
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 60%, #14b8a6 100%);
+  border-radius: 16px;
+  padding: 30px 36px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.35);
+}
+
+.list-storage-hero-title {
+  margin: 0 0 8px 0;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #ffffff !important;
+}
+
+.list-storage-hero-subtitle {
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.94;
+  line-height: 1.5;
+  color: #ccfbf1;
+  max-width: 620px;
+}
+
+/* Owner Tabs Bar */
+.storage-owner-tabs-bar {
+  display: flex;
+  gap: 12px;
+  background: #ffffff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+}
+
+.storage-owner-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.storage-owner-tab-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.storage-owner-tab-btn.active {
+  background: #0d9488;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+}
+
+/* Form Container */
+.storage-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 36px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.storage-owner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.storage-form-section {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.storage-form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.storage-form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.storage-form-section-sub {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.storage-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.storage-form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.storage-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.storage-input-field label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.storage-input-field input,
+.storage-input-field select,
+.storage-input-field textarea {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.storage-input-field input:focus,
+.storage-input-field select:focus,
+.storage-input-field textarea:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+}
+
+/* Crop Selection Checklist */
+.storage-crops-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.storage-crop-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.storage-crop-checkbox-label:hover {
+  background: #f1f5f9;
+}
+
+.storage-crop-checkbox-label.selected {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+}
+
+/* Amenities Checklist */
+.storage-amenities-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.storage-amenity-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.storage-amenity-checkbox-label:hover {
+  background: #f1f5f9;
+}
+
+.storage-amenity-checkbox-label.selected {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+}
+
+/* Image Selection Gallery */
+.storage-images-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.storage-image-choice {
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.storage-image-choice:hover {
+  border-color: #94a3b8;
+}
+
+.storage-image-choice.selected {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.25);
+}
+
+.storage-image-choice img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+.storage-image-choice-label {
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  background: #f8fafc;
+}
+
+/* Facilities Management List */
+.storage-management-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.storage-management-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.storage-management-thumb {
+  width: 90px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.storage-management-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Enquiries Feed Table */
+.storage-enquiries-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.storage-enquiry-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .storage-form-card {
+    padding: 20px 16px;
+  }
+  .storage-form-grid-2,
+  .storage-form-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

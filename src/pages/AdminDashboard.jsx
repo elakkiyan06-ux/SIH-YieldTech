@@ -17,10 +17,12 @@ import {
   MapPin,
   Search,
   Check,
-  Ban
+  Ban,
+  Warehouse
 } from 'lucide-react';
 import { adminMetrics } from '../data/mockData';
 import { equipmentRentalService, equipmentEvents } from '../services/equipmentRentalService';
+import { storageService, StorageEventBus } from '../services/storageService';
 
 export const AdminDashboard = () => {
   const [reports, setReports] = useState(adminMetrics.reportsList);
@@ -32,6 +34,23 @@ export const AdminDashboard = () => {
   const [equipmentReports, setEquipmentReports] = useState(() => equipmentRentalService.getReports());
   const [equipmentStats, setEquipmentStats] = useState(() => equipmentRentalService.getAdminStats());
   const [equipmentSearch, setEquipmentSearch] = useState('');
+
+  // Storage Facilities State
+  const [storageFleet, setStorageFleet] = useState(() => storageService.getFacilities({ radiusKm: 'all' }));
+  const [storageReports, setStorageReports] = useState(() => storageService.getReports());
+  const [storageSearch, setStorageSearch] = useState('');
+
+  const refreshStorageData = () => {
+    setStorageFleet(storageService.getFacilities({ radiusKm: 'all' }));
+    setStorageReports(storageService.getReports());
+  };
+
+  useEffect(() => {
+    const unsub = StorageEventBus.subscribe('*', () => {
+      refreshStorageData();
+    });
+    return unsub;
+  }, []);
 
   const refreshEquipmentData = () => {
     setEquipmentFleet(equipmentRentalService.getAllRawListings());
@@ -172,6 +191,12 @@ export const AdminDashboard = () => {
             className={`feed-tab-btn ${activeTab === 'equipment' ? 'active' : ''}`}
           >
             🚜 Equipment Rental Moderation ({pendingEqReports.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab('storage')} 
+            className={`feed-tab-btn ${activeTab === 'storage' ? 'active' : ''}`}
+          >
+            🏢 Storage Facilities Oversight ({storageReports.filter(r => r.status === 'PENDING_REVIEW').length})
           </button>
           <button 
             onClick={() => setActiveTab('experts')} 
@@ -528,6 +553,165 @@ export const AdminDashboard = () => {
             <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5 }}>
               Farmogram AI integrates real-time decision support with an agricultural machinery sharing and pooling economy. Equipment distance calculations use high-precision Haversine calculations over Tamil Nadu agricultural centers, helping smallholders minimize machinery downtime and rental expenses.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Storage Facilities Oversight */}
+      {activeTab === 'storage' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Storage Moderation Reports Queue */}
+          <div className="farm-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                  Flagged Storage Facilities Queue
+                </h3>
+                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                  Community reports regarding inflated tariffs, false capacity, or unreachable operators.
+                </span>
+              </div>
+              <span className="badge badge-amber">
+                {storageReports.filter(r => r.status === 'PENDING_REVIEW').length} Pending Audits
+              </span>
+            </div>
+
+            {storageReports.filter(r => r.status === 'PENDING_REVIEW').length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {storageReports.filter(r => r.status === 'PENDING_REVIEW').map(rep => (
+                  <div 
+                    key={rep.id}
+                    style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 800, color: '#92400e', fontSize: '0.95rem' }}>
+                        {rep.facilityName}
+                      </div>
+                      <div style={{ color: '#b45309', fontSize: '0.85rem', fontWeight: 600, marginTop: '2px' }}>
+                        Reason: {rep.reason}
+                      </div>
+                      <div style={{ color: '#78350f', fontSize: '0.82rem', marginTop: '2px' }}>
+                        "{rep.details}"
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        onClick={() => {
+                          storageService.dismissReport(rep.id);
+                          refreshStorageData();
+                          alert('Report dismissed after review.');
+                        }}
+                        style={{ background: '#f1f5f9', color: '#334155', border: 'none', padding: '8px 14px', borderRadius: '8px', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
+                      >
+                        Dismiss Flag
+                      </button>
+                      <button 
+                        onClick={() => {
+                          storageService.deleteFacility(rep.facilityId);
+                          storageService.dismissReport(rep.id);
+                          refreshStorageData();
+                          alert(`Facility ${rep.facilityName} removed for compliance violation.`);
+                        }}
+                        style={{ background: '#dc2626', color: '#ffffff', border: 'none', padding: '8px 14px', borderRadius: '8px', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer' }}
+                      >
+                        De-list Facility
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '24px', color: '#16a34a', background: '#f0fdf4', borderRadius: '10px' }}>
+                <CheckCircle2 size={32} style={{ margin: '0 auto 6px auto' }} />
+                <div style={{ fontWeight: 700 }}>Zero Flagged Storage Facilities!</div>
+                <div style={{ fontSize: '0.82rem', color: '#166534' }}>All storage listings meet agricultural verification standards.</div>
+              </div>
+            )}
+          </div>
+
+          {/* Storage Directory Table */}
+          <div className="farm-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                  Registered Storage Facility Fleet ({storageFleet.length})
+                </h3>
+                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                  Live post-harvest godowns, cold storages, and packhouses across Tamil Nadu
+                </span>
+              </div>
+
+              <input 
+                type="text" 
+                placeholder="Search storage facilities..."
+                value={storageSearch}
+                onChange={(e) => setStorageSearch(e.target.value)}
+                style={{ padding: '8px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.85rem', width: '240px' }}
+              />
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569', fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                    <th style={{ padding: '12px' }}>Facility</th>
+                    <th style={{ padding: '12px' }}>Type</th>
+                    <th style={{ padding: '12px' }}>Capacity</th>
+                    <th style={{ padding: '12px' }}>Tariff</th>
+                    <th style={{ padding: '12px' }}>Location</th>
+                    <th style={{ padding: '12px' }}>Operator</th>
+                    <th style={{ padding: '12px' }}>Status</th>
+                    <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {storageFleet
+                    .filter(f => !storageSearch || f.facilityName?.toLowerCase().includes(storageSearch.toLowerCase()) || f.location?.district?.toLowerCase().includes(storageSearch.toLowerCase()))
+                    .map(fac => (
+                      <tr key={fac.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '12px', fontWeight: 700, color: '#0f172a' }}>
+                          {fac.facilityName}
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span className={`storage-type-badge ${fac.storageType}`} style={{ position: 'static' }}>
+                            {fac.storageTypeLabel}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <strong>{fac.availableCapacity}</strong> / {fac.totalCapacity} MT
+                        </td>
+                        <td style={{ padding: '12px', color: '#15803d', fontWeight: 700 }}>
+                          ₹{fac.price}/MT/day
+                        </td>
+                        <td style={{ padding: '12px', color: '#475569' }}>
+                          {fac.location?.village}, {fac.location?.district}
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          {fac.ownerName} ({fac.ownerPhone})
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span style={{ padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700, background: fac.status === 'ACTIVE' ? '#dcfce7' : '#fee2e2', color: fac.status === 'ACTIVE' ? '#166534' : '#991b1b' }}>
+                            {fac.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px', textAlign: 'right' }}>
+                          <button 
+                            onClick={() => {
+                              storageService.deleteFacility(fac.id);
+                              refreshStorageData();
+                            }}
+                            style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer' }}
+                            title="De-list"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
