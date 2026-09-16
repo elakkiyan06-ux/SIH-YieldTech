@@ -17,7 +17,9 @@ import {
   ChevronRight,
   X,
   Settings,
-  Truck
+  Truck,
+  Tractor,
+  Wrench
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { useAuth } from '../../context/AuthContext';
@@ -30,6 +32,7 @@ export const Sidebar = () => {
 
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
+    { id: 'equipment', label: t('nearby_equipment') || 'Nearby Equipment', icon: Tractor },
     { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },
     { id: 'weather', label: t('weather'), icon: CloudSun },
     { id: 'disease', label: t('disease_detection'), icon: Bug },
@@ -100,8 +103,21 @@ export const Sidebar = () => {
           );
         })}
 
-        {/* Settings Item */}
-        <div className="nav-group-label" style={{ marginTop: '16px' }}>{t('management')}</div>
+        {/* Management & Owner Items */}
+        <div className="nav-group-label" style={{ marginTop: '16px' }}>{t('management') || 'Management & Services'}</div>
+        <button
+          onClick={() => {
+            setActivePage('list-equipment');
+            toggleDrawer();
+          }}
+          className={`sidebar-nav-item ${activePage === 'list-equipment' ? 'active' : ''}`}
+        >
+          <span className="nav-item-icon-wrapper">
+            <Wrench size={20} />
+          </span>
+          <span className="nav-item-label">{t('list_equipment') || 'List Your Equipment'}</span>
+        </button>
+
         <button
           onClick={() => {
             setActivePage('settings');

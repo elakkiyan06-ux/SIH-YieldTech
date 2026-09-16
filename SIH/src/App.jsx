@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AppStateProvider, useAppState } from './context/AppStateContext';
 
@@ -25,6 +26,9 @@ import { Register } from './pages/Register';
 import { Reels } from './pages/Reels';
 import { SharedTransport } from './pages/SharedTransport';
 import { OfficerDashboard } from './pages/OfficerDashboard';
+import { NearbyEquipment } from './pages/NearbyEquipment';
+import { ListEquipment } from './pages/ListEquipment';
+import { AdminDashboard } from './pages/AdminDashboard';
 
 
 // Styles
@@ -53,10 +57,17 @@ const MainAppContent = () => {
 
   // Active page renderer
   const renderActivePage = () => {
+    if (isAdmin) {
+      return <AdminDashboard />;
+    }
 
     switch (activePage) {
       case 'home':
         return <Home />;
+      case 'equipment':
+        return <NearbyEquipment />;
+      case 'list-equipment':
+        return <ListEquipment />;
       case 'transport':
         return <SharedTransport />;
       case 'crop-advisor':
@@ -85,6 +96,8 @@ const MainAppContent = () => {
         return <Settings />;
       case 'officer-dashboard':
         return <OfficerDashboard />;
+      case 'admin':
+        return <AdminDashboard />;
       default:
         return <Home />;
     }
@@ -127,8 +140,6 @@ const MainAppContent = () => {
     </div>
   );
 };
-
-import { LanguageProvider } from './context/LanguageContext';
 
 export default function App() {
   return (

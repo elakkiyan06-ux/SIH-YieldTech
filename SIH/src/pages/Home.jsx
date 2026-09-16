@@ -20,9 +20,13 @@ import {
   Award,
   BadgeCheck,
   Truck,
-  ShieldAlert
+  ShieldAlert,
+  Tractor,
+  Wrench
 } from 'lucide-react';
 import { SOSModal } from '../components/sos/SOSModal';
+import { equipmentRentalService } from '../services/equipmentRentalService';
+import { CATEGORY_DEFAULT_IMAGES } from '../data/equipmentSeedData';
 
 const expertProfiles = [
   { id: 1, name: 'Dr. S. Ramasamy', role: 'Agronomist, TNAU', expertise: 'Crop Management, Pest Control', phone: '+91 98765 43210', email: 'ramasamy.s@tnau.ac.in', location: 'Coimbatore, TN', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
@@ -107,8 +111,16 @@ export const Home = () => {
       desc: t('market_prices_desc'), 
       icon: TrendingUp, 
       color: '#059669', 
-      bg: '#ecfdf5',
+      bg: '#ecfdf5', 
       badge: t('tomato_up')
+    },
+    { 
+      id: 'equipment', 
+      title: t('nearby_equipment') || 'Nearby Equipment', 
+      desc: 'Rent tractors, JCBs, harvesters & tools near your farm', 
+      icon: Tractor, 
+      color: '#15803d', 
+      bg: '#f0fdf4'
     },
     { 
       id: 'transport', 
@@ -120,6 +132,11 @@ export const Home = () => {
       badge: t('save_money')
     }
   ];
+
+  // Top nearby agricultural equipment preview for dashboard widget
+  const [nearbyMachines] = useState(() => {
+    return equipmentRentalService.getListings({ radiusKm: 40 }).slice(0, 3);
+  });
 
   // Feed filtering logic
   const filteredPosts = posts.filter(post => {
@@ -250,6 +267,111 @@ export const Home = () => {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* 3.5 NEARBY AGRICULTURAL EQUIPMENT ON RENT WIDGET */}
+      <section className="nearby-equipment-widget-section" style={{ marginTop: '36px' }}>
+        <div className="section-title-row" style={{ marginBottom: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Tractor size={22} color="#15803d" />
+              <h2 className="section-title" style={{ margin: 0 }}>
+                {t('nearby_equipment') || 'Nearby Agricultural Machinery on Rent'}
+              </h2>
+            </div>
+            <span className="section-subtitle">
+              Verified tractors, JCBs, and harvesters available near {user?.village || 'Perundurai'}, {user?.district || 'Erode'}
+            </span>
+          </div>
+          <button 
+            onClick={() => setActivePage('equipment')}
+            className="btn btn-outline"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 700 }}
+          >
+            <span>Explore All Machinery</span>
+            <ArrowRight size={15} />
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+          {nearbyMachines.map(item => (
+            <div 
+              key={item.id} 
+              className="farm-card" 
+              style={{ 
+                padding: '16px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '12px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                position: 'relative'
+              }}
+              onClick={() => setActivePage('equipment')}
+            >
+              <div style={{ position: 'relative', height: '140px', borderRadius: '10px', overflow: 'hidden', background: '#f1f5f9' }}>
+                <img 
+                  src={(item.images && item.images[0]) || CATEGORY_DEFAULT_IMAGES[item.category] || 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800'} 
+                  alt={item.title} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <span style={{ 
+                  position: 'absolute', 
+                  bottom: '8px', 
+                  right: '8px', 
+                  background: 'rgba(255,255,255,0.95)', 
+                  color: '#15803d', 
+                  fontSize: '0.75rem', 
+                  fontWeight: 800, 
+                  padding: '2px 8px', 
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+                }}>
+                  📍 {item.distanceKm} km away
+                </span>
+                <span style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '8px',
+                  background: 'rgba(22, 163, 74, 0.9)',
+                  color: '#ffffff',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  {item.categoryLabel || item.category}
+                </span>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <strong style={{ color: '#15803d', fontSize: '1.2rem' }}>
+                    ₹{item.price?.toLocaleString('en-IN')} <span style={{ fontSize: '0.78rem', color: '#64748b' }}>/ {item.priceUnit}</span>
+                  </strong>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    {item.location?.village}
+                  </span>
+                </div>
+                <h4 style={{ margin: '4px 0 2px 0', fontSize: '0.98rem', color: '#0f172a', lineHeight: 1.3 }}>
+                  {item.title}
+                </h4>
+                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                  Owner: <strong>{item.ownerName}</strong>
+                </span>
+              </div>
+
+              <div style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>
+                  {item.operatorCharges === 'INCLUDED' ? 'Operator Included ✓' : '+Operator'}
+                </span>
+                <span style={{ fontSize: '0.82rem', color: '#2563eb', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  View & Rent <ArrowRight size={14} />
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

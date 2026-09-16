@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const translations = {
   en: {
     home: "Home",
+    nearby_equipment: "Nearby Equipment",
+    list_equipment: "List Your Equipment",
     shared_transport: "Shared Transport",
     weather: "Weather",
     community: "Community",
