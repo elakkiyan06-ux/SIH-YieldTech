@@ -23,11 +23,48 @@ import {
 import { adminMetrics } from '../data/mockData';
 import { equipmentRentalService, equipmentEvents } from '../services/equipmentRentalService';
 import { storageService, StorageEventBus } from '../services/storageService';
+import { reelsService, reelsEvents } from '../services/reelsService';
 
 export const AdminDashboard = () => {
   const [reports, setReports] = useState(adminMetrics.reportsList);
   const [experts, setExperts] = useState(adminMetrics.pendingExperts);
-  const [activeTab, setActiveTab] = useState('moderation'); // 'moderation' | 'experts' | 'equipment' | 'system'
+  const [activeTab, setActiveTab] = useState('moderation'); // 'moderation' | 'experts' | 'equipment' | 'storage' | 'reels' | 'system'
+
+  // Reels Moderation State
+  const [reelsFleet, setReelsFleet] = useState(() => reelsService.getAdminReels());
+  const [reelsReports, setReelsReports] = useState(() => reelsService.getReports());
+  const [reelsFilter, setReelsFilter] = useState('ALL');
+  const [reelsSearch, setReelsSearch] = useState('');
+
+  const refreshReelsData = () => {
+    setReelsFleet(reelsService.getAdminReels());
+    setReelsReports(reelsService.getReports());
+  };
+
+  useEffect(() => {
+    const unsub = reelsEvents.subscribe('*', () => {
+      refreshReelsData();
+    });
+    return unsub;
+  }, []);
+
+  const handleUpdateReelStatus = (reelId, status) => {
+    reelsService.adminUpdateStatus(reelId, status);
+    refreshReelsData();
+    alert(`Reel moderation status updated to: ${status}`);
+  };
+
+  const handleDismissReelReport = (reportId) => {
+    reelsService.adminDismissReport(reportId);
+    refreshReelsData();
+    alert('Report dismissed. Reel verified as compliant with agricultural safety guidelines.');
+  };
+
+  const handleVerifyCreator = (creatorId, isVerified) => {
+    reelsService.adminVerifyCreator(creatorId, isVerified);
+    refreshReelsData();
+    alert(`Creator verification status updated.`);
+  };
 
   // Equipment Fleet Management State
   const [equipmentFleet, setEquipmentFleet] = useState(() => equipmentRentalService.getAllRawListings());
@@ -203,6 +240,12 @@ export const AdminDashboard = () => {
             className={`feed-tab-btn ${activeTab === 'experts' ? 'active' : ''}`}
           >
             🎓 Expert Verification ({experts.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab('reels')} 
+            className={`feed-tab-btn ${activeTab === 'reels' ? 'active' : ''}`}
+          >
+            📹 Reels Moderation ({reelsReports.length + reelsFleet.filter(r => r.status === 'Pending Review').length})
           </button>
           <button 
             onClick={() => setActiveTab('system')} 
@@ -706,6 +749,242 @@ export const AdminDashboard = () => {
                           >
                             <Trash2 size={14} />
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Agricultural Reels Moderation */}
+      {activeTab === 'reels' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Top Reels Metrics Bar */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #16a34a' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Total Farming Reels</span>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>
+                {reelsFleet.length}
+              </div>
+              <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 700 }}>Published across 10 agricultural categories</span>
+            </div>
+
+            <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #f59e0b' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Pending Moderation</span>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: '#b45309', marginTop: '4px' }}>
+                {reelsFleet.filter(r => r.status === 'Pending Review').length}
+              </div>
+              <span style={{ fontSize: '0.75rem', color: '#b45309', fontWeight: 700 }}>Awaiting technical review</span>
+            </div>
+
+            <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #dc2626' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Farmer Safety Flags</span>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: '#dc2626', marginTop: '4px' }}>
+                {reelsReports.length}
+              </div>
+              <span style={{ fontSize: '0.75rem', color: '#dc2626', fontWeight: 700 }}>Misleading claims reported</span>
+            </div>
+
+            <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #0284c7' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Verified Agronomists</span>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: '#0284c7', marginTop: '4px' }}>
+                {new Set(reelsFleet.filter(r => r.creator?.verified).map(r => r.creator?.id)).size}
+              </div>
+              <span style={{ fontSize: '0.75rem', color: '#0284c7', fontWeight: 700 }}>Active verified contributors</span>
+            </div>
+          </div>
+
+          {/* Reported Reels Review Queue */}
+          <div className="farm-card" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={20} color="#dc2626" />
+              Community Reported Reels (Agronomic Safety Escalations)
+            </h3>
+
+            {reelsReports.length === 0 ? (
+              <div style={{ padding: '24px', textAlign: 'center', color: '#16a34a', background: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
+                <CheckCircle2 size={32} style={{ margin: '0 auto 8px auto' }} />
+                <p style={{ margin: 0, fontWeight: 700 }}>Zero active safety flags. All community reels are verified compliant with agricultural standards.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {reelsReports.map(rep => (
+                  <div 
+                    key={rep.id} 
+                    style={{ 
+                      padding: '16px 20px', 
+                      background: '#fef2f2', 
+                      border: '1px solid #fecaca', 
+                      borderRadius: '12px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '12px'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <strong style={{ fontSize: '1rem', color: '#991b1b' }}>"{rep.reelTitle}"</strong>
+                        <span className="badge badge-red">{rep.reasonLabel}</span>
+                      </div>
+                      <p style={{ fontSize: '0.85rem', color: '#7f1d1d', margin: '4px 0 0 0' }}>
+                        Creator: <strong>{rep.creatorName}</strong> • Reported by: {rep.reportedBy} • Date: {new Date(rep.reportedDate).toLocaleDateString()}
+                      </p>
+                      {rep.details && (
+                        <p style={{ fontSize: '0.82rem', color: '#991b1b', margin: '4px 0 0 0', fontStyle: 'italic' }}>
+                          "Note: {rep.details}"
+                        </p>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        onClick={() => handleDismissReelReport(rep.id)}
+                        className="btn btn-secondary btn-sm"
+                        style={{ background: '#ffffff' }}
+                      >
+                        Dismiss Flag (Safe)
+                      </button>
+                      <button 
+                        onClick={() => {
+                          handleUpdateReelStatus(rep.reelId, 'Removed');
+                          handleDismissReelReport(rep.id);
+                        }}
+                        className="btn btn-danger btn-sm"
+                      >
+                        Remove Reel
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* All Reels Management Table */}
+          <div className="farm-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                  Agricultural Reels Catalog & Verification Oversight
+                </h3>
+                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                  Manage video publication, expert badges, and inappropriate content removal
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  placeholder="Search reels or creator…"
+                  value={reelsSearch}
+                  onChange={(e) => setReelsSearch(e.target.value)}
+                  style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                />
+                <select 
+                  value={reelsFilter} 
+                  onChange={(e) => setReelsFilter(e.target.value)}
+                  style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.85rem', background: '#fff' }}
+                >
+                  <option value="ALL">All Statuses</option>
+                  <option value="Published">Published</option>
+                  <option value="Pending Review">Pending Review</option>
+                  <option value="Removed">Removed</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left', color: '#64748b' }}>
+                    <th style={{ padding: '12px' }}>Reel</th>
+                    <th style={{ padding: '12px' }}>Category & Crop</th>
+                    <th style={{ padding: '12px' }}>Creator</th>
+                    <th style={{ padding: '12px' }}>Engagement</th>
+                    <th style={{ padding: '12px' }}>Status</th>
+                    <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reelsFleet
+                    .filter(r => reelsFilter === 'ALL' || r.status === reelsFilter)
+                    .filter(r => !reelsSearch || r.title.toLowerCase().includes(reelsSearch.toLowerCase()) || r.creator?.name.toLowerCase().includes(reelsSearch.toLowerCase()))
+                    .map(r => (
+                      <tr key={r.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <img src={r.poster} alt={r.title} style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }} />
+                          <div>
+                            <strong style={{ color: '#0f172a', display: 'block' }}>{r.title}</strong>
+                            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>📍 {r.location}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span className="badge badge-green" style={{ fontSize: '0.75rem' }}>{r.categoryLabel || r.category}</span>
+                          <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>🌾 {r.crop}</div>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <strong>{r.creator?.name}</strong>
+                            {r.creator?.verified && <ShieldCheck size={15} color="#0284c7" title="Verified Agronomist" />}
+                          </div>
+                          <button 
+                            onClick={() => handleVerifyCreator(r.creator?.id, !r.creator?.verified)}
+                            style={{ 
+                              background: 'transparent', 
+                              border: 'none', 
+                              color: r.creator?.verified ? '#b91c1c' : '#0284c7', 
+                              fontSize: '0.72rem', 
+                              cursor: 'pointer',
+                              padding: 0,
+                              textDecoration: 'underline'
+                            }}
+                          >
+                            {r.creator?.verified ? 'Revoke Verified Badge' : '+ Grant Verified Badge'}
+                          </button>
+                        </td>
+                        <td style={{ padding: '12px', color: '#475569' }}>
+                          <div>❤️ {r.likesCount} • 💬 {r.commentsCount || r.comments?.length || 0}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>👁️ {r.viewsCount} views</div>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span style={{ 
+                            padding: '3px 8px', 
+                            borderRadius: '10px', 
+                            fontSize: '0.75rem', 
+                            fontWeight: 700, 
+                            background: r.status === 'Published' ? '#dcfce7' : r.status === 'Pending Review' ? '#fef3c7' : '#fee2e2',
+                            color: r.status === 'Published' ? '#166534' : r.status === 'Pending Review' ? '#92400e' : '#991b1b'
+                          }}>
+                            {r.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                            {r.status !== 'Published' && (
+                              <button 
+                                onClick={() => handleUpdateReelStatus(r.id, 'Published')}
+                                className="btn btn-secondary btn-sm"
+                                style={{ background: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' }}
+                                title="Approve & Publish"
+                              >
+                                Approve
+                              </button>
+                            )}
+                            {r.status !== 'Removed' && (
+                              <button 
+                                onClick={() => handleUpdateReelStatus(r.id, 'Removed')}
+                                className="btn btn-danger btn-sm"
+                                title="Remove / Hide Reel"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}

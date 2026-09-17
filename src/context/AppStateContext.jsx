@@ -5,7 +5,26 @@ import { generateForecastArray, generateAdvisories, generateCriticalAlert } from
 const AppStateContext = createContext(null);
 
 export const AppStateProvider = ({ children }) => {
-  const [activePage, setActivePage] = useState('home');
+  const [activePage, setActivePage] = useState(() => {
+    try {
+      const p = window.location.pathname.replace(/^\//, '');
+      return p || 'home';
+    } catch (e) {
+      return 'home';
+    }
+  });
+
+  useEffect(() => {
+    const onPop = () => {
+      try {
+        const p = window.location.pathname.replace(/^\//, '');
+        setActivePage(p || 'home');
+      } catch (e) {}
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   const [feedFilter, setFeedFilter] = useState('for-you');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = () => setIsDrawerOpen(prev => !prev);

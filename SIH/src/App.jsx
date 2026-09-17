@@ -142,7 +142,7 @@ const MainAppContent = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="main-wrapper">
+      <div className={`main-wrapper ${activePage === 'reels' ? 'reels-main-wrapper' : ''}`}>
         <Header />
         <main className={`page-content ${activePage === 'reels' ? 'reels-page-content' : ''}`}>
           <ErrorBoundary key={activePage} onGoHome={() => setActivePage('home')}>

@@ -144,10 +144,32 @@ button, input, select, textarea {
   }
 }
 
+.reels-main-wrapper {
+  padding-bottom: 64px !important;
+  height: 100vh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
 .reels-page-content {
   padding: 0 !important;
   max-width: 100% !important;
-  background-color: #000;
+  background-color: transparent !important;
+  height: calc(100vh - 66px - 64px) !important;
+  max-height: calc(100dvh - 66px - 64px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+@media (max-width: 640px) {
+  .reels-main-wrapper {
+    padding-bottom: 60px !important;
+  }
+  .reels-page-content {
+    height: calc(100dvh - 58px - 60px) !important;
+    max-height: calc(100dvh - 58px - 60px) !important;
+  }
 }
 
 /* Reusable Card Styles */

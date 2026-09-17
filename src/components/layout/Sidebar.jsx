@@ -33,6 +33,7 @@ export const Sidebar = () => {
 
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
+    { id: 'reels', label: t('reels') || 'Reels', icon: Video },
     { id: 'equipment', label: t('nearby_equipment') || 'Nearby Equipment', icon: Tractor },
     { id: 'nearby-storage', label: t('nearby_storage') || 'Nearby Storage & Cold Store', icon: Warehouse },
     { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },

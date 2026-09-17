@@ -1164,16 +1164,21 @@ const dirs = ['src/context/locales', 'SIH/src/context/locales'];
 for (const lang of languages) {
   for (const dir of dirs) {
     const filePath = path.resolve(dir, `${lang}.js`);
-    let raw = fs.readFileSync(filePath, 'utf8');
-    const jsonMatch = raw.match(/export const \w+ = (\{[\s\S]*\});/);
-    if (jsonMatch) {
-      const obj = JSON.parse(jsonMatch[1]);
-      for (const [k, map] of Object.entries(extraTranslations)) {
-        obj[k] = map[lang] || map['en'] || k;
-      }
-      const newJs = `// Farmogram AI Dictionary - ${lang.toUpperCase()}\nexport const ${lang} = ${JSON.stringify(obj, null, 2)};\n`;
-      fs.writeFileSync(filePath, newJs, 'utf8');
+    const jsonPath = path.resolve(dir, `${lang}.json`);
+    let obj = {};
+    if (fs.existsSync(jsonPath)) {
+      obj = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    } else if (fs.existsSync(filePath)) {
+      let raw = fs.readFileSync(filePath, 'utf8');
+      const jsonMatch = raw.match(/export (?:const \w+ =|default) (\{[\s\S]*?\});/);
+      if (jsonMatch) obj = JSON.parse(jsonMatch[1]);
     }
+    for (const [k, map] of Object.entries(extraTranslations)) {
+      obj[k] = map[lang] || map['en'] || k;
+    }
+    fs.writeFileSync(jsonPath, JSON.stringify(obj, null, 2), 'utf8');
+    const newJs = `// Farmogram AI Dictionary - ${lang.toUpperCase()}\nexport const ${lang} = ${JSON.stringify(obj, null, 2)};\nexport default ${lang};\n`;
+    fs.writeFileSync(filePath, newJs, 'utf8');
   }
 }
 

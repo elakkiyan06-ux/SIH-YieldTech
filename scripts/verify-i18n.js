@@ -1,9 +1,9 @@
-import { en } from '../src/context/locales/en.js';
-import { ta } from '../src/context/locales/ta.js';
-import { hi } from '../src/context/locales/hi.js';
-import { te } from '../src/context/locales/te.js';
-import { kn } from '../src/context/locales/kn.js';
-import { ml } from '../src/context/locales/ml.js';
+import en from '../src/context/locales/en.js';
+import ta from '../src/context/locales/ta.js';
+import hi from '../src/context/locales/hi.js';
+import te from '../src/context/locales/te.js';
+import kn from '../src/context/locales/kn.js';
+import ml from '../src/context/locales/ml.js';
 
 const languages = { en, ta, hi, te, kn, ml };
 const enKeys = Object.keys(en);
