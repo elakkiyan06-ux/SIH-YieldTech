@@ -535,10 +535,10 @@ export const CropAdvisor = () => {
     <div className="advisor-page">
       <div className="page-header">
         <h1 className="page-title">
-          <Sprout size={28} color="#16a34a" /> Real-Time Crop Advisor
+          <Sprout size={28} color="#16a34a" /> {t('realtime_crop_advisor_title')}
         </h1>
         <p className="page-subtitle">
-          Adaptive agronomic engine.
+          {t('crop_advisor_subtitle')}
         </p>
       </div>
 

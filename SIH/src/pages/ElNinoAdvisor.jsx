@@ -33,10 +33,15 @@ import './ElNinoAdvisor.css';
 
 export const ElNinoAdvisor = () => {
   const { setActivePage } = useAppState();
-  const { language } = useLanguage();
+  const { currentLang, language, t } = useLanguage();
 
-  // Language toggle for educational section (defaults to user's app language if 'ta', otherwise 'en')
-  const [eduLang, setEduLang] = useState(language === 'ta' ? 'ta' : 'en');
+  const effectiveLang = currentLang || language;
+  // Educational content language (Tamil if user selected 'ta', otherwise 'en')
+  const [eduLang, setEduLang] = useState(effectiveLang === 'ta' ? 'ta' : 'en');
+
+  useEffect(() => {
+    setEduLang(effectiveLang === 'ta' ? 'ta' : 'en');
+  }, [effectiveLang]);
 
   // Dynamic Advisor State
   const [selectedDistrict, setSelectedDistrict] = useState('thanjavur');
@@ -52,7 +57,7 @@ export const ElNinoAdvisor = () => {
     irrigation: selectedIrrigation
   });
 
-  const content = EL_NINO_EXPLANATION[eduLang];
+  const content = EL_NINO_EXPLANATION[eduLang] || EL_NINO_EXPLANATION['en'];
 
   return (
     <div className="elnino-page">
@@ -60,14 +65,14 @@ export const ElNinoAdvisor = () => {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span className="badge badge-emerald">Climate Risk Intelligence</span>
-            <span className="badge badge-amber">Bilingual Advisory (EN / தமிழ்)</span>
+            <span className="badge badge-emerald">{t('climate_risk_intel')}</span>
+            <span className="badge badge-amber">EN / தமிழ்</span>
           </div>
           <h1 className="page-title" style={{ marginTop: '8px' }}>
-            <CloudSun size={28} color="#0284c7" /> El Niño Impact & Farm Preparedness Advisor
+            <CloudSun size={28} color="#0284c7" /> {t('elnino_page_title')}
           </h1>
           <p className="page-subtitle">
-            Scientific clarity on ocean-atmosphere climate patterns, monsoon nuances, and proactive agronomic risk mitigation.
+            {t('elnino_page_sub')}
           </p>
         </div>
 

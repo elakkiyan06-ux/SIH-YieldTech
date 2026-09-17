@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
+import { useLanguage } from '../context/LanguageContext';
 import { soilTypes, locations, cropsList } from '../data/mockData';
 import { PostCard } from '../components/feed/PostCard';
 import { Modal } from '../components/common/Modal';
@@ -27,6 +28,7 @@ import { cropClaimService } from '../services/cropClaimService';
 
 export const FarmerProfile = () => {
   const { user, updateProfile } = useAuth();
+  const { t } = useLanguage();
   const { posts, questions, setActivePage } = useAppState();
 
   const [activeTab, setActiveTab] = useState('farm-info');
@@ -150,7 +152,7 @@ export const FarmerProfile = () => {
                     fontWeight: 800,
                     border: '3px solid #22c55e', 
                     boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)'
-                  }}
+                  }} 
                 >
                   {getInitials(user.name)}
                 </div>
@@ -193,20 +195,16 @@ export const FarmerProfile = () => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>{user.name}</h1>
-                <span className="badge badge-green">Registered Farmer</span>
+                <span className="badge badge-green">{t('registered_farmer')}</span>
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', fontSize: '0.86rem', color: '#64748b', marginTop: '6px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <MapPin size={14} color="#16a34a" /> {user.village}, {user.district} District
+                  <MapPin size={14} color="#16a34a" /> {user.village}, {t(user.district) || user.district}
                 </span>
                 <span>•</span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Phone size={14} /> {user.phone}
-                </span>
-                <span>•</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Globe size={14} /> {user.language}
                 </span>
               </div>
             </div>
@@ -216,7 +214,7 @@ export const FarmerProfile = () => {
             onClick={() => setIsEditModalOpen(true)}
             className="btn btn-outline"
           >
-            <Edit3 size={16} /> Edit Profile & Farm Data
+            <Edit3 size={16} /> {t('edit_profile_btn')}
           </button>
         </div>
       </div>
@@ -228,37 +226,37 @@ export const FarmerProfile = () => {
             onClick={() => setActiveTab('farm-info')} 
             className={`feed-tab-btn ${activeTab === 'farm-info' ? 'active' : ''}`}
           >
-            🌾 Farm Information
+            🌾 {t('tab_farm_info')}
           </button>
           <button 
             onClick={() => setActiveTab('my-posts')} 
             className={`feed-tab-btn ${activeTab === 'my-posts' ? 'active' : ''}`}
           >
-            📝 My Posts ({myPosts.length})
+            📝 {t('tab_my_posts')} ({myPosts.length})
           </button>
           <button 
             onClick={() => setActiveTab('saved-posts')} 
             className={`feed-tab-btn ${activeTab === 'saved-posts' ? 'active' : ''}`}
           >
-            🔖 Saved Posts ({savedPosts.length})
+            🔖 {t('tab_saved_posts')} ({savedPosts.length})
           </button>
           <button 
             onClick={() => setActiveTab('my-questions')} 
             className={`feed-tab-btn ${activeTab === 'my-questions' ? 'active' : ''}`}
           >
-            ❓ My Q&A Queries ({myQuestions.length})
+            ❓ {t('tab_my_questions')} ({myQuestions.length})
           </button>
           <button 
             onClick={() => setActiveTab('recommendations')} 
             className={`feed-tab-btn ${activeTab === 'recommendations' ? 'active' : ''}`}
           >
-            🌱 Sowing History
+            🌱 {t('tab_sowing_history')}
           </button>
           <button 
             onClick={() => setActiveTab('claim-dossiers')} 
             className={`feed-tab-btn ${activeTab === 'claim-dossiers' ? 'active' : ''}`}
           >
-            🛡️ Claim Dossiers ({myDossiers.length})
+            🛡️ {t('tab_claim_dossiers')} ({myDossiers.length})
           </button>
         </div>
       </div>
@@ -270,35 +268,35 @@ export const FarmerProfile = () => {
           <div className="grid-2" style={{ gap: '20px' }}>
             <div className="farm-card">
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
-                Land Holding & Soil Texture
+                {t('land_holding_soil')}
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1px solid #f1f5f9' }}>
-                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Cultivable Land Size:</span>
-                  <strong style={{ color: '#0f172a' }}>{user.landArea} Acres</strong>
+                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{t('cultivable_size')}:</span>
+                  <strong style={{ color: '#0f172a' }}>{user.landArea} {t('land_acres')}</strong>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1px solid #f1f5f9' }}>
-                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Dominant Soil Type:</span>
-                  <strong style={{ color: '#16a34a' }}>{user.soilType}</strong>
+                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{t('dominant_soil')}:</span>
+                  <strong style={{ color: '#16a34a' }}>{t(user.soilType) || user.soilType}</strong>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1px solid #f1f5f9' }}>
-                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Irrigation Sources:</span>
-                  <strong style={{ color: '#0284c7' }}>{user.waterSource}</strong>
+                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{t('irrigation_sources')}:</span>
+                  <strong style={{ color: '#0284c7' }}>{t(user.waterSource) || user.waterSource}</strong>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Village & Block:</span>
-                  <strong>{user.village} (Erode West Block)</strong>
+                  <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{t('village_block')}:</span>
+                  <strong>{user.village}, {t(user.district) || user.district}</strong>
                 </div>
               </div>
             </div>
 
             <div className="farm-card">
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
-                Crops in Active Rotation
+                {t('primary_crops')}
               </h3>
               <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '14px' }}>
                 These crops configure your personalized community feed recommendations and microclimate spray alerts:
@@ -306,7 +304,7 @@ export const FarmerProfile = () => {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {user.primaryCrops.map(crop => (
                   <span key={crop} className="badge badge-green" style={{ fontSize: '0.9rem', padding: '6px 14px' }}>
-                    🌱 {crop}
+                    🌱 {t(crop) || crop}
                   </span>
                 ))}
               </div>
@@ -314,7 +312,7 @@ export const FarmerProfile = () => {
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0', marginTop: '20px' }}>
                 <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 700 }}>SOIL TYPE GUIDANCE</span>
                 <p style={{ fontSize: '0.84rem', color: '#334155', marginTop: '4px' }}>
-                  Your registered <strong>{user.soilType}</strong> provides moderate porosity, suitable for drip-fertigated tomato and groundnut pods.
+                  Your registered <strong>{t(user.soilType) || user.soilType}</strong> provides favorable texture for sustainable multi-season crop cycles.
                 </p>
               </div>
             </div>
@@ -353,7 +351,7 @@ export const FarmerProfile = () => {
             {myQuestions.length > 0 ? (
               myQuestions.map(q => (
                 <div key={q.id} className="farm-card" style={{ padding: '20px' }}>
-                  <span className="badge badge-green">{q.farmer.crop}</span>
+                  <span className="badge badge-green">{t(q.farmer.crop) || q.farmer.crop}</span>
                   <p style={{ fontWeight: 700, margin: '8px 0', color: '#0f172a' }}>"{q.question}"</p>
                   <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Submitted {q.timestamp} • {q.answersCount} answers</span>
                 </div>
@@ -370,7 +368,7 @@ export const FarmerProfile = () => {
         {activeTab === 'recommendations' && (
           <div className="farm-card" style={{ padding: '24px' }}>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>
-              Past Crop Advisor Historical Recommendations
+              {t('tab_sowing_history')}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ background: '#f8fafc', padding: '14px 18px', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -397,7 +395,7 @@ export const FarmerProfile = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
               <div>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                  Recorded Crop Loss Incident Dossiers
+                  {t('tab_claim_dossiers_title')}
                 </h3>
                 <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '2px' }}>
                   Pre-survey evidence packets generated for PMFBY 72-hour reporting
@@ -407,7 +405,7 @@ export const FarmerProfile = () => {
                 onClick={() => setActivePage('crop-insurance-claim')} 
                 className="btn btn-primary btn-sm"
               >
-                + Record New Incident
+                + {t('record_new_claim')}
               </button>
             </div>
 
@@ -422,7 +420,7 @@ export const FarmerProfile = () => {
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span className="badge badge-amber" style={{ fontSize: '0.68rem' }}>{dossier.referenceNumber}</span>
-                        <strong style={{ color: '#0f172a' }}>{dossier.cropName}</strong>
+                        <strong style={{ color: '#0f172a' }}>{t(dossier.cropName) || dossier.cropName}</strong>
                       </div>
                       <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>
                         Cause: {dossier.damageCause} • Affected: {dossier.affectedArea} ({dossier.affectedPercentage}%) • {dossier.photos?.length || 0} Photos
@@ -432,7 +430,7 @@ export const FarmerProfile = () => {
                       onClick={() => setActivePage('crop-insurance-claim')} 
                       className="btn btn-outline btn-sm"
                     >
-                      View & Print Dossier
+                      {t('download_dossier_pdf')}
                     </button>
                   </div>
                 ))}
@@ -446,7 +444,7 @@ export const FarmerProfile = () => {
       <Modal 
         isOpen={isEditModalOpen} 
         onClose={() => setIsEditModalOpen(false)} 
-        title="✏️ Edit Farmer Information"
+        title={`✏️ ${t('edit_profile_btn')}`}
       >
         <form onSubmit={handleSaveProfile}>
           {/* Profile Picture Management in Modal */}
@@ -487,7 +485,7 @@ export const FarmerProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label className="form-label">{t('full_name')}</label>
             <input 
               type="text" 
               className="form-input" 
@@ -499,7 +497,7 @@ export const FarmerProfile = () => {
 
           <div className="grid-2">
             <div className="form-group">
-              <label className="form-label">Village / Town</label>
+              <label className="form-label">{t('village_landmark')}</label>
               <input 
                 type="text" 
                 className="form-input" 
@@ -510,14 +508,14 @@ export const FarmerProfile = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">District</label>
+              <label className="form-label">{t('district')}</label>
               <select 
                 className="form-select" 
                 value={editDistrict} 
                 onChange={(e) => setEditDistrict(e.target.value)}
               >
                 {locations.map(loc => (
-                  <option key={loc} value={loc}>{loc}</option>
+                  <option key={loc} value={loc}>{t(loc) || loc}</option>
                 ))}
               </select>
             </div>
@@ -525,7 +523,7 @@ export const FarmerProfile = () => {
 
           <div className="grid-2">
             <div className="form-group">
-              <label className="form-label">Land Holding (Acres)</label>
+              <label className="form-label">{t('land_acres')}</label>
               <input 
                 type="number" 
                 step="0.5" 
@@ -537,21 +535,21 @@ export const FarmerProfile = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Dominant Soil Type</label>
+              <label className="form-label">{t('soil_type')}</label>
               <select 
                 className="form-select" 
                 value={editSoilType} 
                 onChange={(e) => setEditSoilType(e.target.value)}
               >
                 {soilTypes.map(st => (
-                  <option key={st.id} value={st.name}>{st.name}</option>
+                  <option key={st.id} value={st.name}>{t(st.name) || st.name}</option>
                 ))}
               </select>
             </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Water Source & Irrigation System</label>
+            <label className="form-label">{t('irrigation_sources')}</label>
             <input 
               type="text" 
               className="form-input" 
@@ -562,10 +560,10 @@ export const FarmerProfile = () => {
 
           <div className="modal-footer" style={{ margin: '18px -24px -24px -24px' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsEditModalOpen(false)}>
-              Cancel
+              {t('cancel')}
             </button>
             <button type="submit" className="btn btn-primary">
-              Save Changes
+              {t('save_changes')}
             </button>
           </div>
         </form>

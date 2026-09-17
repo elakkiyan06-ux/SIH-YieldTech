@@ -182,13 +182,13 @@ export const NearbyStorage = () => {
         <div className="storage-hero-text">
           <div className="storage-hero-badge">
             <Warehouse size={16} />
-            <span>Post-Harvest Agricultural Storage Network</span>
+            <span>{t('storage_badge')}</span>
           </div>
           <h1 className="storage-hero-title">
-            Nearby Cold Storage, Godowns & Warehouses
+            {t('storage_hero_title')}
           </h1>
           <p className="storage-hero-subtext">
-            Protect your harvested produce from distress selling and post-harvest spoilage. Find verified godowns, cold storages, packhouses, and silos within your agricultural belt. Compare live holding capacity and transparent tariffs.
+            {t('storage_hero_sub')}
           </p>
         </div>
 
@@ -198,7 +198,7 @@ export const NearbyStorage = () => {
             className="storage-list-cta"
           >
             <PlusCircle size={20} />
-            <span>List Your Storage Facility</span>
+            <span>{t('list_storage')}</span>
           </button>
         </div>
       </div>
@@ -226,7 +226,7 @@ export const NearbyStorage = () => {
             <MapPin size={22} color="#059669" />
             <div>
               <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#0f172a', fontWeight: 800 }}>
-                Your Farm Search Location: <span style={{ color: '#059669' }}>{farmerLocationDisplay}</span>
+                {t('farm_search_location')}: <span style={{ color: '#059669' }}>{farmerLocationDisplay}</span>
               </h3>
               <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
                 Storage facilities are filtered and ranked based on direct haulage distance from this point.
@@ -241,16 +241,16 @@ export const NearbyStorage = () => {
           >
             <Navigation size={16} />
             <span>
-              {gpsStatus === 'requesting' ? 'Acquiring Farm GPS...' :
-               gpsStatus === 'acquired' ? `GPS Active (±${gpsAccuracy}m)` :
-               'Detect My Farm GPS'}
+              {gpsStatus === 'requesting' ? t('gps_acquiring') :
+               gpsStatus === 'acquired' ? `${t('gps_active')} (±${gpsAccuracy}m)` :
+               t('detect_gps')}
             </span>
           </button>
         </div>
 
         <div className="storage-selectors-grid">
           <div className="storage-selector-group">
-            <label>District</label>
+            <label>{t('district')}</label>
             <select 
               value={selectedDistrict}
               onChange={(e) => {
@@ -262,25 +262,25 @@ export const NearbyStorage = () => {
               }}
             >
               {districts.map(d => (
-                <option key={d} value={d}>{d}</option>
+                <option key={d} value={d}>{t(d) || d}</option>
               ))}
             </select>
           </div>
 
           <div className="storage-selector-group">
-            <label>Taluk / Agro Hub</label>
+            <label>{t('taluk_hub')}</label>
             <select 
               value={selectedTaluk}
               onChange={(e) => handleTalukChange(e.target.value)}
             >
-              {taluksForDistrict.map(t => (
-                <option key={t} value={t}>{t}</option>
+              {taluksForDistrict.map(t_item => (
+                <option key={t_item} value={t_item}>{t_item}</option>
               ))}
             </select>
           </div>
 
           <div className="storage-selector-group">
-            <label>Search by PIN Code</label>
+            <label>PIN Code</label>
             <form onSubmit={handlePincodeSubmit} style={{ display: 'flex', gap: '6px' }}>
               <input 
                 type="text" 
@@ -300,17 +300,17 @@ export const NearbyStorage = () => {
           </div>
 
           <div className="storage-selector-group">
-            <label>Search Radius</label>
+            <label>{t('radius')}</label>
             <select 
               value={selectedRadius}
               onChange={(e) => setSelectedRadius(e.target.value === 'all' ? 'all' : Number(e.target.value))}
             >
-              <option value={5}>Within 5 km (Immediate)</option>
+              <option value={5}>Within 5 km</option>
               <option value={10}>Within 10 km</option>
-              <option value={25}>Within 25 km (Recommended)</option>
-              <option value={50}>Within 50 km (District Wide)</option>
-              <option value={100}>Within 100 km (Regional)</option>
-              <option value="all">All Available Facilities</option>
+              <option value={25}>Within 25 km</option>
+              <option value={50}>Within 50 km</option>
+              <option value={100}>Within 100 km</option>
+              <option value="all">All Available</option>
             </select>
           </div>
         </div>
@@ -323,7 +323,7 @@ export const NearbyStorage = () => {
             <Search size={18} className="storage-search-icon" />
             <input 
               type="text" 
-              placeholder="Search storage by name, village, crop (e.g. Turmeric, Cold Storage, Erode)..."
+              placeholder="Search storage by name, village, crop..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -335,14 +335,14 @@ export const NearbyStorage = () => {
               onClick={() => setViewMode('list')}
             >
               <Boxes size={16} />
-              <span>List View</span>
+              <span>{t('list_view')}</span>
             </button>
             <button 
               className={`storage-view-btn ${viewMode === 'map' ? 'active' : ''}`}
               onClick={() => setViewMode('map')}
             >
               <MapPin size={16} />
-              <span>Interactive Map</span>
+              <span>{t('map_view')}</span>
             </button>
           </div>
         </div>

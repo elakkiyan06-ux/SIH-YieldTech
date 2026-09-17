@@ -11,6 +11,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useAppState } from '../context/AppStateContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const NotificationsPage = () => {
   const { 
@@ -19,6 +20,7 @@ export const NotificationsPage = () => {
     markAsRead, 
     setActivePage 
   } = useAppState();
+  const { t } = useLanguage();
 
   const [activeFilter, setActiveFilter] = useState('all');
 
@@ -44,10 +46,10 @@ export const NotificationsPage = () => {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h1 className="page-title">
-            <Bell size={28} color="#ea580c" /> Agricultural Notifications & Alerts
+            <Bell size={28} color="#ea580c" /> {t('notifications_page_title')}
           </h1>
           <p className="page-subtitle">
-            Critical weather warnings, mandi price movements, expert answers, and government deadline notices.
+            {t('notifications_page_sub')}
           </p>
         </div>
 
@@ -55,7 +57,7 @@ export const NotificationsPage = () => {
           onClick={markAllAsRead} 
           className="btn btn-secondary btn-sm"
         >
-          <CheckCheck size={16} /> Mark All as Read
+          <CheckCheck size={16} /> {t('mark_all_read')}
         </button>
       </div>
 
@@ -66,106 +68,113 @@ export const NotificationsPage = () => {
             onClick={() => setActiveFilter('all')} 
             className={`feed-tab-btn ${activeFilter === 'all' ? 'active' : ''}`}
           >
-            All Alerts ({notifications.length})
+            {t('all_alerts')} ({notifications.length})
           </button>
           <button 
             onClick={() => setActiveFilter('weather')} 
             className={`feed-tab-btn ${activeFilter === 'weather' ? 'active' : ''}`}
           >
-            🌧 Weather
+            🌧 {t('weather')}
           </button>
           <button 
             onClick={() => setActiveFilter('market')} 
             className={`feed-tab-btn ${activeFilter === 'market' ? 'active' : ''}`}
           >
-            📈 Mandi Prices
+            📈 {t('market_prices')}
           </button>
           <button 
             onClick={() => setActiveFilter('expert')} 
             className={`feed-tab-btn ${activeFilter === 'expert' ? 'active' : ''}`}
           >
-            👨‍🌾 Expert Q&A
+            👨‍🌾 {t('expert_qa')}
           </button>
           <button 
             onClick={() => setActiveFilter('advisor')} 
             className={`feed-tab-btn ${activeFilter === 'advisor' ? 'active' : ''}`}
           >
-            🌱 Crop Advisory
+            🌱 {t('crop_claim_assistant') || 'Crop Advisory'}
           </button>
         </div>
       </div>
 
       {/* Notifications List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {filtered.map(notif => (
-          <div 
-            key={notif.id}
-            className={`farm-card ${!notif.read ? 'farm-card-interactive' : ''}`}
-            onClick={() => {
-              markAsRead(notif.id);
-              if (notif.actionRoute) setActivePage(notif.actionRoute);
-            }}
-            style={{
-              padding: '16px 20px',
-              backgroundColor: !notif.read ? '#ffffff' : '#f8fafc',
-              borderLeft: !notif.read ? '4px solid #16a34a' : '4px solid #cbd5e1',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '16px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-              <div 
-                style={{ 
-                  width: '42px', 
-                  height: '42px', 
-                  borderRadius: '10px', 
-                  backgroundColor: '#f1f5f9', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}
-              >
-                {getIcon(notif.type)}
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: notif.read ? '#475569' : '#0f172a' }}>
-                    {notif.title}
-                  </h3>
-                  {!notif.read && (
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                  )}
-                  <span className="badge badge-gray" style={{ fontSize: '0.7rem' }}>{notif.badge}</span>
-                </div>
-
-                <p style={{ fontSize: '0.86rem', color: '#64748b', marginTop: '4px', lineHeight: 1.45 }}>
-                  {notif.message}
-                </p>
-
-                <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px' }}>
-                  {notif.time}
-                </div>
-              </div>
-            </div>
-
-            <button 
-              className="btn btn-secondary btn-sm"
-              style={{ flexShrink: 0 }}
-              onClick={(e) => {
-                e.stopPropagation();
+        {filtered.length === 0 ? (
+          <div className="farm-card" style={{ textAlign: 'center', padding: '50px 20px', color: '#64748b' }}>
+            <Bell size={40} color="#cbd5e1" style={{ margin: '0 auto 12px auto' }} />
+            <p>{t('all_alerts')}</p>
+          </div>
+        ) : (
+          filtered.map(notif => (
+            <div 
+              key={notif.id}
+              className={`farm-card ${!notif.read ? 'farm-card-interactive' : ''}`}
+              onClick={() => {
                 markAsRead(notif.id);
                 if (notif.actionRoute) setActivePage(notif.actionRoute);
               }}
+              style={{
+                padding: '16px 20px',
+                backgroundColor: !notif.read ? '#ffffff' : '#f8fafc',
+                borderLeft: !notif.read ? '4px solid #16a34a' : '4px solid #cbd5e1',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px'
+              }}
             >
-              Open <ArrowRight size={14} />
-            </button>
-          </div>
-        ))}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                <div 
+                  style={{ 
+                    width: '42px', 
+                    height: '42px', 
+                    borderRadius: '10px', 
+                    backgroundColor: '#f1f5f9', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}
+                >
+                  {getIcon(notif.type)}
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: notif.read ? '#475569' : '#0f172a' }}>
+                      {notif.title}
+                    </h3>
+                    {!notif.read && (
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
+                    )}
+                    <span className="badge badge-gray" style={{ fontSize: '0.7rem' }}>{notif.badge}</span>
+                  </div>
+
+                  <p style={{ fontSize: '0.86rem', color: '#64748b', marginTop: '4px', lineHeight: 1.45 }}>
+                    {notif.message}
+                  </p>
+
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px' }}>
+                    {notif.time}
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                className="btn btn-secondary btn-sm"
+                style={{ flexShrink: 0 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  markAsRead(notif.id);
+                  if (notif.actionRoute) setActivePage(notif.actionRoute);
+                }}
+              >
+                ➔
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

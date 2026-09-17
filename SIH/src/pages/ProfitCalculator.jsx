@@ -10,8 +10,10 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cropsList } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ProfitCalculator = () => {
+  const { t } = useLanguage();
   const [crop, setCrop] = useState('');
   const [landArea, setLandArea] = useState(''); 
   
@@ -68,10 +70,10 @@ export const ProfitCalculator = () => {
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">
-          <Calculator size={28} color="#7c3aed" /> Agricultural Profit & Cost Calculator
+          <Calculator size={28} color="#7c3aed" /> {t('agri_profit_calc')}
         </h1>
         <p className="page-subtitle">
-          Forecast input expenses, gross output revenue, net margins, and break-even mandi pricing before committing field resources.
+          {t('profit_calc_sub')}
         </p>
       </div>
 
@@ -79,32 +81,32 @@ export const ProfitCalculator = () => {
         {/* Left Inputs Form */}
         <div className="farm-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <h2 className="card-section-title">Cost & Yield Variables</h2>
+            <h2 className="card-section-title">{t('cost_yield_variables')}</h2>
             <button 
               type="button" 
               onClick={handleReset} 
               className="btn btn-secondary btn-sm"
               title="Clear all fields"
             >
-              <RotateCcw size={14} /> Reset
+              <RotateCcw size={14} /> {t('reset')}
             </button>
           </div>
-          <p className="card-section-subtitle">Values are automatically scaled by land area.</p>
+          <p className="card-section-subtitle">{t('values_scaled_by_area')}</p>
 
           <form onSubmit={handleCalculate} style={{ marginTop: '16px' }}>
             <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Crop</label>
+                <label className="form-label">{t('crop_cultivated')}</label>
                 <select className="form-select" value={crop} onChange={(e) => handleCropChange(e.target.value)} required>
-                  <option value="" disabled>Select Crop</option>
+                  <option value="" disabled>{t('select_crop')}</option>
                   {cropsList.map(c => (
-                    <option key={c} value={c}>{c}</option>
+                    <option key={c} value={c}>{t(c) || c}</option>
                   ))}
                 </select>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Cultivated Area (Acres)</label>
+                <label className="form-label">{t('land_acres')}</label>
                 <input 
                   type="number" 
                   step="0.1" 
@@ -118,12 +120,12 @@ export const ProfitCalculator = () => {
             </div>
 
             <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '14px 0 8px 0' }}>
-              Per-Acre Input Expenditures (₹)
+              {t('total_expenses')} (₹ / Acre)
             </div>
 
             <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Seed / Seedling Cost (₹)</label>
+                <label className="form-label">{t('seed_cost')} (₹)</label>
                 <input 
                   type="number" min="0"
                   className="form-input" 
@@ -134,7 +136,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Fertilizer & Nutrition (₹)</label>
+                <label className="form-label">{t('fertilizer_cost')} (₹)</label>
                 <input 
                   type="number" min="0"
                   className="form-input" 
@@ -145,7 +147,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Labour & Spraying (₹)</label>
+                <label className="form-label">{t('labour_cost')} (₹)</label>
                 <input 
                   type="number" min="0"
                   className="form-input" 
@@ -156,7 +158,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Irrigation & Power (₹)</label>
+                <label className="form-label">{t('irrigation_power_cost')} (₹)</label>
                 <input 
                   type="number" min="0"
                   className="form-input" 
@@ -168,7 +170,7 @@ export const ProfitCalculator = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Other Machinery & Transport Expenses (₹)</label>
+              <label className="form-label">{t('other_expenses')} (₹)</label>
               <input 
                 type="number" min="0"
                 className="form-input" 
@@ -179,12 +181,12 @@ export const ProfitCalculator = () => {
             </div>
 
             <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '14px 0 8px 0' }}>
-              Output Yield & Mandi Pricing
+              {t('expected_yield_acre')} & {t('expected_mandi_price')}
             </div>
 
             <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Expected Yield (Q/Acre)</label>
+                <label className="form-label">{t('expected_yield_acre')} (Q)</label>
                 <input 
                   type="number" step="0.1" min="0"
                   className="form-input" 
@@ -195,7 +197,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Expected Selling Price (₹/Q)</label>
+                <label className="form-label">{t('expected_mandi_price')} (₹/Q)</label>
                 <input 
                   type="number" min="0"
                   className="form-input" 
@@ -207,7 +209,7 @@ export const ProfitCalculator = () => {
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '16px', padding: '12px' }}>
-              <TrendingUp size={18} /> Calculate Profit Margin
+              <TrendingUp size={18} /> {t('calculate_roi')}
             </button>
           </form>
         </div>
@@ -219,31 +221,31 @@ export const ProfitCalculator = () => {
               <div style={{ backgroundColor: '#e2e8f0', borderRadius: '50%', padding: '20px', marginBottom: '20px' }}>
                 <Calculator size={40} color="#64748b" />
               </div>
-              <h3 style={{ fontSize: '1.2rem', color: '#475569', marginBottom: '10px' }}>Ready to Calculate</h3>
+              <h3 style={{ fontSize: '1.2rem', color: '#475569', marginBottom: '10px' }}>{t('ready_to_calculate')}</h3>
               <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '320px', lineHeight: 1.5 }}>
-                Enter your own expected costs and yield parameters to generate a personalized financial feasibility report.
+                {t('ready_to_calculate_sub')}
               </p>
             </div>
           ) : (
             <div className="farm-card recommendation-card" style={{ borderTopColor: '#7c3aed' }}>
             <span className="badge badge-green" style={{ fontSize: '0.8rem' }}>
-              Financial Feasibility for {area} Acres of {crop}
+              {t('financial_forecast')} — {area} {t('land_acres')} ({t(crop) || crop})
             </span>
 
             {/* Main Profit Callout */}
             <div style={{ margin: '18px 0', padding: '20px 24px', background: netProfit >= 0 ? '#f0fdf4' : '#fef2f2', border: `1.5px solid ${netProfit >= 0 ? '#bbf7d0' : '#fecaca'}`, borderRadius: '16px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: netProfit >= 0 ? '#166534' : '#991b1b', textTransform: 'uppercase' }}>
-                Estimated Net Profit
+                {t('projected_net_profit')}
               </span>
               <div style={{ fontSize: '2.5rem', fontWeight: 800, color: netProfit >= 0 ? '#15803d' : '#dc2626', fontFamily: 'var(--font-display)', lineHeight: 1.15, marginTop: '4px' }}>
                 ₹ {netProfit.toLocaleString()}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '6px' }}>
                 <span className="badge badge-green" style={{ fontSize: '0.85rem' }}>
-                  ROI: {roi}%
+                  {t('return_on_investment')}: {roi}%
                 </span>
                 <span style={{ fontSize: '0.85rem', color: '#475569' }}>
-                  Net Profit per Acre: <strong>₹ {Math.round(netProfit / area).toLocaleString()}</strong>
+                  {t('net_profit')} / Acre: <strong>₹ {Math.round(netProfit / area).toLocaleString()}</strong>
                 </span>
               </div>
             </div>
@@ -251,7 +253,7 @@ export const ProfitCalculator = () => {
             {/* Metrics Breakdown Grid */}
             <div className="grid-2" style={{ gap: '12px', marginBottom: '20px' }}>
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Total Investment Cost</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('total_expenses')}</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#dc2626', marginTop: '2px' }}>
                   ₹ {totalCost.toLocaleString()}
                 </div>
@@ -259,7 +261,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Gross Output Revenue</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('gross_revenue')}</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0284c7', marginTop: '2px' }}>
                   ₹ {expectedRevenue.toLocaleString()}
                 </div>
@@ -267,7 +269,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Break-Even Price</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('break_even_price')}</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#d97706', marginTop: '2px' }}>
                   ₹ {breakEvenPrice.toLocaleString()} / Q
                 </div>
@@ -275,7 +277,7 @@ export const ProfitCalculator = () => {
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Profit Margin</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('return_on_investment')}</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#16a34a', marginTop: '2px' }}>
                   {expectedRevenue > 0 ? Math.round((netProfit / expectedRevenue) * 100) : 0}%
                 </div>
@@ -286,22 +288,22 @@ export const ProfitCalculator = () => {
             {/* Expenditure Proportion Bar */}
             <div style={{ background: '#fafafa', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>
-                <span>Cost Component Share</span>
-                <span>Labour ~ {Math.round((labourCost / costPerAcre) * 100)}%</span>
+                <span>{t('cost_yield_variables')}</span>
+                <span>{t('labour_cost')} ~ {Math.round((labourCost / (costPerAcre || 1)) * 100)}%</span>
               </div>
               <div style={{ display: 'flex', height: '14px', borderRadius: '9999px', overflow: 'hidden', gap: '2px' }}>
-                <div style={{ width: `${(seedCost / costPerAcre) * 100}%`, background: '#3b82f6' }} title={`Seed: ₹${seedCost}`} />
-                <div style={{ width: `${(fertilizerCost / costPerAcre) * 100}%`, background: '#10b981' }} title={`Fertilizer: ₹${fertilizerCost}`} />
-                <div style={{ width: `${(labourCost / costPerAcre) * 100}%`, background: '#f59e0b' }} title={`Labour: ₹${labourCost}`} />
-                <div style={{ width: `${(irrigationCost / costPerAcre) * 100}%`, background: '#06b6d4' }} title={`Irrigation: ₹${irrigationCost}`} />
-                <div style={{ width: `${(otherExpenses / costPerAcre) * 100}%`, background: '#8b5cf6' }} title={`Other: ₹${otherExpenses}`} />
+                <div style={{ width: `${(seedCost / (costPerAcre || 1)) * 100}%`, background: '#3b82f6' }} title={`Seed: ₹${seedCost}`} />
+                <div style={{ width: `${(fertilizerCost / (costPerAcre || 1)) * 100}%`, background: '#10b981' }} title={`Fertilizer: ₹${fertilizerCost}`} />
+                <div style={{ width: `${(labourCost / (costPerAcre || 1)) * 100}%`, background: '#f59e0b' }} title={`Labour: ₹${labourCost}`} />
+                <div style={{ width: `${(irrigationCost / (costPerAcre || 1)) * 100}%`, background: '#06b6d4' }} title={`Irrigation: ₹${irrigationCost}`} />
+                <div style={{ width: `${(otherExpenses / (costPerAcre || 1)) * 100}%`, background: '#8b5cf6' }} title={`Other: ₹${otherExpenses}`} />
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '0.72rem', color: '#64748b', marginTop: '10px' }}>
-                <span><strong style={{ color: '#3b82f6' }}>■</strong> Seeds</span>
-                <span><strong style={{ color: '#10b981' }}>■</strong> Fertilizers</span>
-                <span><strong style={{ color: '#f59e0b' }}>■</strong> Labour</span>
-                <span><strong style={{ color: '#06b6d4' }}>■</strong> Irrigation</span>
-                <span><strong style={{ color: '#8b5cf6' }}>■</strong> Other</span>
+                <span><strong style={{ color: '#3b82f6' }}>■</strong> {t('seed_cost')}</span>
+                <span><strong style={{ color: '#10b981' }}>■</strong> {t('fertilizer_cost')}</span>
+                <span><strong style={{ color: '#f59e0b' }}>■</strong> {t('labour_cost')}</span>
+                <span><strong style={{ color: '#06b6d4' }}>■</strong> {t('irrigation_power_cost')}</span>
+                <span><strong style={{ color: '#8b5cf6' }}>■</strong> {t('other_expenses')}</span>
               </div>
             </div>
           </div>

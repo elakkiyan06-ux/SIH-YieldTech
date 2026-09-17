@@ -7,13 +7,27 @@ import { useLanguage } from '../../context/LanguageContext';
 export const Header = () => {
   const { user, isAdmin } = useAuth();
   const { setActivePage, unreadNotificationsCount, toggleDrawer, weather } = useAppState();
-  const { currentLang, setCurrentLang } = useLanguage();
+  const { currentLang, setCurrentLang, t } = useLanguage();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 12) return t('greeting_morning');
+    if (hour < 17) return t('greeting_afternoon');
+    return t('greeting_evening');
+  };
+
+  const getConditionLabel = (cond) => {
+    if (!cond) return '';
+    const norm = cond.toLowerCase().trim();
+    if (norm.includes('partly')) return t('cond_partly_cloudy');
+    if (norm.includes('cloud')) return t('cond_cloudy');
+    if (norm.includes('thunder')) return t('cond_thunderstorm');
+    if (norm.includes('rain')) return t('cond_rain');
+    if (norm.includes('shower')) return t('cond_showers');
+    if (norm.includes('fog')) return t('cond_fog');
+    if (norm.includes('snow')) return t('cond_snow');
+    if (norm.includes('clear') || norm.includes('sunny')) return t('cond_clear');
+    return cond;
   };
 
   return (
@@ -23,7 +37,7 @@ export const Header = () => {
         <button 
           onClick={toggleDrawer}
           className="hamburger-menu-btn"
-          title="Open Menu"
+          title={t('open_menu')}
           style={{ background: 'none', border: 'none', padding: '4px', cursor: 'pointer', color: 'var(--slate-700)' }}
         >
           <Menu size={24} />
@@ -65,7 +79,7 @@ export const Header = () => {
               cursor: 'pointer', 
               outline: 'none' 
             }}
-            title="Switch Language / மொழி மாற்றுக"
+            title={t('switch_lang_title')}
           >
             <option value="en">English (EN)</option>
             <option value="ta">தமிழ் (Tamil)</option>
@@ -80,18 +94,18 @@ export const Header = () => {
         <button 
           onClick={() => setActivePage('weather')} 
           className="header-weather-chip"
-          title="Click to view complete 7-day weather forecast"
+          title={t('view_7day_forecast')}
         >
           <CloudSun size={18} color="#16a34a" />
           <span>{weather.location.split(',')[0]} <strong>{weather.currentTemp}°C</strong></span>
-          <span style={{ opacity: 0.75 }}>• {weather.condition}</span>
+          <span style={{ opacity: 0.75 }}>• {getConditionLabel(weather.condition)}</span>
         </button>
 
         {/* Notification Bell */}
         <button 
           onClick={() => setActivePage('notifications')}
           className="header-notif-btn" 
-          title="View Agricultural Alerts & Notifications"
+          title={t('view_agri_alerts')}
         >
           <Bell size={18} />
           {unreadNotificationsCount > 0 && (
@@ -108,7 +122,7 @@ export const Header = () => {
             padding: 0,
             cursor: 'pointer'
           }}
-          title="Farmer Profile"
+          title={t('profile')}
         >
           {user?.avatar ? (
             <img 

@@ -364,7 +364,7 @@ export const ListEquipment = () => {
           className={`owner-tab-btn ${activeTab === 'register' ? 'active' : ''}`}
         >
           <PlusCircle size={18} />
-          <span>{editingId ? 'Edit Listing Form' : 'Register Equipment'}</span>
+          <span>{editingId ? 'Edit Listing Form' : t('register_equipment')}</span>
         </button>
 
         <button 
@@ -372,7 +372,7 @@ export const ListEquipment = () => {
           className={`owner-tab-btn ${activeTab === 'my-listings' ? 'active' : ''}`}
         >
           <Layers size={18} />
-          <span>My Listings ({myListings.length})</span>
+          <span>{t('my_listings')} ({myListings.length})</span>
         </button>
 
         <button 
@@ -380,7 +380,7 @@ export const ListEquipment = () => {
           className={`owner-tab-btn ${activeTab === 'enquiries' ? 'active' : ''}`}
         >
           <MessageSquare size={18} />
-          <span>Received Enquiries ({receivedEnquiries.length})</span>
+          <span>{t('received_enquiries')} ({receivedEnquiries.length})</span>
         </button>
       </div>
 

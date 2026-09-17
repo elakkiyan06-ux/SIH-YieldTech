@@ -168,7 +168,7 @@ export const DiseaseDetection = () => {
                     {t('detected_crop')}: {result.crop}
                   </span>
                   <h2 className="diag-disease-name">{locRep.diseaseName}</h2>
-                  <div className="diag-pathogen-name">Pathogen: <em>{locRep.pathogen}</em></div>
+                  <div className="diag-pathogen-name">{t('pathogen')}: <em>{locRep.pathogen}</em></div>
                 </div>
 
                 <div className="confidence-pill">
@@ -235,7 +235,7 @@ export const DiseaseDetection = () => {
               {/* Action Strip */}
               <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
                 <button 
-                  onClick={() => alert('Consultation request sent to nearest agricultural extension officer!')}
+                  onClick={() => alert(t('consultation_sent'))}
                   className="btn btn-primary"
                   style={{ flex: 1 }}
                 >

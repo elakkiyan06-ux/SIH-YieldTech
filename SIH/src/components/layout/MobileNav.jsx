@@ -11,7 +11,7 @@ export const MobileNav = () => {
     { id: 'home', label: t('home'), icon: Wheat },
     { id: 'market', label: t('market'), icon: TrendingUp },
     { id: 'profit', label: t('profit'), icon: Calculator },
-    { id: 'reels', label: 'Reels', icon: Clapperboard },
+    { id: 'reels', label: t('reels'), icon: Clapperboard },
     { id: 'expert-qa', label: t('qa'), icon: HelpCircle }
   ];
 

@@ -191,7 +191,7 @@ export const Sidebar = () => {
               logout();
             }} 
             className="logout-icon-btn" 
-            title="Log out"
+            title={t('logout')}
           >
             <LogOut size={16} />
           </button>

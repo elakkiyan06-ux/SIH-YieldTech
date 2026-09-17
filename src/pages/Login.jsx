@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Wheat, Phone, Lock, ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
+import { Wheat, Phone, Lock, ArrowRight, Sparkles, ShieldCheck, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
+import { useLanguage } from '../context/LanguageContext';
 import { currentUser } from '../data/mockData';
 import { generateForecastArray, generateAdvisories, generateCriticalAlert } from '../utils/weatherUtils';
 
 export const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
   const { setWeather } = useAppState();
+  const { currentLang, setCurrentLang, t } = useLanguage();
   const [phone, setPhone] = useState('9842176540');
   const [otp, setOtp] = useState('1234');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,7 +95,24 @@ export const Login = ({ onSwitchToRegister }) => {
 
   return (
     <div className="auth-container auth-3d-bg">
-      <div className="auth-card-3d">
+      <div className="auth-card-3d" style={{ position: 'relative' }}>
+        {/* Language selector chip on login card */}
+        <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', alignItems: 'center', gap: '5px', background: '#f0fdf4', padding: '4px 10px', borderRadius: '9999px', border: '1px solid #bbf7d0' }}>
+          <Globe size={14} color="#16a34a" />
+          <select 
+            value={currentLang} 
+            onChange={(e) => setCurrentLang(e.target.value)}
+            style={{ background: 'transparent', border: 'none', fontSize: '0.8rem', fontWeight: 700, color: '#15803d', cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="en">English</option>
+            <option value="ta">தமிழ்</option>
+            <option value="hi">हिन्दी</option>
+            <option value="te">తెలుగు</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+          </select>
+        </div>
+
         {/* Brand Banner */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="brand-logo-3d">
@@ -103,7 +122,7 @@ export const Login = ({ onSwitchToRegister }) => {
             Farmogram
           </h1>
           <p className="brand-subtitle-3d">
-            Farmer Community & Precision Agricultural Decision Support
+            {t('brand_subtitle_login')}
           </p>
         </div>
 
@@ -111,7 +130,7 @@ export const Login = ({ onSwitchToRegister }) => {
         <form onSubmit={handleSubmit} className="auth-form-3d">
           <div className="form-group-3d">
             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Phone size={14} /> Registered Mobile Number
+              <Phone size={14} /> {t('login_mobile_label')}
             </label>
             <input 
               type="tel" 
@@ -125,7 +144,7 @@ export const Login = ({ onSwitchToRegister }) => {
 
           <div className="form-group-3d">
             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Lock size={14} /> Password
+              <Lock size={14} /> {t('login_pwd_label')}
             </label>
             <input 
               type="password" 
@@ -135,7 +154,7 @@ export const Login = ({ onSwitchToRegister }) => {
               onChange={(e) => setOtp(e.target.value)}
               required
             />
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Demo password is pre-filled</span>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{t('demo_pwd_hint')}</span>
           </div>
 
           <button 
@@ -143,18 +162,18 @@ export const Login = ({ onSwitchToRegister }) => {
             className={`btn-3d-submit ${isSubmitting ? 'loading' : ''}`}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Fetching Location & Weather...' : 'Login to Farmogram'}
+            {isSubmitting ? t('fetching_location_weather') : t('login_submit_btn')}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.85rem', color: '#64748b' }}>
-          New Farmer?{' '}
+          {t('new_farmer_prompt')}{' '}
           <button 
             type="button"
             onClick={onSwitchToRegister}
             style={{ background: 'none', border: 'none', color: '#16a34a', fontWeight: 700, cursor: 'pointer' }}
           >
-            Register Your Farm
+            {t('register_farm_link')}
           </button>
         </div>
       </div>

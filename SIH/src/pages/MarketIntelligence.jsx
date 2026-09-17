@@ -14,8 +14,10 @@ import {
 } from 'lucide-react';
 import { marketCommodities, locations, cropsList } from '../data/mockData';
 import { Modal } from '../components/common/Modal';
+import { useLanguage } from '../context/LanguageContext';
 
 export const MarketIntelligence = () => {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCrop, setSelectedCrop] = useState('All');
   const [selectedMandi, setSelectedMandi] = useState('All');
@@ -35,46 +37,46 @@ export const MarketIntelligence = () => {
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">
-          <TrendingUp size={28} color="#16a34a" /> Market Intelligence & Mandi Rates
+          <TrendingUp size={28} color="#16a34a" /> {t('market_mandi_rates')}
         </h1>
         <p className="page-subtitle">
-          Real-time APMC mandi prices, volume arrivals, and 15-day price momentum across Tamil Nadu markets.
+          {t('market_mandi_sub')}
         </p>
       </div>
 
       {/* Top Ticker / Market Summary Strip */}
       <div className="market-summary-cards grid-4" style={{ marginBottom: '20px' }}>
         <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #16a34a' }}>
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Top Gainer Today</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>{t('top_gainer_today')}</span>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>Tomato</span>
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>{t('Tomato') || 'Tomato'}</span>
             <span className="badge badge-green">↑ 8.1%</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 700, marginTop: '2px' }}>₹ 2,800 / Quintal</div>
         </div>
 
         <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #d97706' }}>
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Cash Crop Star</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>{t('cash_crop_star')}</span>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>Turmeric (Erode)</span>
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>{t('Turmeric') || 'Turmeric'} (Erode)</span>
             <span className="badge badge-amber">↑ 6.5%</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#d97706', fontWeight: 700, marginTop: '2px' }}>₹ 14,800 / Quintal</div>
         </div>
 
         <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #0284c7' }}>
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Highest Arrivals</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>{t('highest_arrivals')}</span>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>Paddy (Thanjavur)</span>
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>{t('Paddy') || 'Paddy'} (Thanjavur)</span>
             <span className="badge badge-blue">140 Tonnes</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#0284c7', fontWeight: 700, marginTop: '2px' }}>₹ 2,300 / Quintal</div>
         </div>
 
         <div className="farm-card" style={{ padding: '16px 20px', borderLeft: '4px solid #7c3aed' }}>
-          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Oilseed Trend</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>{t('oilseed_trend')}</span>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>Groundnut Pod</span>
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>{t('Groundnut') || 'Groundnut'}</span>
             <span className="badge badge-green">↑ 4.0%</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#7c3aed', fontWeight: 700, marginTop: '2px' }}>₹ 6,500 / Quintal</div>
@@ -90,7 +92,7 @@ export const MarketIntelligence = () => {
             <input 
               type="text" 
               className="form-input" 
-              placeholder="Search commodity (e.g. Tomato, Groundnut, Paddy)..."
+              placeholder={t('search_commodity_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ paddingLeft: '38px' }}
@@ -104,9 +106,9 @@ export const MarketIntelligence = () => {
               value={selectedCrop} 
               onChange={(e) => setSelectedCrop(e.target.value)}
             >
-              <option value="All">All Commodities</option>
+              <option value="All">{t('all_commodities')}</option>
               {cropsList.map(c => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>{t(c) || c}</option>
               ))}
             </select>
           </div>
@@ -118,9 +120,9 @@ export const MarketIntelligence = () => {
               value={selectedMandi} 
               onChange={(e) => setSelectedMandi(e.target.value)}
             >
-              <option value="All">All Mandi Districts</option>
+              <option value="All">{t('all_mandi_districts')}</option>
               {locations.map(loc => (
-                <option key={loc} value={loc}>{loc}</option>
+                <option key={loc} value={loc}>{t(loc) || loc}</option>
               ))}
             </select>
           </div>
@@ -130,7 +132,7 @@ export const MarketIntelligence = () => {
               onClick={() => { setSearchTerm(''); setSelectedCrop('All'); setSelectedMandi('All'); }}
               className="btn btn-secondary btn-sm"
             >
-              Clear Filters
+              {t('clear_filters')}
             </button>
           )}
         </div>
@@ -139,10 +141,10 @@ export const MarketIntelligence = () => {
       {/* Mandi Commodities Grid */}
       {filteredCommodities.length === 0 ? (
         <div className="farm-card" style={{ gridColumn: '1 / -1', padding: '60px 20px', textAlign: 'center', background: '#f8fafc', border: '2px dashed #cbd5e1' }}>
-          <h3 style={{ color: '#475569', fontSize: '1.25rem', marginBottom: '8px', fontWeight: '700' }}>No Mandi Price Details Available</h3>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>We couldn't find any active APMC mandi price details for the selected crop and district combination.</p>
+          <h3 style={{ color: '#475569', fontSize: '1.25rem', marginBottom: '8px', fontWeight: '700' }}>{t('no_mandi_details')}</h3>
+          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>{t('no_mandi_details_sub')}</p>
           <button onClick={() => { setSearchTerm(''); setSelectedCrop('All'); setSelectedMandi('All'); }} className="btn btn-primary" style={{ marginTop: '16px' }}>
-            Clear Filters
+            {t('clear_filters')}
           </button>
         </div>
       ) : (
@@ -159,7 +161,7 @@ export const MarketIntelligence = () => {
               {/* Top row */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>{item.commodity}</h3>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>{t(item.commodity) || item.commodity}</h3>
                   <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{item.variety}</span>
                 </div>
                 <span className={`badge ${isUp ? 'badge-green' : 'badge-red'}`} style={{ fontSize: '0.82rem', padding: '3px 8px' }}>
@@ -170,14 +172,14 @@ export const MarketIntelligence = () => {
 
               {/* Mandi Location */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.82rem', color: '#475569', marginBottom: '14px' }}>
-                <MapPin size={13} color="#16a34a" /> {item.mandi} ({item.district})
+                <MapPin size={13} color="#16a34a" /> {item.mandi} ({t(item.district) || item.district})
               </div>
 
               {/* Price Row */}
               <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Current Modal Rate:</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Prev: ₹{item.previousPrice.toLocaleString()}</span>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('current_modal_rate')}:</span>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{t('prev_rate')}: ₹{item.previousPrice.toLocaleString()}</span>
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', fontFamily: 'var(--font-display)', marginTop: '2px' }}>
                   ₹ {item.currentPrice.toLocaleString()} <span style={{ fontSize: '0.8rem', fontWeight: 500, color: '#64748b' }}>/ Quintal</span>
@@ -185,16 +187,16 @@ export const MarketIntelligence = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b', marginTop: '6px' }}>
                   <span>Min: ₹{item.minPrice.toLocaleString()}</span>
                   <span>Max: ₹{item.maxPrice.toLocaleString()}</span>
-                  <span>Arrivals: {item.arrivalsTonnes} T</span>
+                  <span>{t('arrivals')}: {item.arrivalsTonnes} T</span>
                 </div>
               </div>
 
               {/* Visual 6-point Mini Trend Sparkline Bar */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#94a3b8', marginBottom: '4px' }}>
-                  <span>15-Day Price Trend</span>
+                  <span>{t('trend_15day')}</span>
                   <span style={{ color: isUp ? '#16a34a' : '#dc2626', fontWeight: 700 }}>
-                    {isUp ? 'Bullish' : 'Bearish'}
+                    {isUp ? t('bullish') : t('bearish')}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '36px', background: '#f8fafc', padding: '4px', borderRadius: '6px' }}>
@@ -221,7 +223,7 @@ export const MarketIntelligence = () => {
 
               {/* Click to view details */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '14px', borderTop: '1px solid #f1f5f9', paddingTop: '10px', fontSize: '0.82rem', fontWeight: 700, color: '#16a34a' }}>
-                <span>View Mandi Analytics</span>
+                <span>{t('view_mandi_analytics')}</span>
                 <span>→</span>
               </div>
             </div>
@@ -235,49 +237,49 @@ export const MarketIntelligence = () => {
         <Modal 
           isOpen={true} 
           onClose={() => setActiveTrendModal(null)} 
-          title={`📈 ${activeTrendModal.commodity} — ${activeTrendModal.mandi}`}
+          title={`📈 ${t(activeTrendModal.commodity) || activeTrendModal.commodity} — ${activeTrendModal.mandi}`}
         >
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f0fdf4', padding: '14px 18px', borderRadius: '12px', border: '1px solid #bbf7d0', marginBottom: '16px' }}>
               <div>
-                <span style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 700 }}>CURRENT APMC MODAL RATE</span>
+                <span style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 700 }}>{t('current_modal_rate')}</span>
                 <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#14532d' }}>
                   ₹ {activeTrendModal.currentPrice.toLocaleString()} / Quintal
                 </div>
               </div>
               <span className={`badge ${activeTrendModal.trend === 'up' ? 'badge-green' : 'badge-red'}`} style={{ fontSize: '0.9rem', padding: '6px 12px' }}>
-                {activeTrendModal.trend === 'up' ? '↑' : '↓'} {Math.abs(activeTrendModal.changePercent)}% This Week
+                {activeTrendModal.trend === 'up' ? '↑' : '↓'} {Math.abs(activeTrendModal.changePercent)}%
               </span>
             </div>
 
             <h4 style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1e293b', marginBottom: '8px' }}>
-              Arrivals & Quality Specifications
+              {t('grade_rating')} & {t('daily_arrivals')}
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '16px' }}>
               <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Daily Arrivals</span>
+                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{t('daily_arrivals')}</span>
                 <div style={{ fontWeight: 700, color: '#0f172a' }}>{activeTrendModal.arrivalsTonnes} Tonnes</div>
               </div>
               <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Grade Rating</span>
+                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{t('grade_rating')}</span>
                 <div style={{ fontWeight: 700, color: '#0f172a' }}>FAQ / Grade A</div>
               </div>
               <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Mandi Status</span>
+                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{t('mandi_status')}</span>
                 <div style={{ fontWeight: 700, color: '#16a34a' }}>Active Trading</div>
               </div>
             </div>
 
             <h4 style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1e293b', marginBottom: '8px' }}>
-              Procurement & Selling Advice
+              {t('procurement_advice')}
             </h4>
             <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, background: '#fafafa', padding: '12px', borderRadius: '8px' }}>
-              Demand from retail distribution centers in Coimbatore and Tirupur remains strong. With morning arrivals peaking at 6:30 AM, farmers bringing graded produce can expect to realize rates closer to the maximum band (₹{activeTrendModal.maxPrice.toLocaleString()}/q).
+              Demand from regional distribution centers remains active. With morning arrivals peaking early, farmers bringing graded produce can expect to realize rates closer to the maximum band (₹{activeTrendModal.maxPrice.toLocaleString()}/q).
             </p>
 
             <div className="modal-footer" style={{ margin: '18px -24px -24px -24px' }}>
               <button className="btn btn-primary" onClick={() => setActiveTrendModal(null)}>
-                Close Analytics
+                {t('close_analytics')}
               </button>
             </div>
           </div>

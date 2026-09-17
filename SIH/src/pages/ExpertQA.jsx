@@ -17,9 +17,11 @@ import { useAuth } from '../context/AuthContext';
 import { cropsList } from '../data/mockData';
 import { Modal } from '../components/common/Modal';
 import { FarmingChatbot } from '../components/chatbot/FarmingChatbot';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ExpertQA = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { questions, askQuestion, addReplyToQuestion } = useAppState();
 
   const [isAskModalOpen, setIsAskModalOpen] = useState(false);
@@ -74,10 +76,10 @@ export const ExpertQA = () => {
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <h1 className="page-title">
-            <HelpCircle size={28} color="#16a34a" /> 👨‍🌾 Ask an Expert & Community Forum
+            <HelpCircle size={28} color="#16a34a" /> {t('expert_forum_title')}
           </h1>
           <p className="page-subtitle">
-            Get peer-reviewed agronomic answers from TNAU scientists, KVK officers, and verified master farmers.
+            {t('expert_forum_sub')}
           </p>
         </div>
 
@@ -87,7 +89,7 @@ export const ExpertQA = () => {
             onClick={() => setIsAskModalOpen(true)}
             className="btn btn-primary"
           >
-            <PlusCircle size={18} /> Ask a Farming Question
+            <PlusCircle size={18} /> {t('ask_farming_question')}
           </button>
         </div>
       </div>
@@ -100,7 +102,7 @@ export const ExpertQA = () => {
             <input 
               type="text" 
               className="form-input" 
-              placeholder="Search questions by symptom, pest, or crop..."
+              placeholder={t('search_qa_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ paddingLeft: '38px' }}
@@ -113,9 +115,9 @@ export const ExpertQA = () => {
               value={selectedCrop} 
               onChange={(e) => setSelectedCrop(e.target.value)}
             >
-              <option value="All">All Crops</option>
+              <option value="All">{t('all_commodities') || 'All Crops'}</option>
               {cropsList.map(c => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>{t(c) || c}</option>
               ))}
             </select>
           </div>
@@ -137,17 +139,16 @@ export const ExpertQA = () => {
                 <div>
                   <div style={{ fontWeight: 700, color: '#0f172a' }}>{q.farmer.name}</div>
                   <div style={{ fontSize: '0.76rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <MapPin size={11} /> {q.farmer.location} • {q.timestamp}
+                    <MapPin size={11} /> {t(q.farmer.location) || q.farmer.location} • {q.timestamp}
                   </div>
                 </div>
               </div>
 
-              <span className="badge badge-green">{q.farmer.crop}</span>
+              <span className="badge badge-green">{t(q.farmer.crop) || q.farmer.crop}</span>
             </div>
 
-            {/* Question Body with Agri-Tip Reel Sized Image (160px, 9/14) */}
+            {/* Question Body with Agri-Tip Reel Sized Image */}
             <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: '16px' }}>
-              {/* Question Image if uploaded - exact size of Short Video Agri-Tips & Guides */}
               {q.image && (
                 <div 
                   className="qa-post-reel-thumb"
@@ -192,7 +193,7 @@ export const ExpertQA = () => {
                     fontWeight: 700,
                     backdropFilter: 'blur(2px)'
                   }}>
-                    {q.farmer.crop}
+                    {t(q.farmer.crop) || q.farmer.crop}
                   </div>
                   <div style={{
                     position: 'absolute',
@@ -250,7 +251,7 @@ export const ExpertQA = () => {
                   </div>
                 ) : (
                   <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px', fontSize: '0.85rem', color: '#b45309' }}>
-                    ⏳ Awaiting official TNAU agronomist review. You can share your farmer experience below.
+                    ⏳ Awaiting official agronomist review. You can share your farmer experience below.
                   </div>
                 )}
               </div>
@@ -260,7 +261,7 @@ export const ExpertQA = () => {
             {q.replies && q.replies.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
                 <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-                  Farmer Discussions ({q.replies.length})
+                  {t('farmer_discussion') || 'Farmer Discussions'} ({q.replies.length})
                 </div>
                 {q.replies.map(r => (
                   <div key={r.id} style={{ background: '#f8fafc', padding: '10px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '0.85rem' }}>
@@ -279,7 +280,7 @@ export const ExpertQA = () => {
               <input 
                 type="text" 
                 className="form-input" 
-                placeholder="Share your practical experience or reply..."
+                placeholder={t('write_reply')}
                 value={replyInputs[q.id] || ''}
                 onChange={(e) => handleReplyChange(q.id, e.target.value)}
               />
@@ -287,6 +288,7 @@ export const ExpertQA = () => {
                 onClick={() => handleSendReply(q.id)}
                 className="btn btn-primary"
                 style={{ padding: '0 16px' }}
+                title={t('post_reply')}
               >
                 <Send size={16} />
               </button>
@@ -299,20 +301,20 @@ export const ExpertQA = () => {
       <Modal 
         isOpen={isAskModalOpen} 
         onClose={() => setIsAskModalOpen(false)} 
-        title="👨‍🌾 Ask Agricultural Experts"
+        title={`👨‍🌾 ${t('ask_farming_question')}`}
       >
         <form onSubmit={handleAskSubmit}>
           <div className="form-group">
-            <label className="form-label">Associated Crop</label>
+            <label className="form-label">{t('crop_cultivated')}</label>
             <select className="form-select" value={newCrop} onChange={(e) => setNewCrop(e.target.value)}>
               {cropsList.map(c => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>{t(c) || c}</option>
               ))}
             </select>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Describe Your Problem / Query *</label>
+            <label className="form-label">{t('ask_farming_question')} *</label>
             <textarea 
               className="form-textarea" 
               rows="4" 
@@ -338,10 +340,10 @@ export const ExpertQA = () => {
 
           <div className="modal-footer" style={{ margin: '18px -24px -24px -24px' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsAskModalOpen(false)}>
-              Cancel
+              {t('cancel')}
             </button>
             <button type="submit" className="btn btn-primary">
-              Submit Question
+              {t('submit_question')}
             </button>
           </div>
         </form>
@@ -352,7 +354,7 @@ export const ExpertQA = () => {
         <Modal 
           isOpen={!!previewImage} 
           onClose={() => setPreviewImage(null)} 
-          title="🔍 Field Sample Inspection (High-Resolution)"
+          title="🔍 Field Sample Inspection"
         >
           <div style={{ textAlign: 'center' }}>
             <img 

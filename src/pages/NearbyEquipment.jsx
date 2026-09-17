@@ -153,14 +153,13 @@ export const NearbyEquipment = () => {
         <div className="hero-text-content">
           <div className="hero-pill-badge">
             <Tractor size={16} />
-            <span>Farm Machinery & Rental Hub</span>
+            <span>{t('equipment_badge')}</span>
           </div>
           <h1 className="hero-main-title" style={{ color: '#ffffff' }}>
-            Nearby Agricultural Equipment & Services
+            {t('equipment_hero_title')}
           </h1>
           <p className="hero-subtext">
-            Discover verified tractors, JCBs, combine harvesters, rotavators, and sprayers near your farm. 
-            Compare rental rates per hour or acre and contact local machinery owners directly.
+            {t('equipment_hero_sub')}
           </p>
         </div>
 
@@ -170,7 +169,7 @@ export const NearbyEquipment = () => {
             className="btn btn-primary list-equipment-cta"
           >
             <PlusCircle size={20} />
-            <span>List Your Equipment</span>
+            <span>{t('list_equipment')}</span>
           </button>
         </div>
       </div>
@@ -194,7 +193,7 @@ export const NearbyEquipment = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <MapPin size={20} color="#16a34a" />
             <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#0f172a', fontWeight: 700 }}>
-              Your Farm Search Location
+              {t('farm_search_location')}
             </h3>
           </div>
 
@@ -207,16 +206,16 @@ export const NearbyEquipment = () => {
           >
             <Navigation size={16} className={gpsStatus === 'requesting' ? 'spin-icon' : ''} />
             <span>
-              {gpsStatus === 'requesting' ? 'Acquiring GPS...' :
-               gpsStatus === 'acquired' ? `GPS Active (±${gpsAccuracy}m)` :
-               'Detect My Farm GPS'}
+              {gpsStatus === 'requesting' ? t('gps_acquiring') :
+               gpsStatus === 'acquired' ? `${t('gps_active')} (±${gpsAccuracy}m)` :
+               t('detect_gps')}
             </span>
           </button>
         </div>
 
         <div className="location-selectors-row">
           <div className="selector-group">
-            <label>District</label>
+            <label>{t('district')}</label>
             <select 
               value={selectedDistrict}
               onChange={(e) => {
@@ -229,26 +228,26 @@ export const NearbyEquipment = () => {
               className="ai-settings-select"
             >
               {districts.map(d => (
-                <option key={d} value={d}>{d}</option>
+                <option key={d} value={d}>{t(d) || d}</option>
               ))}
             </select>
           </div>
 
           <div className="selector-group">
-            <label>Taluk / Agro Hub</label>
+            <label>{t('taluk_hub')}</label>
             <select 
               value={selectedTaluk}
               onChange={(e) => handleTalukChange(e.target.value)}
               className="ai-settings-select"
             >
-              {taluksForDistrict.map(t => (
-                <option key={t} value={t}>{t}</option>
+              {taluksForDistrict.map(t_item => (
+                <option key={t_item} value={t_item}>{t_item}</option>
               ))}
             </select>
           </div>
 
           <div className="selector-group village-input-group">
-            <label>Village / Landmark</label>
+            <label>{t('village_landmark')}</label>
             <input 
               type="text" 
               value={customVillage}
@@ -286,7 +285,7 @@ export const NearbyEquipment = () => {
 
         {/* Distance Radius Pills */}
         <div className="radius-pill-selector">
-          <span className="filter-inline-label">Radius:</span>
+          <span className="filter-inline-label">{t('radius')}:</span>
           {[5, 10, 25, 50, 100].map(r => (
             <button
               key={r}
@@ -312,7 +311,7 @@ export const NearbyEquipment = () => {
             title="List View"
           >
             <Layers size={18} />
-            <span>List ({equipmentList.length})</span>
+            <span>{t('list_view')} ({equipmentList.length})</span>
           </button>
           <button 
             onClick={() => setViewMode('map')}
@@ -320,7 +319,7 @@ export const NearbyEquipment = () => {
             title="Interactive Map View"
           >
             <Compass size={18} />
-            <span>Map View</span>
+            <span>{t('map_view')}</span>
           </button>
         </div>
       </div>
@@ -346,16 +345,16 @@ export const NearbyEquipment = () => {
         <div className="left-filter-group">
           {/* Pricing Unit Filter */}
           <div className="mini-filter">
-            <span className="mini-label">Price Unit:</span>
+            <span className="mini-label">{t('price_unit')}:</span>
             <select 
               value={pricingUnitFilter}
               onChange={(e) => setPricingUnitFilter(e.target.value)}
               className="mini-select"
             >
               <option value="all">All Units</option>
-              <option value="hour">Per Hour</option>
-              <option value="acre">Per Acre</option>
-              <option value="day">Per Day</option>
+              <option value="hour">{t('per_hour')}</option>
+              <option value="acre">{t('per_acre')}</option>
+              <option value="day">{t('per_day')}</option>
             </select>
           </div>
 
@@ -367,23 +366,23 @@ export const NearbyEquipment = () => {
               onChange={(e) => setAvailableOnly(e.target.checked)}
               className="available-checkbox"
             />
-            <span>Available for Work Only</span>
+            <span>{t('available_only')}</span>
           </label>
         </div>
 
         {/* Sorting Dropdown */}
         <div className="sorting-group">
           <ArrowUpDown size={15} color="#64748b" />
-          <span className="mini-label">Sort:</span>
+          <span className="mini-label">{t('sort_by')}:</span>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="mini-select sort-select"
           >
-            <option value="nearest">Nearest First</option>
-            <option value="price_low">Price: Low to High</option>
-            <option value="price_high">Price: High to Low</option>
-            <option value="rating">Top Rated Owner</option>
+            <option value="nearest">{t('sort_nearest')}</option>
+            <option value="price_low">{t('sort_price_low')}</option>
+            <option value="price_high">{t('sort_price_high')}</option>
+            <option value="rating">{t('sort_rating')}</option>
           </select>
         </div>
       </div>

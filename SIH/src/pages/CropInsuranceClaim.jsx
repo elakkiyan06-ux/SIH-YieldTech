@@ -186,17 +186,17 @@ export const CropInsuranceClaim = () => {
           </div>
           <div>
             <div className="claim-urgent-title">
-              ⚠️ 72-Hour Mandatory Damage Intimation Notice
+              {t('mandatory_72h_notice')}
             </div>
             <p className="claim-urgent-desc">
-              For PMFBY localized calamities (hailstorm, inundation, cyclone, cloudburst), intimate the incident within <strong>72 hours</strong> directly to Helpline <strong>14447</strong> or your Block Agricultural Officer before floodwaters recede.
+              {t('claim_notice_desc')}
             </p>
           </div>
         </div>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <a href="tel:14447" className="claim-helpline-chip">
-            <Phone size={16} /> Call Toll-Free 14447
+            <Phone size={16} /> {t('call_toll_free_14447')}
           </a>
         </div>
       </div>
@@ -206,13 +206,13 @@ export const CropInsuranceClaim = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span className="badge badge-emerald">PMFBY Claim Assistance</span>
-            <span className="badge badge-amber">Farmer Evidence Pre-Survey</span>
+            <span className="badge badge-amber">{t('claim_hero_badge')}</span>
           </div>
           <h1 className="page-title" style={{ marginTop: '8px' }}>
-            <ShieldAlert size={28} color="#16a34a" /> Crop Insurance Claim Preparation Assistant
+            <ShieldAlert size={28} color="#16a34a" /> {t('claim_hero_title')}
           </h1>
           <p className="page-subtitle">
-            Systematically document crop damage, assemble verified evidence, generate an incident dossier, and access official PMFBY procedures.
+            {t('claim_hero_sub')}
           </p>
         </div>
 
@@ -224,7 +224,7 @@ export const CropInsuranceClaim = () => {
           className="btn btn-primary"
           style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
         >
-          <PlusCircle size={18} /> Record New Damage Incident
+          <PlusCircle size={18} /> {t('record_new_claim')}
         </button>
       </div>
 
@@ -234,25 +234,25 @@ export const CropInsuranceClaim = () => {
           onClick={() => setActiveTab('dossiers')} 
           className={`claim-tab-btn ${activeTab === 'dossiers' ? 'active' : ''}`}
         >
-          <FileText size={18} /> My Incident Dossiers ({dossiers.length})
+          <FileText size={18} /> {t('tab_claim_dossiers_title')} ({dossiers.length})
         </button>
         <button 
           onClick={() => setActiveTab('record')} 
           className={`claim-tab-btn ${activeTab === 'record' ? 'active' : ''}`}
         >
-          <PlusCircle size={18} /> Record Damage Evidence
+          <PlusCircle size={18} /> {t('tab_record_damage')}
         </button>
         <button 
           onClick={() => setActiveTab('checklist')} 
           className={`claim-tab-btn ${activeTab === 'checklist' ? 'active' : ''}`}
         >
-          <CheckCircle2 size={18} /> Document & Evidence Checklist
+          <CheckCircle2 size={18} /> {t('tab_evidence_checklist')}
         </button>
         <button 
           onClick={() => setActiveTab('procedures')} 
           className={`claim-tab-btn ${activeTab === 'procedures' ? 'active' : ''}`}
         >
-          <Info size={18} /> Official Procedures & Helplines
+          <Info size={18} /> {t('tab_official_procedures')}
         </button>
       </div>
 

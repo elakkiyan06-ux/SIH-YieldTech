@@ -7,16 +7,18 @@ import {
   FileText, 
   Calendar, 
   ExternalLink, 
-  Info,
-  ShieldCheck,
-  Tag
+  Info, 
+  ShieldCheck, 
+  Tag 
 } from 'lucide-react';
 import { governmentSchemes } from '../data/mockData';
 import { Modal } from '../components/common/Modal';
 import { useAppState } from '../context/AppStateContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const GovernmentSchemes = () => {
   const { setActivePage } = useAppState();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalScheme, setActiveModalScheme] = useState(null);
@@ -36,10 +38,10 @@ export const GovernmentSchemes = () => {
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">
-          <Landmark size={28} color="#15803d" /> Central & State Agricultural Schemes
+          <Landmark size={28} color="#15803d" /> {t('schemes_page_title')}
         </h1>
         <p className="page-subtitle">
-          Direct benefit transfers, micro-irrigation subsidies, crop insurance, and tractor mechanization grants for Tamil Nadu farmers.
+          {t('schemes_page_sub')}
         </p>
       </div>
 
@@ -52,7 +54,7 @@ export const GovernmentSchemes = () => {
             <input 
               type="text" 
               className="form-input" 
-              placeholder="Search scheme by keyword (e.g. PM-KISAN, Drip subsidy, Insurance)..."
+              placeholder={t('search_schemes_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ paddingLeft: '38px' }}
@@ -67,7 +69,7 @@ export const GovernmentSchemes = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>{cat === 'All' ? t('all_categories') : (t(cat) || cat)}</option>
               ))}
             </select>
           </div>
@@ -77,7 +79,7 @@ export const GovernmentSchemes = () => {
               onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
               className="btn btn-secondary btn-sm"
             >
-              Reset Filters
+              {t('clear_filters')}
             </button>
           )}
         </div>
@@ -89,7 +91,7 @@ export const GovernmentSchemes = () => {
           <div key={scheme.id} className="farm-card scheme-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '10px' }}>
-                <span className="badge badge-green">{scheme.category}</span>
+                <span className="badge badge-green">{t(scheme.category) || scheme.category}</span>
                 <span className="badge badge-amber">{scheme.badge}</span>
               </div>
 
@@ -102,7 +104,7 @@ export const GovernmentSchemes = () => {
 
               {/* Benefits Snippet */}
               <div style={{ background: '#f0fdf4', padding: '12px 14px', borderRadius: '10px', border: '1px solid #bbf7d0', margin: '14px 0' }}>
-                <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>Financial Benefit / Subsidy</span>
+                <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>{t('benefits')}</span>
                 <div style={{ fontSize: '0.88rem', color: '#14532d', fontWeight: 600, marginTop: '2px' }}>
                   {scheme.benefits}
                 </div>
@@ -110,7 +112,7 @@ export const GovernmentSchemes = () => {
 
               {/* Eligibility Preview */}
               <div style={{ fontSize: '0.84rem', color: '#475569', marginBottom: '12px' }}>
-                <strong>Eligibility:</strong> {scheme.eligibility}
+                <strong>{t('eligibility')}:</strong> {scheme.eligibility}
               </div>
 
               {/* Deadline */}
@@ -127,16 +129,16 @@ export const GovernmentSchemes = () => {
                   className="btn btn-outline btn-sm"
                   style={{ flex: 1 }}
                 >
-                  <FileText size={14} /> View Details
+                  <FileText size={14} /> {t('view_scheme_guidelines')}
                 </button>
                 <a 
                   href={scheme.officialLink} 
                   target="_blank" 
-                  rel="noreferrer"
+                  rel="noreferrer" 
                   className="btn btn-primary btn-sm"
                   style={{ flex: 1 }}
                 >
-                  Apply Online <ExternalLink size={14} />
+                  {t('apply_official_portal')} <ExternalLink size={14} />
                 </a>
               </div>
               {(scheme.category === 'Insurance' || scheme.name.toLowerCase().includes('insurance')) && (
@@ -145,7 +147,7 @@ export const GovernmentSchemes = () => {
                   className="btn btn-sm"
                   style={{ background: '#fff7ed', color: '#c2410c', borderColor: '#fed7aa', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontWeight: 700, width: '100%' }}
                 >
-                  <ShieldCheck size={15} /> Prepare Crop Damage Claim Dossier
+                  <ShieldCheck size={15} /> {t('claim_hero_badge')}
                 </button>
               )}
             </div>
@@ -163,7 +165,7 @@ export const GovernmentSchemes = () => {
         >
           <div>
             <div style={{ background: '#f8fafc', padding: '14px 18px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-              <div style={{ fontSize: '0.78rem', color: '#64748b' }}>Issuing Authority</div>
+              <div style={{ fontSize: '0.78rem', color: '#64748b' }}>{t('nodal_department')}</div>
               <div style={{ fontWeight: 700, color: '#0f172a' }}>{activeModalScheme.ministry}</div>
               <div style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 700, marginTop: '4px' }}>
                 Subsidy Quantum: {activeModalScheme.subsidyAmount}
@@ -171,21 +173,21 @@ export const GovernmentSchemes = () => {
             </div>
 
             <h4 style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b', marginBottom: '6px' }}>
-              Benefits Overview
+              {t('benefits')}
             </h4>
             <p style={{ fontSize: '0.88rem', color: '#334155', lineHeight: 1.5, marginBottom: '16px' }}>
               {activeModalScheme.benefits}
             </p>
 
             <h4 style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b', marginBottom: '6px' }}>
-              Farmer Eligibility Requirements
+              {t('eligibility')}
             </h4>
             <p style={{ fontSize: '0.88rem', color: '#334155', lineHeight: 1.5, marginBottom: '16px' }}>
               {activeModalScheme.eligibility}
             </p>
 
             <h4 style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1e293b', marginBottom: '8px' }}>
-              Required Checklist Documents
+              {t('tab_evidence_checklist')}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
               {activeModalScheme.documents.map((doc, idx) => (
@@ -201,7 +203,7 @@ export const GovernmentSchemes = () => {
 
             <div className="modal-footer" style={{ margin: '18px -24px -24px -24px' }}>
               <button className="btn btn-secondary" onClick={() => setActiveModalScheme(null)}>
-                Close
+                {t('cancel')}
               </button>
               <a 
                 href={activeModalScheme.officialLink} 
@@ -209,7 +211,7 @@ export const GovernmentSchemes = () => {
                 rel="noreferrer" 
                 className="btn btn-primary"
               >
-                Go to Portal <ExternalLink size={14} />
+                {t('apply_official_portal')} <ExternalLink size={14} />
               </a>
             </div>
           </div>

@@ -14,30 +14,46 @@ import {
   Info,
   MapPin,
   ArrowRight
- } from 'lucide-react';
- import { locations } from '../data/mockData';
- import { useAppState } from '../context/AppStateContext';
- 
- export const WeatherPage = () => {
+} from 'lucide-react';
+import { locations } from '../data/mockData';
+import { useAppState } from '../context/AppStateContext';
+import { useLanguage } from '../context/LanguageContext';
+
+export const WeatherPage = () => {
   const { weather, setActivePage } = useAppState();
- 
-   // Dynamic advisories are now fetched from the global weather state
-   const agroAdvisories = weather.agroAdvisories || [];
- 
-   return (
-     <div className="weather-page">
-       {/* Header */}
-       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-         <div>
-           <h1 className="page-title">
-             <CloudSun size={28} color="#0284c7" /> Agricultural Weather Intelligence
-           </h1>
-           <p className="page-subtitle">
-             Hyperlocal microclimate forecasts and agrometeorological advisories tailored for field operations.
-           </p>
-         </div>
-       </div>
- 
+  const { t } = useLanguage();
+
+  // Dynamic advisories are now fetched from the global weather state
+  const agroAdvisories = weather.agroAdvisories || [];
+
+  const getConditionLabel = (cond) => {
+    if (!cond) return '';
+    const norm = cond.toLowerCase().trim();
+    if (norm.includes('partly')) return t('cond_partly_cloudy');
+    if (norm.includes('cloud')) return t('cond_cloudy');
+    if (norm.includes('thunder')) return t('cond_thunderstorm');
+    if (norm.includes('rain')) return t('cond_rain');
+    if (norm.includes('shower')) return t('cond_showers');
+    if (norm.includes('fog')) return t('cond_fog');
+    if (norm.includes('snow')) return t('cond_snow');
+    if (norm.includes('clear') || norm.includes('sunny')) return t('cond_clear');
+    return cond;
+  };
+
+  return (
+    <div className="weather-page">
+      {/* Header */}
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h1 className="page-title">
+            <CloudSun size={28} color="#0284c7" /> {t('weather_page_title')}
+          </h1>
+          <p className="page-subtitle">
+            {t('weather_page_sub')}
+          </p>
+        </div>
+      </div>
+
       {/* El Niño & Climate Risk Banner */}
       <div 
         className="farm-card" 
@@ -59,10 +75,10 @@ import {
           </div>
           <div>
             <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#0369a1' }}>
-              El Niño & Long-Range Climate Preparedness Advisor
+              {t('elnino_hero_title')}
             </div>
             <div style={{ fontSize: '0.82rem', color: '#0284c7', marginTop: '2px' }}>
-              Understand Pacific sea surface anomalies, monsoon facts vs myths, and drought-proofing mitigation steps.
+              {t('elnino_hero_sub')}
             </div>
           </div>
         </div>
@@ -71,21 +87,21 @@ import {
           className="btn btn-primary btn-sm"
           style={{ background: '#0284c7', borderColor: '#0284c7', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
         >
-          Explore El Niño Advisor <ArrowRight size={14} />
+          {t('el_nino_advisor')} <ArrowRight size={14} />
         </button>
       </div>
 
-       {/* Hero Weather Card */}
+      {/* Hero Weather Card */}
       <div className="weather-hero-card">
         <div className="weather-hero-main">
           <div>
-            <span className="weather-loc-tag">Current Conditions • {weather.location.split(',')[0]} Observatory</span>
+            <span className="weather-loc-tag">{t('current_conditions')} • {weather.location.split(',')[0]}</span>
             <div className="weather-temp-row">
               <span className="current-temp-large">{weather.currentTemp}°</span>
               <div className="temp-sub-meta">
                 <span className="temp-celsius">C</span>
-                <span className="feels-like-text">Feels like {weather.feelsLike}°C</span>
-                <span className="sky-condition-pill">{weather.condition}</span>
+                <span className="feels-like-text">{t('temperature')} {weather.feelsLike}°C</span>
+                <span className="sky-condition-pill">{getConditionLabel(weather.condition)}</span>
               </div>
             </div>
           </div>
@@ -100,7 +116,7 @@ import {
           <div className="weather-metric-item">
             <Droplets size={20} color="#0ea5e9" />
             <div>
-              <span className="metric-label">Relative Humidity</span>
+              <span className="metric-label">{t('humidity_label')}</span>
               <strong className="metric-value">{weather.humidity}%</strong>
             </div>
           </div>
@@ -108,7 +124,7 @@ import {
           <div className="weather-metric-item">
             <CloudRain size={20} color="#38bdf8" />
             <div>
-              <span className="metric-label">Rainfall Probability</span>
+              <span className="metric-label">{t('rain_prob_label')}</span>
               <strong className="metric-value">{weather.forecast7Day?.[0]?.rainProb ?? weather.rainfallProbability}%</strong>
             </div>
           </div>
@@ -116,7 +132,7 @@ import {
           <div className="weather-metric-item">
             <Wind size={20} color="#64748b" />
             <div>
-              <span className="metric-label">Wind Speed</span>
+              <span className="metric-label">{t('wind_speed_label')}</span>
               <strong className="metric-value">{weather.windSpeed} km/h ({weather.windDirection})</strong>
             </div>
           </div>
@@ -124,7 +140,7 @@ import {
           <div className="weather-metric-item">
             <Thermometer size={20} color="#eab308" />
             <div>
-              <span className="metric-label">Soil Moisture Index</span>
+              <span className="metric-label">{t('soil_moisture_label')}</span>
               <strong className="metric-value">{weather.soilMoisture}</strong>
             </div>
           </div>
@@ -134,8 +150,8 @@ import {
       {/* Agricultural Advisories Grid */}
       <div style={{ marginTop: '28px' }}>
         <div className="section-title-row">
-          <h2 className="section-title">🌾 Actionable Agricultural Advisories</h2>
-          <span className="section-subtitle">Practical guidance for spraying, irrigation, and harvesting</span>
+          <h2 className="section-title">🌾 {t('actionable_advisories_title')}</h2>
+          <span className="section-subtitle">{t('actionable_advisories_sub')}</span>
         </div>
 
         <div className="grid-2" style={{ marginTop: '12px' }}>
@@ -178,8 +194,8 @@ import {
       {/* 7-Day Agricultural Forecast Table / Cards */}
       <div style={{ marginTop: '32px' }}>
         <div className="section-title-row">
-          <h2 className="section-title">📅 7-Day Precision Agricultural Forecast</h2>
-          <span className="section-subtitle">Anticipate moisture windows and plan labor cycles</span>
+          <h2 className="section-title">📅 {t('forecast_7day_title')}</h2>
+          <span className="section-subtitle">{t('forecast_7day_sub')}</span>
         </div>
 
         <div className="forecast-strip-grid" style={{ marginTop: '14px' }}>
@@ -206,7 +222,7 @@ import {
               </div>
 
               <div className="forecast-rain-pill" style={{ backgroundColor: day.rainProb > 50 ? '#dbeafe' : '#f1f5f9', color: day.rainProb > 50 ? '#0369a1' : '#64748b' }}>
-                <CloudRain size={12} /> {day.rainProb}% rain
+                <CloudRain size={12} /> {day.rainProb}% {t('cond_rain')}
               </div>
 
               <div className="forecast-advisory-tip">

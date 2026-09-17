@@ -120,7 +120,7 @@ export const Home = () => {
     { 
       id: 'equipment', 
       title: t('nearby_equipment') || 'Nearby Equipment', 
-      desc: 'Rent tractors, JCBs, harvesters & tools near your farm', 
+      desc: t('equipment_hero_sub') || 'Rent tractors, JCBs, harvesters & tools near your farm', 
       icon: Tractor, 
       color: '#15803d', 
       bg: '#f0fdf4'
@@ -128,11 +128,11 @@ export const Home = () => {
     { 
       id: 'nearby-storage', 
       title: t('nearby_storage') || 'Storage & Cold Storage', 
-      desc: 'Find godowns, cold storage & packhouses near your farm', 
+      desc: t('storage_hero_sub') || 'Find godowns, cold storage & packhouses near your farm', 
       icon: Warehouse, 
       color: '#0f766e', 
       bg: '#f0fdfa',
-      badge: 'Zero Spoilage'
+      badge: t('water_saving') || 'Zero Spoilage'
     },
     { 
       id: 'transport', 
@@ -146,20 +146,20 @@ export const Home = () => {
     {
       id: 'el-nino-advisor',
       title: t('el_nino_advisor') || 'El Niño & Climate Advisor',
-      desc: 'Understand ocean-atmosphere climate patterns & farm preparedness',
+      desc: t('elnino_hero_sub') || 'Understand ocean-atmosphere climate patterns & farm preparedness',
       icon: CloudSun,
       color: '#0284c7',
       bg: '#f0f9ff',
-      badge: 'Climate Intelligence'
+      badge: t('high_precision') || 'Climate Intelligence'
     },
     {
       id: 'crop-insurance-claim',
       title: t('crop_claim_assistant') || 'Crop Claim Assistant',
-      desc: 'Prepare PMFBY claim evidence dossiers & 72-hr loss intimation',
+      desc: t('claim_hero_sub') || 'Prepare PMFBY claim evidence dossiers & 72-hr loss intimation',
       icon: ShieldAlert,
       color: '#c2410c',
       bg: '#fff7ed',
-      badge: '72h Notice'
+      badge: t('claim_notice_72h') || '72h Notice'
     }
   ];
 
@@ -208,7 +208,7 @@ export const Home = () => {
           </h1>
           <p className="hero-summary">
             {t('your_farm_dashboard')}. 
-            All insights are personalized for your <strong>{user.landArea} Acre</strong> farm in <strong>{user.district}</strong>.
+            {t('personalized_for_farm', { acres: user.landArea, district: user.district })}
           </p>
 
           <div className="hero-meta-chips">
@@ -218,11 +218,11 @@ export const Home = () => {
             </div>
             <div className="hero-chip">
               <span className="chip-label">{t('temperature')}</span>
-              <strong className="chip-value">{weather.currentTemp}°C ({weather.condition})</strong>
+              <strong className="chip-value">{weather.currentTemp}°C ({t('cond_' + weather.condition.toLowerCase().replace(/\s+/g, '_')) || weather.condition})</strong>
             </div>
             <div className="hero-chip">
               <span className="chip-label">{t('primary_soil')}</span>
-              <strong className="chip-value">{user.soilType}</strong>
+              <strong className="chip-value">{t(user.soilType) || user.soilType}</strong>
             </div>
           </div>
         </div>
@@ -316,7 +316,7 @@ export const Home = () => {
               </h2>
             </div>
             <span className="section-subtitle">
-              Verified tractors, JCBs, and harvesters available near {user?.village || 'Perundurai'}, {user?.district || 'Erode'}
+              {t('verified_machinery_near', { village: user?.village || 'Perundurai', district: user?.district || 'Erode' })}
             </span>
           </div>
           <button 
@@ -324,7 +324,7 @@ export const Home = () => {
             className="btn btn-outline"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 700 }}
           >
-            <span>Explore All Machinery</span>
+            <span>{t('explore_all_machinery')}</span>
             <ArrowRight size={15} />
           </button>
         </div>
@@ -366,7 +366,7 @@ export const Home = () => {
                   borderRadius: '12px',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
                 }}>
-                  📍 {item.distanceKm} km away
+                  📍 {t('distance_km', { dist: item.distanceKm })}
                 </span>
                 <span style={{
                   position: 'absolute',
@@ -402,10 +402,10 @@ export const Home = () => {
 
               <div style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>
-                  {item.operatorCharges === 'INCLUDED' ? 'Operator Included ✓' : '+Operator'}
+                  {item.operatorCharges === 'INCLUDED' ? (t('driver_included') + ' ✓') : ('+' + t('driver_included'))}
                 </span>
                 <span style={{ fontSize: '0.82rem', color: '#2563eb', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  View & Rent <ArrowRight size={14} />
+                  {t('book_now')} <ArrowRight size={14} />
                 </span>
               </div>
             </div>
@@ -418,13 +418,13 @@ export const Home = () => {
         <div className="section-title-row" style={{ marginBottom: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className="badge badge-emerald">Post-Harvest Storage</span>
+              <span className="badge badge-emerald">{t('storage_network_badge')}</span>
               <h2 className="section-title" style={{ margin: 0 }}>
                 {t('nearby_storage') || 'Nearby Cold Storage, Godowns & Warehouses'}
               </h2>
             </div>
             <span className="section-subtitle">
-              Verified cold storage and warehouse space with transparent tariffs near {user?.village || 'Perundurai'}, {user?.district || 'Erode'}
+              {t('verified_storage_near', { village: user?.village || 'Perundurai', district: user?.district || 'Erode' })}
             </span>
           </div>
           <button 
@@ -432,7 +432,7 @@ export const Home = () => {
             className="btn btn-outline"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 700 }}
           >
-            <span>Explore All Storage</span>
+            <span>{t('explore_all_storage')}</span>
             <ArrowRight size={15} />
           </button>
         </div>
@@ -455,8 +455,11 @@ export const Home = () => {
             >
               <div style={{ position: 'relative', height: '140px', borderRadius: '10px', overflow: 'hidden', background: '#f1f5f9' }}>
                 <img 
-                  src={getStorageImageUrl(fac.images?.[0] || 'images/storage/cold_storage_facility.jpg')} 
+                  src={getStorageImageUrl(fac.photos && fac.photos[0]) || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800'} 
                   alt={fac.facilityName} 
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800';
+                  }}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
                 <span style={{ 
@@ -471,7 +474,7 @@ export const Home = () => {
                   borderRadius: '12px',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
                 }}>
-                  📍 {fac.distanceKm} km away
+                  📍 {t('distance_km', { dist: fac.distanceKm })}
                 </span>
                 <span style={{
                   position: 'absolute',
@@ -510,7 +513,7 @@ export const Home = () => {
                   🌾 {fac.supportedCrops?.slice(0, 2).join(', ')}
                 </span>
                 <span style={{ fontSize: '0.82rem', color: '#0d9488', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  View & Calculate <ArrowRight size={14} />
+                  {t('enquire_storage')} <ArrowRight size={14} />
                 </span>
               </div>
             </div>
@@ -540,19 +543,19 @@ export const Home = () => {
               onClick={() => setFeedFilter('for-you')}
               className={`feed-tab-btn ${feedFilter === 'for-you' ? 'active' : ''}`}
             >
-              🌟 For You
+              🌟 {t('feed_filter_for_you')}
             </button>
             <button 
               onClick={() => setFeedFilter('experts')}
               className={`feed-tab-btn ${feedFilter === 'experts' ? 'active' : ''}`}
             >
-              🎓 TNAU & Verified Experts
+              🎓 {t('feed_filter_experts')}
             </button>
             <button 
               onClick={() => setFeedFilter('soil-tests')}
               className={`feed-tab-btn ${feedFilter === 'soil-tests' ? 'active' : ''}`}
             >
-              🧪 Soil Test Centers
+              🧪 {t('soil_testing_labs')}
             </button>
           </div>
         </div>

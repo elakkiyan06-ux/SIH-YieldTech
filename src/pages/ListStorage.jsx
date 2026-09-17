@@ -254,7 +254,7 @@ export const ListStorage = () => {
           onClick={() => setActiveTab('register')}
         >
           <PlusCircle size={17} />
-          <span>Register New Facility</span>
+          <span>{t('list_storage')}</span>
         </button>
 
         <button 
@@ -262,7 +262,7 @@ export const ListStorage = () => {
           onClick={() => setActiveTab('my_facilities')}
         >
           <Warehouse size={17} />
-          <span>My Facilities ({myFacilities.length})</span>
+          <span>{t('my_listings')} ({myFacilities.length})</span>
         </button>
 
         <button 
@@ -270,7 +270,7 @@ export const ListStorage = () => {
           onClick={() => setActiveTab('enquiries')}
         >
           <MessageSquare size={17} />
-          <span>Received Enquiries ({enquiries.length})</span>
+          <span>{t('received_enquiries')} ({enquiries.length})</span>
         </button>
       </div>
 
