@@ -16,7 +16,8 @@ import {
   Camera,
   Upload,
   Trash2,
-  ShieldAlert
+  ShieldAlert,
+  Compass
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppState } from '../context/AppStateContext';
@@ -315,6 +316,52 @@ export const FarmerProfile = () => {
                   Your registered <strong>{t(user.soilType) || user.soilType}</strong> provides favorable texture for sustainable multi-season crop cycles.
                 </p>
               </div>
+            </div>
+
+            {/* Quick Decision Support Tile */}
+            <div className="farm-card" style={{
+              gridColumn: '1 / -1',
+              marginTop: '10px',
+              background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+              border: '1px solid #bbf7d0',
+              borderRadius: '12px',
+              padding: '18px 22px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 300px' }}>
+                <div style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '10px',
+                  background: '#16a34a',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Compass size={22} />
+                </div>
+                <div>
+                  <h4 style={{ margin: 0, fontWeight: 700, fontSize: '1.02rem', color: '#14532d' }}>
+                    {t('where_to_sell_nav') || 'Where Should I Sell Your Harvest?'}
+                  </h4>
+                  <p style={{ margin: '3px 0 0 0', fontSize: '0.84rem', color: '#166534' }}>
+                    Calculate transparent net returns for your registered crops from {user.village}, {user.district} across APMC mandis and verified buyers.
+                  </p>
+                </div>
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={() => setActivePage('where-to-sell')}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 18px', whiteSpace: 'nowrap' }}
+              >
+                <Compass size={16} /> {t('compare_destinations_btn') || 'Compare Selling Options'}
+              </button>
             </div>
           </div>
         )}

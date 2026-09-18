@@ -86,6 +86,32 @@ export const SharedTransport = () => {
     };
   }, []);
 
+  // Handle route transfer from "Where Should I Sell?"
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('farmogram_transfer_transport');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setFormData(prev => ({
+          ...prev,
+          produceType: parsed.crop || prev.produceType,
+          quantityKg: parsed.quantityKg || prev.quantityKg,
+          pickupLocation: parsed.farmLocation || prev.pickupLocation,
+          maxBudget: parsed.estCost ? Math.round(parsed.estCost * 1.2) : prev.maxBudget
+        }));
+        setActiveTab('create');
+        setNotificationBanner({
+          type: 'info',
+          title: `Route Imported: ${parsed.destinationName}`,
+          message: `Transport details imported for ${parsed.crop} (${parsed.quantityKg} kg) to ${parsed.destinationName} (${parsed.district}).`
+        });
+        localStorage.removeItem('farmogram_transfer_transport');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   // Countdown timer for match proposal
   useEffect(() => {
     let interval = null;

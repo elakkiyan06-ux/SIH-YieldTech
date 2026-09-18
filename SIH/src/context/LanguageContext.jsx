@@ -29,22 +29,48 @@ export const LanguageProvider = ({ children }) => {
     document.documentElement.lang = currentLang;
   }, [currentLang]);
 
-  // Enhanced t function with fallback and string interpolation e.g. {{name}} or {name}
-  const t = (key, params) => {
+  // Enhanced t function with fallback, interpolation, and automatic snake_case humanization
+  const t = (key, fallbackOrParams, maybeParams) => {
     if (!key) return '';
     const langDict = translations[currentLang] || translations.en;
     let str = langDict?.[key];
-    if (str === undefined) {
+    if (str === undefined || str === null) {
       str = translations.en?.[key];
     }
-    if (str === undefined) {
-      str = key;
+
+    // If a string fallback was provided as 2nd argument e.g. t('key', 'Default text')
+    if ((str === undefined || str === null) && typeof fallbackOrParams === 'string') {
+      str = fallbackOrParams;
     }
-    if (params && typeof params === 'object') {
-      for (const [paramKey, paramVal] of Object.entries(params)) {
+
+    // If still missing, humanize the key so raw snake_case with underscores is NEVER displayed
+    if (str === undefined || str === null) {
+      if (typeof key === 'string') {
+        str = key
+          .replace(/[_-]+/g, ' ')
+          .trim()
+          .replace(/\b\w/g, c => c.toUpperCase());
+      } else {
+        str = String(key);
+      }
+    }
+
+    // Determine parameter object e.g. { dist: 12 }
+    const actualParams = (typeof fallbackOrParams === 'object' && fallbackOrParams !== null) 
+      ? fallbackOrParams 
+      : (typeof maybeParams === 'object' && maybeParams !== null ? maybeParams : null);
+
+    if (actualParams && typeof actualParams === 'object') {
+      for (const [paramKey, paramVal] of Object.entries(actualParams)) {
         str = str.replace(new RegExp(`{{${paramKey}}}|{${paramKey}}`, 'g'), String(paramVal));
       }
     }
+
+    // Absolute guarantee: clean any remaining underscores in user-facing text
+    if (typeof str === 'string' && str.includes('_')) {
+      str = str.replace(/_/g, ' ');
+    }
+
     return str;
   };
 

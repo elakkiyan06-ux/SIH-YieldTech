@@ -20,7 +20,8 @@ import {
   Truck,
   Tractor,
   Wrench,
-  Warehouse
+  Warehouse,
+  Compass
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { useAuth } from '../../context/AuthContext';
@@ -34,6 +35,9 @@ export const Sidebar = () => {
   const navItems = [
     { id: 'home', label: t('home'), icon: Sprout, highlight: true },
     { id: 'reels', label: t('reels') || 'Reels', icon: Video },
+    { id: 'where-to-sell', label: t('where_to_sell_nav') || 'Where to Sell?', icon: Compass, highlight: true },
+    { id: 'market', label: t('market_prices') || 'Market Intelligence', icon: TrendingUp },
+    { id: 'profit', label: t('profit_calculator') || 'Profit Calculator', icon: Calculator },
     { id: 'equipment', label: t('nearby_equipment') || 'Nearby Equipment', icon: Tractor },
     { id: 'nearby-storage', label: t('nearby_storage') || 'Nearby Storage & Cold Store', icon: Warehouse },
     { id: 'transport', label: t('shared_transport') || 'Shared Transport', icon: Truck },

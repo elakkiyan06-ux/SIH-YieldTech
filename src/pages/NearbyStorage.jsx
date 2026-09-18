@@ -94,6 +94,26 @@ export const NearbyStorage = () => {
     return unsub;
   }, [farmerCoords, selectedRadius, selectedType, selectedCrop, minCapacity, searchQuery, sortBy]);
 
+  // Handle transfer from "Where Should I Sell?"
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('farmogram_transfer_storage');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.crop) {
+          setSelectedCrop(parsed.crop);
+        }
+        setToastMessage({
+          type: 'info',
+          text: `Filtered facilities for ${parsed.crop} (holding estimate: ${parsed.storageDays || 0} days).`
+        });
+        localStorage.removeItem('farmogram_transfer_storage');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   // GPS Detection Handler
   const handleDetectGPS = () => {
     if (!navigator.geolocation) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
   DollarSign, 
@@ -7,15 +7,38 @@ import {
   PieChart, 
   CheckCircle2, 
   RotateCcw,
-  Sparkles
+  Sparkles,
+  Compass
 } from 'lucide-react';
 import { cropsList } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
+import { useAppState } from '../context/AppStateContext';
 
 export const ProfitCalculator = () => {
   const { t } = useLanguage();
+  const { setActivePage } = useAppState();
   const [crop, setCrop] = useState('');
   const [landArea, setLandArea] = useState(''); 
+  const [transferredInfo, setTransferredInfo] = useState(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('farmogram_transfer_selling_price');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.sellingPricePerQtl) {
+          setSellingPrice(String(parsed.sellingPricePerQtl));
+          if (parsed.crop) {
+            setCrop(parsed.crop);
+          }
+          setTransferredInfo(parsed);
+          localStorage.removeItem('farmogram_transfer_selling_price');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
   
   // Cost parameters (Per Acre base or total)
   const [seedCost, setSeedCost] = useState('');
@@ -92,6 +115,37 @@ export const ProfitCalculator = () => {
             </button>
           </div>
           <p className="card-section-subtitle">{t('values_scaled_by_area')}</p>
+
+          {transferredInfo && (
+            <div style={{
+              background: '#ecfdf5',
+              border: '1px solid #10b981',
+              borderRadius: '10px',
+              padding: '12px 14px',
+              marginTop: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '10px',
+              fontSize: '0.84rem',
+              color: '#065f46'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Compass size={18} color="#059669" style={{ flexShrink: 0 }} />
+                <span>
+                  <strong>{t('imported_destination_price') || 'Imported from Where Should I Sell?'}:</strong> ₹{transferredInfo.sellingPricePerQtl}/Q ({transferredInfo.mandiName})
+                </span>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setTransferredInfo(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#047857', fontWeight: 700, padding: '2px 6px' }}
+                title="Dismiss"
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleCalculate} style={{ marginTop: '16px' }}>
             <div className="grid-2">
@@ -197,7 +251,33 @@ export const ProfitCalculator = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">{t('expected_mandi_price')} (₹/Q)</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <label className="form-label" style={{ marginBottom: 0 }}>{t('expected_mandi_price')} (₹/Q)</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (crop) {
+                        localStorage.setItem('farmogram_where_to_sell_crop', crop);
+                      }
+                      setActivePage('where-to-sell');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#16a34a',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: 0
+                    }}
+                    title="Compare mandi and buyer net prices"
+                  >
+                    <Compass size={13} /> {t('compare_destinations_link') || 'Compare Options'}
+                  </button>
+                </div>
                 <input 
                   type="number" min="0"
                   className="form-input" 

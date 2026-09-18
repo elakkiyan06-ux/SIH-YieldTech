@@ -10,14 +10,17 @@ import {
   DollarSign, 
   BarChart2, 
   Calendar,
-  Sparkles
+  Sparkles,
+  Compass
 } from 'lucide-react';
 import { marketCommodities, locations, cropsList } from '../data/mockData';
 import { Modal } from '../components/common/Modal';
 import { useLanguage } from '../context/LanguageContext';
+import { useAppState } from '../context/AppStateContext';
 
 export const MarketIntelligence = () => {
   const { t } = useLanguage();
+  const { setActivePage } = useAppState();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCrop, setSelectedCrop] = useState('All');
   const [selectedMandi, setSelectedMandi] = useState('All');
@@ -42,6 +45,61 @@ export const MarketIntelligence = () => {
         <p className="page-subtitle">
           {t('market_mandi_sub')}
         </p>
+      </div>
+
+      {/* Where Should I Sell Decision Support Banner */}
+      <div className="farm-card" style={{
+        background: 'linear-gradient(135deg, #14532d 0%, #16a34a 100%)',
+        color: '#ffffff',
+        padding: '18px 22px',
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '14px',
+        borderRadius: '14px',
+        boxShadow: '0 4px 14px rgba(22, 163, 74, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 320px' }}>
+          <div style={{
+            width: '46px',
+            height: '46px',
+            borderRadius: '12px',
+            background: 'rgba(255, 255, 255, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <Compass size={26} color="#ffffff" />
+          </div>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: '1.08rem' }}>
+              {t('where_to_sell_banner_title') || 'Where Should I Sell Your Harvest?'}
+            </div>
+            <div style={{ fontSize: '0.84rem', opacity: 0.92, marginTop: '2px' }}>
+              {t('where_to_sell_banner_sub') || 'Compare mandis, verified buyers & net returns after deducting transport and storage costs.'}
+            </div>
+          </div>
+        </div>
+        <button
+          className="btn"
+          onClick={() => setActivePage('where-to-sell')}
+          style={{
+            background: '#ffffff',
+            color: '#15803d',
+            fontWeight: 700,
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {t('compare_destinations_btn') || 'Compare Selling Options →'}
+        </button>
       </div>
 
       {/* Top Ticker / Market Summary Strip */}
@@ -277,7 +335,18 @@ export const MarketIntelligence = () => {
               Demand from regional distribution centers remains active. With morning arrivals peaking early, farmers bringing graded produce can expect to realize rates closer to the maximum band (₹{activeTrendModal.maxPrice.toLocaleString()}/q).
             </p>
 
-            <div className="modal-footer" style={{ margin: '18px -24px -24px -24px' }}>
+            <div className="modal-footer" style={{ margin: '18px -24px -24px -24px', display: 'flex', gap: '10px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => {
+                  localStorage.setItem('farmogram_where_to_sell_crop', activeTrendModal.commodity);
+                  setActiveTrendModal(null);
+                  setActivePage('where-to-sell');
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <Compass size={16} color="#16a34a" /> {t('compare_crop_destinations') || `Compare Selling Options for ${activeTrendModal.commodity}`}
+              </button>
               <button className="btn btn-primary" onClick={() => setActiveTrendModal(null)}>
                 {t('close_analytics')}
               </button>

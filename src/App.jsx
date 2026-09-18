@@ -34,7 +34,7 @@ import { ListStorage } from './pages/ListStorage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { CropInsuranceClaim } from './pages/CropInsuranceClaim';
 import { ElNinoAdvisor } from './pages/ElNinoAdvisor';
-
+import { WhereToSell } from './pages/WhereToSell';
 
 // Styles
 import './index.css';
@@ -91,6 +91,8 @@ const MainAppContent = () => {
         return <IrrigationRecommendation />;
       case 'market':
         return <MarketIntelligence />;
+      case 'where-to-sell':
+        return <WhereToSell />;
       case 'profit':
         return <ProfitCalculator />;
       case 'reels':

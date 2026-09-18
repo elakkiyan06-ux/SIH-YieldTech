@@ -23,7 +23,8 @@ import {
   ShieldAlert,
   Tractor,
   Wrench,
-  Warehouse
+  Warehouse,
+  Compass
 } from 'lucide-react';
 import { SOSModal } from '../components/sos/SOSModal';
 import { equipmentRentalService } from '../services/equipmentRentalService';
@@ -116,6 +117,15 @@ export const Home = () => {
       color: '#059669', 
       bg: '#ecfdf5', 
       badge: t('tomato_up')
+    },
+    { 
+      id: 'where-to-sell', 
+      title: t('where_to_sell_nav') || 'Where Should I Sell?', 
+      desc: t('where_to_sell_hero_sub') || 'Compare mandis, verified buyers & net returns after transport & storage', 
+      icon: Compass, 
+      color: '#16a34a', 
+      bg: '#f0fdf4', 
+      badge: t('decision_support') || 'Net Return'
     },
     { 
       id: 'equipment', 
