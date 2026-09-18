@@ -24,7 +24,8 @@ import {
   Tractor,
   Wrench,
   Warehouse,
-  Compass
+  Compass,
+  Tag
 } from 'lucide-react';
 import { SOSModal } from '../components/sos/SOSModal';
 import { equipmentRentalService } from '../services/equipmentRentalService';
@@ -126,6 +127,15 @@ export const Home = () => {
       color: '#16a34a', 
       bg: '#f0fdf4', 
       badge: t('decision_support') || 'Net Return'
+    },
+    { 
+      id: 'input-watch', 
+      title: t('farm_input_price_watch') || 'Farm Input Price Watch', 
+      desc: t('input_watch_sub') || 'Track agricultural input prices, compare dealer quotes & feed costs into your budget', 
+      icon: Tag, 
+      color: '#059669', 
+      bg: '#ecfdf5', 
+      badge: t('verified_market_rates') || 'Verified Rates'
     },
     { 
       id: 'equipment', 

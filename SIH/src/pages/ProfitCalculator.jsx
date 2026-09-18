@@ -8,7 +8,8 @@ import {
   CheckCircle2, 
   RotateCcw,
   Sparkles,
-  Compass
+  Compass,
+  Tag
 } from 'lucide-react';
 import { cropsList } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,6 +21,7 @@ export const ProfitCalculator = () => {
   const [crop, setCrop] = useState('');
   const [landArea, setLandArea] = useState(''); 
   const [transferredInfo, setTransferredInfo] = useState(null);
+  const [transferredInputInfo, setTransferredInputInfo] = useState(null);
 
   useEffect(() => {
     try {
@@ -33,6 +35,25 @@ export const ProfitCalculator = () => {
           }
           setTransferredInfo(parsed);
           localStorage.removeItem('farmogram_transfer_selling_price');
+        }
+      }
+
+      const inputRaw = localStorage.getItem('farmogram_transfer_input_costs');
+      if (inputRaw) {
+        const inputParsed = JSON.parse(inputRaw);
+        if (inputParsed.approxCostPerAcre) {
+          const costVal = String(inputParsed.approxCostPerAcre);
+          if (inputParsed.targetField === 'seedCost') {
+            setSeedCost(costVal);
+          } else if (inputParsed.targetField === 'fertilizerCost') {
+            setFertilizerCost(costVal);
+          } else if (inputParsed.targetField === 'irrigationCost') {
+            setIrrigationCost(costVal);
+          } else {
+            setOtherExpenses(costVal);
+          }
+          setTransferredInputInfo(inputParsed);
+          localStorage.removeItem('farmogram_transfer_input_costs');
         }
       }
     } catch (e) {
@@ -68,6 +89,8 @@ export const ProfitCalculator = () => {
     setOtherExpenses('');
     setExpectedYield('');
     setSellingPrice('');
+    setTransferredInfo(null);
+    setTransferredInputInfo(null);
     setIsCalculated(false);
   };
 
@@ -137,8 +160,39 @@ export const ProfitCalculator = () => {
                 </span>
               </div>
               <button 
-                type="button"
+                type="button" 
                 onClick={() => setTransferredInfo(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#047857', fontWeight: 700, padding: '2px 6px' }}
+                title="Dismiss"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {transferredInputInfo && (
+            <div style={{
+              background: '#f0fdf4',
+              border: '1px solid #059669',
+              borderRadius: '10px',
+              padding: '12px 14px',
+              marginTop: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '10px',
+              fontSize: '0.84rem',
+              color: '#065f46'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Tag size={18} color="#059669" style={{ flexShrink: 0 }} />
+                <span>
+                  <strong>{t('imported_input_cost') || 'Imported from Farm Input Price Watch'}:</strong> {transferredInputInfo.name} (₹{transferredInputInfo.price}/{transferredInputInfo.unit}) &rarr; ₹{transferredInputInfo.approxCostPerAcre}/acre
+                </span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setTransferredInputInfo(null)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#047857', fontWeight: 700, padding: '2px 6px' }}
                 title="Dismiss"
               >

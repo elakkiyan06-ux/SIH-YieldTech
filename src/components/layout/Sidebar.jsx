@@ -21,7 +21,8 @@ import {
   Tractor,
   Wrench,
   Warehouse,
-  Compass
+  Compass,
+  Tag
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { useAuth } from '../../context/AuthContext';
@@ -37,6 +38,7 @@ export const Sidebar = () => {
     { id: 'reels', label: t('reels') || 'Reels', icon: Video },
     { id: 'where-to-sell', label: t('where_to_sell_nav') || 'Where to Sell?', icon: Compass, highlight: true },
     { id: 'market', label: t('market_prices') || 'Market Intelligence', icon: TrendingUp },
+    { id: 'input-watch', label: t('farm_input_price_watch') || 'Farm Input Price Watch', icon: Tag },
     { id: 'profit', label: t('profit_calculator') || 'Profit Calculator', icon: Calculator },
     { id: 'equipment', label: t('nearby_equipment') || 'Nearby Equipment', icon: Tractor },
     { id: 'nearby-storage', label: t('nearby_storage') || 'Nearby Storage & Cold Store', icon: Warehouse },

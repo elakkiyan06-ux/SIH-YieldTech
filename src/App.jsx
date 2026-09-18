@@ -35,6 +35,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { CropInsuranceClaim } from './pages/CropInsuranceClaim';
 import { ElNinoAdvisor } from './pages/ElNinoAdvisor';
 import { WhereToSell } from './pages/WhereToSell';
+import { FarmInputPriceWatch } from './pages/FarmInputPriceWatch';
 
 // Styles
 import './index.css';
@@ -46,6 +47,7 @@ import './pages/WeatherPage.css';
 import './pages/DiseaseDetection.css';
 import './pages/CropInsuranceClaim.css';
 import './pages/ElNinoAdvisor.css';
+import './pages/FarmInputPriceWatch.css';
 import './pages/auth.css';
 
 const MainAppContent = () => {
@@ -93,6 +95,9 @@ const MainAppContent = () => {
         return <MarketIntelligence />;
       case 'where-to-sell':
         return <WhereToSell />;
+      case 'input-watch':
+      case 'farm-inputs':
+        return <FarmInputPriceWatch />;
       case 'profit':
         return <ProfitCalculator />;
       case 'reels':
